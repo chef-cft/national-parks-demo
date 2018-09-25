@@ -1,1 +1,0 @@
-*/5 * * * * root /home/centos/collect_metrics/files/cluster_health.sh
