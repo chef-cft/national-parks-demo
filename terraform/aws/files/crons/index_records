@@ -1,0 +1,1 @@
+*/5 * * * * root /home/centos/collect_metrics/files/index_records.sh

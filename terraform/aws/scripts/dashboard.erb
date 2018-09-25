@@ -1,0 +1,429 @@
+{
+    "widgets": [
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 0,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "view": "timeSeries",
+                "stacked": false,
+                "metrics": [
+                    [ "AWS/EC2", "2xxStatuses", "TestId", "<%=testId%>", "Instance", "terraform_automate_<%=randomId%>_chef_automate_01" ],
+                    [ ".", "5xxStatuses", ".", ".", ".", "." ],
+                    [ ".", "3xxStatuses", ".", ".", ".", "." ],
+                    [ ".", "4xxStatuses", ".", ".", ".", "." ]
+                ],
+                "region": "<%=AWS_REGION%>",
+                "title": "DataCollector HTTP Codes",
+                "period": 300
+            }
+        },
+        {
+            "type": "metric",
+            "x": 12,
+            "y": 0,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "<%=AWS_REGION%>",
+                "title": "GW Legacy Events Count",
+                "metrics": [
+                    [ "AWS/EC2", "LegacyEvents", "TestId", "<%=testId%>", "Instance", "terraform_automate_<%=randomId%>_chef_automate_01" ],
+                    [ ".", "SuccessIngestedMessages", ".", ".", ".", "." ],
+                    [ ".", "FailedIngestMessages", ".", ".", ".", "." ],
+                    [ ".", "UnsupportedIngestMessages", ".", ".", ".", "." ],
+                    [ ".", "UnknownIngestMessages", ".", ".", ".", "." ]
+                ]
+            }
+        },
+        {
+            "type": "metric",
+            "x": 6,
+            "y": 0,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "<%=AWS_REGION%>",
+                "metrics": [
+                    [ "AWS/EC2", "5MinuteAveragePostRequestTime", "TestId", "<%=testId%>", "Instance", "terraform_automate_<%=randomId%>_chef_automate_01" ]
+                ],
+                "title": "Data-Collector Post Request Times"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 18,
+            "y": 0,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "<%=AWS_REGION%>",
+                "metrics": [
+                    [ "AWS/EC2", "5MinuteAverageIngestChefRunPipelineTime", "TestId", "<%=testId%>", "Instance", "terraform_automate_<%=randomId%>_chef_automate_01" ],
+                    [ ".", "5MinuteAverageIngestChefActionPipelineTime", ".", ".", ".", "." ]
+                ],
+                "title": "Ingest Pipeline Times",
+                "period": 300,
+                "yAxis": {
+                    "left": {
+                        "min": 0
+                    }
+                }
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 12,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "view": "timeSeries",
+                "stacked": false,
+                "metrics": [
+                    [ "AWS/EC2", "TotalRecords", "TestId", "<%=testId%>", "Instance", "terraform_automate_<%=randomId%>_chef_automate_01" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_02" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_03" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_04" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_05" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_06" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_07" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_08" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_09" ]
+                ],
+                "region": "<%=AWS_REGION%>",
+                "title": "Total Index Document Count*"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 6,
+            "y": 6,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "<%=AWS_REGION%>",
+                "metrics": [
+                    [ "AWS/EC2", "5MinuteAverageESDocInsertTime", "TestId", "<%=testId%>", "Instance", "terraform_automate_<%=randomId%>_chef_automate_01" ]
+                ],
+                "title": "ES Document Insertion Times"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 18,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "<%=AWS_REGION%>",
+                "title": "ES GC Young Collection Count",
+                "metrics": [
+                    [ "AWS/EC2", "GCYoungCollectionCount", "TestId", "<%=testId%>", "Instance", "terraform_automate_<%=randomId%>_chef_automate_01" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_02" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_03" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_04" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_05" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_06" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_07" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_08" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_09" ]
+                ]
+            }
+        },
+        {
+            "type": "metric",
+            "x": 12,
+            "y": 18,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "<%=AWS_REGION%>",
+                "title": "ES Disk Queue Size",
+                "metrics": [
+                    [ "AWS/EC2", "ESDiskQueueSize", "TestId", "<%=testId%>", "Instance", "terraform_automate_<%=randomId%>_chef_automate_01" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_02" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_03" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_04" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_05" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_06" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_07" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_08" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_09" ]
+                ]
+            }
+        },
+        {
+            "type": "metric",
+            "x": 6,
+            "y": 24,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "<%=AWS_REGION%>",
+                "title": "Compliance Index Size",
+                "metrics": [
+                    [ "AWS/EC2", "ComplianceIndexBytes", "TestId", "<%=testId%>", "Instance", "terraform_automate_<%=randomId%>_chef_automate_01" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_02" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_03" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_04" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_05" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_06" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_07" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_08" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_09" ]
+                ]
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 24,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "<%=AWS_REGION%>",
+                "title": "Compliance Index Document Count",
+                "metrics": [
+                    [ "AWS/EC2", "ComplianceRecords", "TestId", "<%=testId%>", "Instance", "terraform_automate_<%=randomId%>_chef_automate_01" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_02" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_03" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_04" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_05" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_06" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_07" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_08" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_09" ]
+                ]
+            }
+        },
+        {
+            "type": "metric",
+            "x": 18,
+            "y": 12,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "<%=AWS_REGION%>",
+                "title": "ES GC Young Collection TIme",
+                "metrics": [
+                    [ "AWS/EC2", "GCYoungCollectionTimeInMillis", "TestId", "<%=testId%>", "Instance", "terraform_automate_<%=randomId%>_chef_automate_01" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_02" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_03" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_04" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_05" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_06" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_07" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_08" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_09" ]
+                ]
+            }
+        },
+        {
+            "type": "metric",
+            "x": 12,
+            "y": 12,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "<%=AWS_REGION%>",
+                 "title": "ES Heap Used",
+                "metrics": [
+                    [ "AWS/EC2", "HeapUsedInBytes", "TestId", "<%=testId%>", "Instance", "terraform_automate_<%=randomId%>_chef_automate_01" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_02" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_03" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_04" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_05" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_06" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_07" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_08" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_09" ]
+                ]
+            }
+        },
+        {
+            "type": "metric",
+            "x": 6,
+            "y": 12,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "<%=AWS_REGION%>",
+                "title": "ES Heap Used Percent",
+                "metrics": [
+                    [ "AWS/EC2", "HeapUsedPercent", "TestId", "<%=testId%>", "Instance", "terraform_automate_<%=randomId%>_chef_automate_01" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_02" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_03" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_04" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_05" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_06" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_07" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_08" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_09" ]
+                ]
+            }
+        },
+        {
+            "type": "metric",
+            "x": 12,
+            "y": 6,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "<%=AWS_REGION%>",
+                "title": "Node Index Size",
+                "metrics": [
+                    [ "AWS/EC2", "NodeIndexBytes", "TestId", "<%=testId%>", "Instance", "terraform_automate_<%=randomId%>_chef_automate_01" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_02" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_03" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_04" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_05" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_06" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_07" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_08" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_09" ]
+                ]
+            }
+        },
+        {
+            "type": "metric",
+            "x": 6,
+            "y": 18,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "<%=AWS_REGION%>",
+                "title": "Node Index Document Count",
+                "metrics": [
+                    [ "AWS/EC2", "NodeRecords", "TestId", "<%=testId%>", "Instance", "terraform_automate_<%=randomId%>_chef_automate_01" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_02" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_03" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_04" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_05" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_06" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_07" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_08" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_09" ]
+                ]
+            }
+        },
+        {
+            "type": "metric",
+            "x": 18,
+            "y": 6,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "<%=AWS_REGION%>",
+                "title": "Daily Combined Indices Size*",
+                "metrics": [
+                    [ "AWS/EC2", "TotalBytes", "TestId", "<%=testId%>", "Instance", "terraform_automate_<%=randomId%>_chef_automate_01" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_02" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_03" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_04" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_05" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_06" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_07" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_08" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_09" ]
+                ]
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 6,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "view": "timeSeries",
+                "stacked": false,
+                "metrics": [
+                    [ "AWS/EC2", "TotalRecordsPerMinute", "TestId", "<%=testId%>", "Instance", "terraform_automate_<%=randomId%>_chef_automate_01", { "stat": "Average" } ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_02", { "stat": "Average" } ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_03", { "stat": "Average" } ]
+                ],
+                "region": "<%=AWS_REGION%>",
+                "period": 300,
+                "title": "Documents Ingested Per Minute"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 12,
+            "y": 24,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "view": "timeSeries",
+                "stacked": false,
+                "metrics": [
+                    [ "AWS/EC2", "ClusterNumberOfNodes", "TestId", "<%=testId%>", "Instance", "terraform_automate_<%=randomId%>_chef_automate_01" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_02" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_03" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_04" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_05" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_06" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_07" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_08" ],
+                    [ "...", "terraform_automate_<%=randomId%>_chef_automate_09" ]
+                ],
+                "region": "<%=AWS_REGION%>",
+                "title": "Number of ES Nodes in Cluster"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 18,
+            "y": 18,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "view": "timeSeries",
+                "stacked": false,
+                "metrics": [
+                    [ "AWS/EC2", "ClusterActiveShards", "TestId", "<%=testId%>", "Instance", "terraform_automate_<%=randomId%>_chef_automate_01" ],
+                    [ ".", "ClusterInitializingShards", ".", ".", ".", "." ],
+                    [ ".", "ClusterRelocatingShards", ".", ".", ".", "." ],
+                    [ ".", "ClusterDelayedUnassignedShards", ".", ".", ".", "." ],
+                    [ ".", "ClusterUnassignedShards", ".", ".", ".", "." ],
+                    [ ".", "ClusterNumberOfPendingTasks", ".", ".", ".", "." ],
+                    [ ".", "ClusterActivePrimaryShards", ".", ".", ".", "." ]
+                ],
+                "region": "<%=AWS_REGION%>",
+                "title": "ES Shard Health",
+                "period": 300
+            }
+        }
+    ]
+}

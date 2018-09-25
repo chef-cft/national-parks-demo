@@ -1,0 +1,29 @@
+I, [2018-05-20T20:29:43.133091 #87675]  INFO -- Kitchen: -----> Starting Kitchen (v1.21.2)
+E, [2018-05-20T20:29:43.133549 #87675] ERROR -- Kitchen: ------Exception-------
+E, [2018-05-20T20:29:43.133583 #87675] ERROR -- Kitchen: Class: Kitchen::UserError
+E, [2018-05-20T20:29:43.133605 #87675] ERROR -- Kitchen: Message: Kitchen YAML file /Users/scottford/src/chefconf2018/terraform/aws/instances/.kitchen.yml does not exist.
+E, [2018-05-20T20:29:43.133625 #87675] ERROR -- Kitchen: ----------------------
+E, [2018-05-20T20:29:43.133643 #87675] ERROR -- Kitchen: ------Backtrace-------
+E, [2018-05-20T20:29:43.133689 #87675] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/2.5.0/gems/test-kitchen-1.21.2/lib/kitchen/loader/yaml.rb:65:in `read'
+E, [2018-05-20T20:29:43.133710 #87675] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/2.5.0/gems/test-kitchen-1.21.2/lib/kitchen/config.rb:152:in `data'
+E, [2018-05-20T20:29:43.133729 #87675] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/2.5.0/gems/test-kitchen-1.21.2/lib/kitchen/config.rb:131:in `suites'
+E, [2018-05-20T20:29:43.133747 #87675] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/2.5.0/gems/test-kitchen-1.21.2/lib/kitchen/config.rb:182:in `filter_instances'
+E, [2018-05-20T20:29:43.133765 #87675] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/2.5.0/gems/test-kitchen-1.21.2/lib/kitchen/config.rb:141:in `build_instances'
+E, [2018-05-20T20:29:43.133783 #87675] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/2.5.0/gems/test-kitchen-1.21.2/lib/kitchen/config.rb:117:in `instances'
+E, [2018-05-20T20:29:43.133801 #87675] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/2.5.0/gems/test-kitchen-1.21.2/lib/kitchen/command.rb:112:in `filtered_instances'
+E, [2018-05-20T20:29:43.133819 #87675] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/2.5.0/gems/test-kitchen-1.21.2/lib/kitchen/command.rb:142:in `parse_subcommand'
+E, [2018-05-20T20:29:43.133837 #87675] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/2.5.0/gems/test-kitchen-1.21.2/lib/kitchen/command/action.rb:35:in `block in call'
+E, [2018-05-20T20:29:43.133855 #87675] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/2.5.0/benchmark.rb:293:in `measure'
+E, [2018-05-20T20:29:43.133873 #87675] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/2.5.0/gems/test-kitchen-1.21.2/lib/kitchen/command/action.rb:34:in `call'
+E, [2018-05-20T20:29:43.133899 #87675] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/2.5.0/gems/test-kitchen-1.21.2/lib/kitchen/cli.rb:52:in `perform'
+E, [2018-05-20T20:29:43.133916 #87675] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/2.5.0/gems/test-kitchen-1.21.2/lib/kitchen/cli.rb:193:in `block (2 levels) in <class:CLI>'
+E, [2018-05-20T20:29:43.133933 #87675] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/2.5.0/gems/thor-0.20.0/lib/thor/command.rb:27:in `run'
+E, [2018-05-20T20:29:43.133950 #87675] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/2.5.0/gems/thor-0.20.0/lib/thor/invocation.rb:126:in `invoke_command'
+E, [2018-05-20T20:29:43.133968 #87675] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/2.5.0/gems/thor-0.20.0/lib/thor.rb:387:in `dispatch'
+E, [2018-05-20T20:29:43.133992 #87675] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/2.5.0/gems/thor-0.20.0/lib/thor/base.rb:466:in `start'
+E, [2018-05-20T20:29:43.134010 #87675] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/2.5.0/gems/test-kitchen-1.21.2/bin/kitchen:13:in `block in <top (required)>'
+E, [2018-05-20T20:29:43.134027 #87675] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/2.5.0/gems/test-kitchen-1.21.2/lib/kitchen/errors.rb:171:in `with_friendly_errors'
+E, [2018-05-20T20:29:43.134045 #87675] ERROR -- Kitchen: /opt/chef-workstation/embedded/lib/ruby/gems/2.5.0/gems/test-kitchen-1.21.2/bin/kitchen:13:in `<top (required)>'
+E, [2018-05-20T20:29:43.134062 #87675] ERROR -- Kitchen: /opt/chef-workstation/bin/kitchen:270:in `load'
+E, [2018-05-20T20:29:43.134096 #87675] ERROR -- Kitchen: /opt/chef-workstation/bin/kitchen:270:in `<main>'
+E, [2018-05-20T20:29:43.134123 #87675] ERROR -- Kitchen: ----End Backtrace-----
