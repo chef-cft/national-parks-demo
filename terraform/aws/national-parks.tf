@@ -1,4 +1,4 @@
-resource "aws_instance" "aws-linux-acceptance" {
+resource "aws_instance" "permanent_peer" {
   connection {
     user        = "${var.aws_centos_image_user}"
     private_key = "${file("${var.aws_key_pair_file}")}"
@@ -7,12 +7,12 @@ resource "aws_instance" "aws-linux-acceptance" {
   ami                         = "${data.aws_ami.centos.id}"
   instance_type               = "${var.test_server_instance_type}"
   key_name                    = "${var.aws_key_pair_name}"
-  subnet_id                   = "${var.subnet_id}"
-  vpc_security_group_ids      = ["${aws_security_group.base_linux.id}", "${aws_security_group.habitat_supervisor.id}"]
+  subnet_id                   = "${aws_subnet.national_parks_subnet.id}"
+  vpc_security_group_ids      = ["${aws_security_group.national_parks.id}", "${aws_security_group.habitat_supervisor.id}"]
   associate_public_ip_address = true
 
   tags {
-    Name          = "aws_amazon_acceptance_${random_id.instance_id.hex}"
+    Name          = "permanent_peer_${random_id.instance_id.hex}"
     X-Dept        = "${var.tag_dept}"
     X-Customer    = "${var.tag_customer}"
     X-Project     = "${var.tag_project}"
@@ -21,21 +21,11 @@ resource "aws_instance" "aws-linux-acceptance" {
     X-TTL         = "${var.tag_ttl}"
   }
 
-  provisioner "file" {
-    source      = "files/chef-base.toml"
-    destination = "/tmp/chef-base.toml"
-  }
-
-  provisioner "file" {
-    source      = "files/compliance.toml"
-    destination = "/tmp/compliance.toml"
-  }
-
   provisioner "remote-exec" {
     inline = [
       "sudo rm -rf /etc/machine-id",
       "sudo systemd-machine-id-setup",
-      "sudo hostname aws-linux-${var.dev_channel}",
+      "sudo hostname np-permanent-peer-${var.dev_channel}",
     ]
 
     connection {
@@ -47,19 +37,68 @@ resource "aws_instance" "aws-linux-acceptance" {
   }
 
   provisioner "habitat" {
+    permanent_peer = true
+    use_sudo     = true
+    service_type = "systemd"
+
+    connection {
+      host        = "${self.public_ip}"
+      type        = "ssh"
+      user        = "${var.aws_centos_image_user}"
+      private_key = "${file("${var.aws_key_pair_file}")}"
+    }
+  }
+}
+
+
+# Single Mongdb instance peered with the permanent peer
+resource "aws_instance" "mongodb" {
+  connection {
+    user        = "${var.aws_centos_image_user}"
+    private_key = "${file("${var.aws_key_pair_file}")}"
+  }
+
+  ami                         = "${data.aws_ami.centos.id}"
+  instance_type               = "${var.test_server_instance_type}"
+  key_name                    = "${var.aws_key_pair_name}"
+  subnet_id                   = "${aws_subnet.national_parks_subnet.id}"
+  vpc_security_group_ids      = ["${aws_security_group.national_parks.id}", "${aws_security_group.habitat_supervisor.id}"]
+  associate_public_ip_address = true
+
+  tags {
+    Name          = "np_mongodb_${random_id.instance_id.hex}"
+    X-Dept        = "${var.tag_dept}"
+    X-Customer    = "${var.tag_customer}"
+    X-Project     = "${var.tag_project}"
+    X-Application = "${var.tag_application}"
+    X-Contact     = "${var.tag_contact}"
+    X-TTL         = "${var.tag_ttl}"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo rm -rf /etc/machine-id",
+      "sudo systemd-machine-id-setup",
+      "sudo hostname np-mongodb-${var.prod_channel}",
+    ]
+
+    connection {
+      host        = "${self.public_ip}"
+      type        = "ssh"
+      user        = "${var.aws_centos_image_user}"
+      private_key = "${file("${var.aws_key_pair_file}")}"
+    }
+  }
+
+  provisioner "habitat" {
+    peer         = "${aws_instance.permanent_peer.public_ip}"
     use_sudo     = true
     service_type = "systemd"
 
     service {
-      name     = "scottford/chef-base"
-      channel  = "${var.dev_channel}"
-      strategy = "at-once"
-    }
-
-    service {
-      name     = "scottford/compliance"
-      channel  = "${var.dev_channel}"
-      strategy = "at-once"
+      name     = "core/mongodb"
+      channel  = "stable"
+      user_toml = "${file("files/mongo.toml")}"
     }
 
     connection {
@@ -71,7 +110,8 @@ resource "aws_instance" "aws-linux-acceptance" {
   }
 }
 
-resource "aws_instance" "aws-amazon-linux-production" {
+# Single Mongdb instance peered with the permanent peer
+resource "aws_instance" "national_parks" {
   connection {
     user        = "${var.aws_centos_image_user}"
     private_key = "${file("${var.aws_key_pair_file}")}"
@@ -80,12 +120,12 @@ resource "aws_instance" "aws-amazon-linux-production" {
   ami                         = "${data.aws_ami.centos.id}"
   instance_type               = "${var.test_server_instance_type}"
   key_name                    = "${var.aws_key_pair_name}"
-  subnet_id                   = "${var.subnet_id}"
-  vpc_security_group_ids      = ["${aws_security_group.base_linux.id}", "${aws_security_group.habitat_supervisor.id}"]
+  subnet_id                   = "${aws_subnet.national_parks_subnet.id}"
+  vpc_security_group_ids      = ["${aws_security_group.national_parks.id}", "${aws_security_group.habitat_supervisor.id}"]
   associate_public_ip_address = true
 
   tags {
-    Name          = "aws_amazon_linux_production_${random_id.instance_id.hex}"
+    Name          = "national_parks_${random_id.instance_id.hex}"
     X-Dept        = "${var.tag_dept}"
     X-Customer    = "${var.tag_customer}"
     X-Project     = "${var.tag_project}"
@@ -94,21 +134,11 @@ resource "aws_instance" "aws-amazon-linux-production" {
     X-TTL         = "${var.tag_ttl}"
   }
 
-  provisioner "file" {
-    source      = "files/chef-base.toml"
-    destination = "/tmp/chef-base.toml"
-  }
-
-  provisioner "file" {
-    source      = "files/compliance.toml"
-    destination = "/tmp/compliance.toml"
-  }
-
   provisioner "remote-exec" {
     inline = [
       "sudo rm -rf /etc/machine-id",
       "sudo systemd-machine-id-setup",
-      "sudo hostname aws-linux-${var.prod_channel}",
+      "sudo hostname national_parks-${var.prod_channel}",
     ]
 
     connection {
@@ -120,19 +150,75 @@ resource "aws_instance" "aws-amazon-linux-production" {
   }
 
   provisioner "habitat" {
+    peer         = "${aws_instance.permanent_peer.public_ip}"
     use_sudo     = true
     service_type = "systemd"
 
     service {
-      name     = "scottford/chef-base"
+      name     = "${var.origin}/national-parks"
       channel  = "${var.prod_channel}"
       strategy = "at-once"
+      binds    = ["database:mongodb.default"]
     }
 
+    connection {
+      host        = "${self.public_ip}"
+      type        = "ssh"
+      user        = "${var.aws_centos_image_user}"
+      private_key = "${file("${var.aws_key_pair_file}")}"
+    }
+  }
+}
+
+# Single Mongdb instance peered with the permanent peer
+resource "aws_instance" "national_parks" {
+  connection {
+    user        = "${var.aws_centos_image_user}"
+    private_key = "${file("${var.aws_key_pair_file}")}"
+  }
+
+  ami                         = "${data.aws_ami.centos.id}"
+  instance_type               = "${var.test_server_instance_type}"
+  key_name                    = "${var.aws_key_pair_name}"
+  subnet_id                   = "${aws_subnet.national_parks_subnet.id}"
+  vpc_security_group_ids      = ["${aws_security_group.national_parks.id}", "${aws_security_group.habitat_supervisor.id}"]
+  associate_public_ip_address = true
+
+  tags {
+    Name          = "national_parks_${random_id.instance_id.hex}"
+    X-Dept        = "${var.tag_dept}"
+    X-Customer    = "${var.tag_customer}"
+    X-Project     = "${var.tag_project}"
+    X-Application = "${var.tag_application}"
+    X-Contact     = "${var.tag_contact}"
+    X-TTL         = "${var.tag_ttl}"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo rm -rf /etc/machine-id",
+      "sudo systemd-machine-id-setup",
+      "sudo hostname haproxy_national_parks",
+    ]
+
+    connection {
+      host        = "${self.public_ip}"
+      type        = "ssh"
+      user        = "${var.aws_centos_image_user}"
+      private_key = "${file("${var.aws_key_pair_file}")}"
+    }
+  }
+
+  provisioner "habitat" {
+    peer         = "${aws_instance.permanent_peer.public_ip}"
+    use_sudo     = true
+    service_type = "systemd"
+
     service {
-      name     = "scottford/compliance"
-      channel  = "${var.prod_channel}"
-      strategy = "at-once"
+      name     = "core/haproxy"
+      channel  = "stable"
+      binds    = ["backend:national-parks.default"]
+      user_toml = "${file("files/haproxy.toml")}" 
     }
 
     connection {
