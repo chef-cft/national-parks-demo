@@ -97,3 +97,9 @@ variable "prod_channel" {
 variable "test_server_instance_type" {
   default = "m4.xlarge"
 }
+
+variable "count" {
+  default = "1"
+}
+
+variable "origin" {}

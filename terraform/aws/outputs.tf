@@ -1,7 +1,15 @@
-output "aws_linux_acceptance_public_ip" {
-  value = "${aws_instance.aws-linux-acceptance.public_ip}"
+output "permanent_peer_public_ip" {
+  value = "${aws_instance.permanent_peer.public_ip}"
 }
 
-output "aws_linux_production_public_ip" {
-  value = "${aws_instance.aws-amazon-linux-production.public_ip}"
+output "mongodb_public_ip" {
+  value = "${aws_instance.mongodb.public_ip}"
+}
+
+output "national_parks_public_ip" {
+  value = "${aws_instance.national_parks.public_ip}"
+}
+
+output "mongodb_public_ip" {
+  value = "${aws_instance.haproxy.public_ip}"
 }
