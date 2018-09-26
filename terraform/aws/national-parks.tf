@@ -171,7 +171,7 @@ resource "aws_instance" "national_parks" {
 }
 
 # Single Mongdb instance peered with the permanent peer
-resource "aws_instance" "national_parks" {
+resource "aws_instance" "haproxy" {
   connection {
     user        = "${var.aws_centos_image_user}"
     private_key = "${file("${var.aws_key_pair_file}")}"
@@ -185,7 +185,7 @@ resource "aws_instance" "national_parks" {
   associate_public_ip_address = true
 
   tags {
-    Name          = "national_parks_${random_id.instance_id.hex}"
+    Name          = "haproxy_${random_id.instance_id.hex}"
     X-Dept        = "${var.tag_dept}"
     X-Customer    = "${var.tag_customer}"
     X-Project     = "${var.tag_project}"
