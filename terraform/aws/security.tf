@@ -1,23 +1,7 @@
-resource "aws_security_group" "base_linux" {
-  name        = "base_linux_${random_id.instance_id.hex}"
-  description = "base security rules for all linux nodes"
-  vpc_id      = "${var.vpc_id}"
-
-  tags {
-    Name          = "${var.tag_customer}-${var.tag_project}_${random_id.instance_id.hex}_${var.tag_application}_security_group"
-    X-Dept        = "${var.tag_dept}"
-    X-Customer    = "${var.tag_customer}"
-    X-Project     = "${var.tag_project}"
-    X-Application = "${var.tag_application}"
-    X-Contact     = "${var.tag_contact}"
-    X-TTL         = "${var.tag_ttl}"
-  }
-}
-
-resource "aws_security_group" "base_windows" {
-  name        = "base_windows_${random_id.instance_id.hex}"
-  description = "base security rules for all windows nodes"
-  vpc_id      = "${var.vpc_id}"
+resource "aws_security_group" "national_parks" {
+  name        = "national_parks_${random_id.instance_id.hex}"
+  description = "base rules for national parks demo"
+  vpc_id      = "${aws_vpc.national_parks_vpc.id}"
 
   tags {
     Name          = "${var.tag_customer}-${var.tag_project}_${random_id.instance_id.hex}_${var.tag_application}_security_group"
@@ -32,8 +16,8 @@ resource "aws_security_group" "base_windows" {
 
 resource "aws_security_group" "habitat_supervisor" {
   name        = "habitat_supervisor_${random_id.instance_id.hex}"
-  description = "Security rules for the Habitat supervisor"
-  vpc_id      = "${var.vpc_id}"
+  description = "SG rules to allow Habitat supervisor to communicate privately"
+  vpc_id      = "${aws_vpc.national_parks_vpc.id}"
 
   tags {
     Name          = "${var.tag_customer}-${var.tag_project}_${random_id.instance_id.hex}_${var.tag_application}_security_group"
@@ -47,23 +31,32 @@ resource "aws_security_group" "habitat_supervisor" {
 }
 
 //////////////////////////
-// Base Linux Rules
+// National Parks SG Rules 
 resource "aws_security_group_rule" "ingress_allow_22_tcp_all" {
   type              = "ingress"
   from_port         = 22
   to_port           = 22
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = "${aws_security_group.base_linux.id}"
+  security_group_id = "${aws_security_group.national_parks.id}"
 }
 
 resource "aws_security_group_rule" "ingress_allow_8080_tcp_all" {
   type              = "ingress"
   from_port         = 8080
-  to_port           = 8080
+  to_port           = 8085
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = "${aws_security_group.base_linux.id}"
+  security_group_id = "${aws_security_group.national_parks.id}"
+}
+
+resource "aws_security_group_rule" "ingress_allow_8000_tcp_all" {
+  type              = "ingress"
+  from_port         = 8000
+  to_port           = 8000
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = "${aws_security_group.national_parks.id}"
 }
 
 resource "aws_security_group_rule" "ingress_allow_9631_tcp_all" {
@@ -72,29 +65,7 @@ resource "aws_security_group_rule" "ingress_allow_9631_tcp_all" {
   to_port           = 9631
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = "${aws_security_group.base_linux.id}"
-}
-
-//////////////////////////
-// Base Windows Rules
-# RDP - all
-resource "aws_security_group_rule" "ingress_rdp_all" {
-  type              = "ingress"
-  from_port         = 3389
-  to_port           = 3389
-  protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = "${aws_security_group.base_windows.id}"
-}
-
-# WinRM - all
-resource "aws_security_group_rule" "ingress_winrm_all" {
-  type              = "ingress"
-  from_port         = 5985
-  to_port           = 5986
-  protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = "${aws_security_group.base_windows.id}"
+  security_group_id = "${aws_security_group.national_parks.id}"
 }
 
 /////////////////////////
@@ -146,14 +117,5 @@ resource "aws_security_group_rule" "linux_egress_allow_0-65535_all" {
   to_port           = 0
   protocol          = "-1"
   cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = "${aws_security_group.base_linux.id}"
-}
-
-resource "aws_security_group_rule" "windows_egress_allow_0-65535_all" {
-  type              = "egress"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = "${aws_security_group.base_windows.id}"
+  security_group_id = "${aws_security_group.national_parks.id}"
 }
