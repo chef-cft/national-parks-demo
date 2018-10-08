@@ -10,6 +10,6 @@ output "national_parks_public_ip" {
   value = "${aws_instance.national_parks.public_ip}"
 }
 
-output "mongodb_public_ip" {
+output "haproxy_public_ip" {
   value = "${aws_instance.haproxy.public_ip}"
 }
