@@ -25,7 +25,7 @@ resource "aws_instance" "permanent_peer" {
     inline = [
       "sudo rm -rf /etc/machine-id",
       "sudo systemd-machine-id-setup",
-      "sudo hostname np-permanent-peer-${var.dev_channel}",
+      "sudo hostname np-permanent-peer",
     ]
 
     connection {
@@ -91,7 +91,7 @@ resource "aws_instance" "mongodb" {
   }
 
   provisioner "habitat" {
-    peer         = "${aws_instance.permanent_peer.public_ip}"
+    peer         = "${aws_instance.permanent_peer.private_ip}"
     use_sudo     = true
     service_type = "systemd"
 
@@ -110,7 +110,7 @@ resource "aws_instance" "mongodb" {
   }
 }
 
-# Single Mongdb instance peered with the permanent peer
+# National Parks instances peered with the permanent peer and binded to mongodb instance
 resource "aws_instance" "national_parks" {
   connection {
     user        = "${var.aws_centos_image_user}"
@@ -138,7 +138,7 @@ resource "aws_instance" "national_parks" {
     inline = [
       "sudo rm -rf /etc/machine-id",
       "sudo systemd-machine-id-setup",
-      "sudo hostname national_parks-${var.prod_channel}",
+      "sudo hostname national-parks-${var.count}",
     ]
 
     connection {
@@ -150,7 +150,7 @@ resource "aws_instance" "national_parks" {
   }
 
   provisioner "habitat" {
-    peer         = "${aws_instance.permanent_peer.public_ip}"
+    peer         = "${aws_instance.permanent_peer.private_ip}"
     use_sudo     = true
     service_type = "systemd"
 
@@ -170,7 +170,7 @@ resource "aws_instance" "national_parks" {
   }
 }
 
-# Single Mongdb instance peered with the permanent peer
+# HAProxy instance peered with permanent peer and binded to the national-parks instance
 resource "aws_instance" "haproxy" {
   connection {
     user        = "${var.aws_centos_image_user}"
@@ -198,7 +198,7 @@ resource "aws_instance" "haproxy" {
     inline = [
       "sudo rm -rf /etc/machine-id",
       "sudo systemd-machine-id-setup",
-      "sudo hostname haproxy_national_parks",
+      "sudo hostname haproxy-national-parks",
     ]
 
     connection {
@@ -210,7 +210,7 @@ resource "aws_instance" "haproxy" {
   }
 
   provisioner "habitat" {
-    peer         = "${aws_instance.permanent_peer.public_ip}"
+    peer         = "${aws_instance.permanent_peer.private_ip}"
     use_sudo     = true
     service_type = "systemd"
 

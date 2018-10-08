@@ -1,9 +1,7 @@
 ////////////////////////////////
 // AWS Connection
 
-variable "aws_profile" {
-  default = "default"
-}
+variable "aws_profile" {}
 
 variable "aws_region" {
   default = "us-west-2"
@@ -27,41 +25,25 @@ variable "aws_amazon_image_user" {
 ////////////////////////////////
 // Tags
 
-variable "tag_customer" {
-  default = "chefconf2018"
-}
+variable "tag_customer" {}
 
-variable "tag_project" {
-  default = "chefconf2018"
-}
+variable "tag_project" {}
 
-variable "tag_name" {
-  default = "chefconf2018"
-}
+variable "tag_name" {}
 
-variable "tag_dept" {
-  default = "scottford"
-}
+variable "tag_dept" {}
 
-variable "tag_contact" {
-  default = "scott@scottford.io"
-}
+variable "tag_contact" {}
 
-variable "tag_application" {
-  default = "chefconfdemo"
-}
+variable "tag_application" {}
 
 variable "tag_ttl" {
   default = 3600
 }
 
-variable "aws_key_pair_file" {
-  default = "~/.ssh/scottford"
-}
+variable "aws_key_pair_file" {}
 
-variable "aws_key_pair_name" {
-  default = "scottford"
-}
+variable "aws_key_pair_name" {}
 
 variable "automate_server_instance_type" {
   default = "m4.xlarge"
