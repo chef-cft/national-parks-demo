@@ -119,3 +119,22 @@ resource "aws_security_group_rule" "linux_egress_allow_0-65535_all" {
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = "${aws_security_group.national_parks.id}"
 }
+
+# MongoDB
+resource "aws_security_group_rule" "ingress_allow_27017_tcp" {
+  type                     = "ingress"
+  from_port                = 27017
+  to_port                  = 27018
+  protocol                 = "tcp"
+  security_group_id        = "${aws_security_group.habitat_supervisor.id}"
+  source_security_group_id = "${aws_security_group.habitat_supervisor.id}"
+}
+
+resource "aws_security_group_rule" "ingress_allow_8080_8085_tcp" {
+  type                     = "ingress"
+  from_port                = 8080
+  to_port                  = 8085
+  protocol                 = "tcp"
+  security_group_id        = "${aws_security_group.habitat_supervisor.id}"
+  source_security_group_id = "${aws_security_group.habitat_supervisor.id}"
+}
