@@ -123,6 +123,7 @@ resource "aws_instance" "national_parks" {
   subnet_id                   = "${aws_subnet.national_parks_subnet.id}"
   vpc_security_group_ids      = ["${aws_security_group.national_parks.id}", "${aws_security_group.habitat_supervisor.id}"]
   associate_public_ip_address = true
+  count                       = "${var.count}"
 
   tags {
     Name          = "national_parks_${random_id.instance_id.hex}"
