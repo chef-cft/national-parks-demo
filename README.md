@@ -8,6 +8,36 @@ This is an example Java Tomcat application packaged by [Habitat](https://habitat
 ## Usage
 In order run this repo, you must first install Habitat. You can find setup docs on the [Habitat Website](https://www.habitat.sh/docs/install-habitat/).
 
+### Build/Test National-Parks App:
+1. Clone this repo: `git clone https://github.com/smford22/national-parks-demo.git`
+2. `cd national-parks-demo`
+3. `export HAB_DOCKER_OPTS='-p 8000:8000 -p 8080:8080 -p 8085:8085 -p 9631:9631 '`
+4. `hab studio enter`
+5. `build`
+6. `source results/last_build.env`
+7. `hab svc load core/mongodb`
+8. `hab config apply mongodb.default $(date +%s) mongodb.toml`
+9. `hab svc load $pkg_ident --bind database:mongodb.default`
+10. `hab svc load core/haproxy --bind backend:national-parks.default`
+11. `hab config apply haproxy.default $(date +%s) haproxy.toml`
+12. `sup-log` will allow you to see the output of the supervisor
+
+You should now be able to hit the front end of the national-parks site as follows:
+
+Directly - http://localhost:8080/national-parks
+Proxy - http://localhost:8085/national-parks
+
+You can also view the admin console for HAProxy to see how the webserver was added dynamically to the load balancer:
+
+http://localhost:8000/haproxy-stats
+
+```
+username: admin
+password: password
+```
+
+
+
 
 ## Terraform
 Included in the repo is terraform code for launching the application in AWS. You will need to have an [AWS account already created](https://aws.amazon.com), and install [Terraform](https://www.terraform.io/intro/getting-started/install.html).
