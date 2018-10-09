@@ -24,9 +24,8 @@ In order run this repo, you must first install Habitat. You can find setup docs 
 
 You should now be able to hit the front end of the national-parks site as follows:
 
-Directly - http://localhost:8080/national-parks  
-
-Proxy - http://localhost:8085/national-parks
+- Directly - http://localhost:8080/national-parks  
+- Proxy - http://localhost:8085/national-parks
 
 You can also view the admin console for HAProxy to see how the webserver was added dynamically to the load balancer:
 
