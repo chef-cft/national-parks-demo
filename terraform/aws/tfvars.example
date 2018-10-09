@@ -1,0 +1,21 @@
+origin = "scottford"
+
+aws_profile = "chefsa"
+
+aws_key_pair_file = "~/.ssh/scottford"
+
+aws_key_pair_name = "scottford"
+
+tag_customer = "testing"
+
+tag_project = "hab_demos"
+
+tag_name = "scottford"
+
+tag_dept = "sales"
+
+tag_contact = "sford@chef.io"
+
+tag_application = "national_parks"
+
+count = "1"
