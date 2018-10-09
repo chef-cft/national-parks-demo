@@ -24,7 +24,8 @@ In order run this repo, you must first install Habitat. You can find setup docs 
 
 You should now be able to hit the front end of the national-parks site as follows:
 
-Directly - http://localhost:8080/national-parks
+Directly - http://localhost:8080/national-parks  
+
 Proxy - http://localhost:8085/national-parks
 
 You can also view the admin console for HAProxy to see how the webserver was added dynamically to the load balancer:
@@ -36,10 +37,22 @@ username: admin
 password: password
 ```
 
+### Build a new version of the application
+There is also an `index.html` file in the root of the repo that updates the map of the National-Parks app to use red pins and colored map. This can be used to demonstrate the package promotion capabilities of Habitat. 
 
+1. create a new feature branch - `git checkout -b update_homepage`
+2. Bump the `pkg_version` in `habitat/plan.sh`
+3. Overwrite `src/main/webapp/index.html` with the contents of the `index.html` in the root directory _NOTE: the index.html has a version number hard coded on line 38. Update that to your version number if you want it to match.
+4. `hab studio enter` 
+5. `build`
 
 
 ## Terraform
 Included in the repo is terraform code for launching the application in AWS. You will need to have an [AWS account already created](https://aws.amazon.com), and install [Terraform](https://www.terraform.io/intro/getting-started/install.html).
 
-Once the prereqs have been taken care...
+### Proivision in AWS
+1. `cd terraform/aws`
+2. `cp tfvars.example terraform.tfvars`
+3. edit `terraform.tfvars` with your own values
+4. `terraform apply`
+
