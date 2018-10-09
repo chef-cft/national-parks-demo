@@ -6,8 +6,10 @@ This is an example Java Tomcat application packaged by [Habitat](https://habitat
 
 
 ## Usage
-In order run the 
+In order run this repo, you must first install Habitat. You can find setup docs on the [Habitat Website](https://www.habitat.sh/docs/install-habitat/).
 
 
 ## Terraform
-Included in the repo is terraform code for launching the application in AWS. 
+Included in the repo is terraform code for launching the application in AWS. You will need to have an [AWS account already created](https://aws.amazon.com), and install [Terraform](https://www.terraform.io/intro/getting-started/install.html).
+
+Once the prereqs have been taken care...
