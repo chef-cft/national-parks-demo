@@ -1,0 +1,19 @@
+gke_project = "national-parks-kube"
+
+gke_credentials_file = "/Users/scottford/national-parks-kube-148d217b554e.json"
+
+habitat_origin = "scottford"
+
+tag_contact = "sford@chef.io"
+
+tag_dept = "sales"
+
+tag_customer = "slalom"
+
+tag_project = "hab"
+
+gke_basic_username = "admin"
+
+gke_basic_password = "sH9YrjoTBDFHYhV4"
+
+gke_region = "us-west1"
