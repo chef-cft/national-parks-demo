@@ -47,11 +47,32 @@ There is also an `index.html` file in the root of the repo that updates the map 
 
 
 ## Terraform
-Included in the repo is terraform code for launching the application in AWS. You will need to have an [AWS account already created](https://aws.amazon.com), and install [Terraform](https://www.terraform.io/intro/getting-started/install.html).
+Included in the repo is terraform code for launching the application in AWS and Google Kubernetes Engine. Provision either AWS, GKE, or both, and then you can watch Habitat update across cloud deployments. 
 
-### Proivision in AWS
+[Terraform](https://www.terraform.io/intro/getting-started/install.html).
+
+### Proivision National-Parks in AWS
+You will need to have an [AWS account already created](https://aws.amazon.com)
+
+#### Step
 1. `cd terraform/aws`
 2. `cp tfvars.example terraform.tfvars`
 3. edit `terraform.tfvars` with your own values
 4. `terraform apply`
 
+### Deploy National-Parks in Google Kubernetes Engine
+You will need to have an [Google Cloud account already created](https://console.cloud.google.com/), and install the [Google Cloud SDK](https://cloud.google.com/sdk/)
+
+#### Before you begin
+- `git clone https://github.com/habitat-sh/habitat-operator`
+- `git clone https://github.com/habitat-sh/habitat-updater`
+- create a `terraform.tfvars` 
+
+#### Provision Kubernetes
+1. `cd terraform/gke`
+2. `terraform apply`
+3. When provisioning completes you will see two commands you need to run:
+
+   - `1_creds_command = gcloud container clusters get-credentials...`
+   - `2_admin_permissions = kubectl create clusterrolebinding cluster-admin-binding`
+4. 
