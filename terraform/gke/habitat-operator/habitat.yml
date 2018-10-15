@@ -16,7 +16,8 @@ metadata:
 customVersion: v1beta2
 spec:
   v1beta2:
-    image: habitat/mongodb
+    # Make sure to update with your own origin and that you have published to Docker Hub
+    image: scottford/mongodb
     count: 1
     service:
       name: mongodb
@@ -33,6 +34,7 @@ metadata:
 customVersion: v1beta2
 spec:
   v1beta2:
+    # Make sure to update with your own origin and that you have published to Docker Hub
     image: scottford/national-parks
     count: 1
     service:
