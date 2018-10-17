@@ -46,13 +46,55 @@ There is also an `index.html` file in the root of the repo that updates the map 
 
 
 ## Terraform
-Included in the repo is terraform code for launching the application in AWS. You will need to have an [AWS account already created](https://aws.amazon.com), and install [Terraform](https://www.terraform.io/intro/getting-started/install.html).
+Included in the repo is terraform code for launching the application in AWS and Google Kubernetes Engine. Provision either AWS, GKE, or both, and then you can watch Habitat update across cloud deployments. 
 
-### Proivision in AWS
+[Terraform](https://www.terraform.io/intro/getting-started/install.html).
+
+### Proivision National-Parks in AWS
+You will need to have an [AWS account already created](https://aws.amazon.com)
+
+#### Step
 1. `cd terraform/aws`
 2. `cp tfvars.example terraform.tfvars`
 3. edit `terraform.tfvars` with your own values
 4. `terraform apply`
 
-This is a simple change
+
+
+### Deploy National-Parks in Google Kubernetes Engine
+You will need to have an [Google Cloud account already created](https://console.cloud.google.com/), and install the [Google Cloud SDK](https://cloud.google.com/sdk/)
+
+#### Before you begin
+- `git clone https://github.com/habitat-sh/habitat-operator`
+- `git clone https://github.com/habitat-sh/habitat-updater`
+- create a `terraform.tfvars` 
+
+#### Provision Kubernetes
+1. `cd terraform/gke`
+2. `terraform apply`
+3. When provisioning completes you will see two commands you need to run:
+
+   - `1_creds_command = gcloud container clusters get-credentials...`
+   - `2_admin_permissions = kubectl create clusterrolebinding cluster-admin-binding...`
+
+#### Deploy Habitat Operator and Habitat Updater
+First we need to deploy the Habitat Operator
+1. `git clone https://github.com/habitat-sh/habitat-operator`
+2. `cd habitat-operator`
+3. `kubectl apply -f examples/rbac/rbac.yml`
+4. `kubectl apply -f examples/rbac/habitat-operator.yml`
+
+Now we can deploy the Habitat Updater
+1. `git clone https://github.com/habitat-sh/habitat-updater`
+2. `cd habitat-updater`
+3. `kubectl apply -f kubernetes/rbac/rbac.yml`
+4. `kubectl apply -f kubernetes/rbac/updater.yml`
+
+#### Deploy National-Parks into Kubernetes
+Now that we have k8s stood up and the Habitat Operator and Updater deployed we are are ready to deploy our app.
+1. `cd national-parks-demo/terraform/gke/habitat-operator`
+2. Deploy the GKE load balancer: `kubectl create -f gke-service.yml`
+3. Next, edit the `habitat.yml` template with the proper origin names on lines 19 and 36
+4. Deploy the application: `kubectl create -f habitat.yml`
+
 
