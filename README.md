@@ -74,5 +74,27 @@ You will need to have an [Google Cloud account already created](https://console.
 3. When provisioning completes you will see two commands you need to run:
 
    - `1_creds_command = gcloud container clusters get-credentials...`
-   - `2_admin_permissions = kubectl create clusterrolebinding cluster-admin-binding`
-4. 
+   - `2_admin_permissions = kubectl create clusterrolebinding cluster-admin-binding...`
+
+#### Deploy Habitat Operator and Habitat Updater
+First we need to deploy the Habitat Operator
+1. `git clone https://github.com/habitat-sh/habitat-operator`
+2. `cd habitat-operator`
+3. `kubectl apply -f examples/rbac/rbac.yml`
+4. `kubectl apply -f examples/rbac/habitat-operator.yml`
+
+Now we can deploy the Habitat Updater
+1. `git clone https://github.com/habitat-sh/habitat-updater`
+2. `cd habitat-updater`
+3. `kubectl apply -f kubernetes/rbac/rbac.yml`
+4. `kubectl apply -f kubernetes/rbac/updater.yml`
+
+#### Deploy National-Parks into Kubernetes
+Now that we have k8s stood up and the Habitat Operator and Updater deployed we are are ready to deploy our app.
+1. `cd national-parks-demo/terraform/gke/habitat-operator`
+2. Deploy the GKE load balancer: `kubectl create -f gke-service.yml`
+3. Next, edit the `habitat.yml` template with the proper origin names on lines 19 and 36
+4. Deploy the application: `kubectl create -f habitat.yml`
+
+
+
