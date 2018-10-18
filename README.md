@@ -8,7 +8,8 @@ This is an example Java Tomcat application packaged by [Habitat](https://habitat
 ## Usage
 In order run this repo, you must first install Habitat. You can find setup docs on the [Habitat Website](https://www.habitat.sh/docs/install-habitat/).
 
-### Build/Test National-Parks App:
+### Build/Test National-Parks App: 
+
 1. Clone this repo: `git clone https://github.com/smford22/national-parks-demo.git`
 2. `cd national-parks-demo`
 3. `export HAB_DOCKER_OPTS='-p 8000:8000 -p 8080:8080 -p 8085:8085 -p 9631:9631 '`
