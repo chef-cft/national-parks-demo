@@ -8,7 +8,7 @@ This is an example Java Tomcat application packaged by [Habitat](https://habitat
 ## Usage
 In order run this repo, you must first install Habitat. You can find setup docs on the [Habitat Website](https://www.habitat.sh/docs/install-habitat/).
 
-### Build/Test National-Parks App: 
+## Build/Test National-Parks App Locally: 
 
 1. Clone this repo: `git clone https://github.com/smford22/national-parks-demo.git`
 2. `cd national-parks-demo`
@@ -62,16 +62,15 @@ You will need to have an [AWS account already created](https://aws.amazon.com)
 4. `terraform apply`
 
 
-
-### Deploy National-Parks in Google Kubernetes Engine
+## Deploy National-Parks in Google Kubernetes Engine
 You will need to have an [Google Cloud account already created](https://console.cloud.google.com/), and install the [Google Cloud SDK](https://cloud.google.com/sdk/)
 
-#### Before you begin
+### Before you begin
 - `git clone https://github.com/habitat-sh/habitat-operator`
 - `git clone https://github.com/habitat-sh/habitat-updater`
 - create a `terraform.tfvars` 
 
-#### Provision Kubernetes
+### Provision Kubernetes
 1. `cd terraform/gke`
 2. `terraform apply`
 3. When provisioning completes you will see two commands you need to run:
@@ -79,7 +78,7 @@ You will need to have an [Google Cloud account already created](https://console.
    - `1_creds_command = gcloud container clusters get-credentials...`
    - `2_admin_permissions = kubectl create clusterrolebinding cluster-admin-binding...`
 
-#### Deploy Habitat Operator and Habitat Updater
+### Deploy Habitat Operator and Habitat Updater
 First we need to deploy the Habitat Operator
 1. `git clone https://github.com/habitat-sh/habitat-operator`
 2. `cd habitat-operator`
@@ -92,7 +91,7 @@ Now we can deploy the Habitat Updater
 3. `kubectl apply -f kubernetes/rbac/rbac.yml`
 4. `kubectl apply -f kubernetes/rbac/updater.yml`
 
-#### Deploy National-Parks into Kubernetes
+### Deploy National-Parks into Kubernetes
 Now that we have k8s stood up and the Habitat Operator and Updater deployed we are are ready to deploy our app.
 1. `cd national-parks-demo/terraform/gke/habitat-operator`
 2. Deploy the GKE load balancer: `kubectl create -f gke-service.yml`
