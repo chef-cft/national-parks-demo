@@ -61,6 +61,8 @@ You will need to have an [AWS account already created](https://aws.amazon.com)
 3. edit `terraform.tfvars` with your own values
 4. `terraform apply`
 
+
+
 ### Deploy National-Parks in Google Kubernetes Engine
 You will need to have an [Google Cloud account already created](https://console.cloud.google.com/), and install the [Google Cloud SDK](https://cloud.google.com/sdk/)
 
@@ -96,6 +98,5 @@ Now that we have k8s stood up and the Habitat Operator and Updater deployed we a
 2. Deploy the GKE load balancer: `kubectl create -f gke-service.yml`
 3. Next, edit the `habitat.yml` template with the proper origin names on lines 19 and 36
 4. Deploy the application: `kubectl create -f habitat.yml`
-
 
 
