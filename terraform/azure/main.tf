@@ -49,6 +49,7 @@ resource "azurerm_subnet" "subnet" {
 }
 
 # Create public IPs
+
 resource "azurerm_public_ip" "pip" {
   name                         = "${var.tag_name}-${var.application}-pip-${count.index}"
   location                     = "${var.azure_region}"
@@ -243,8 +244,8 @@ resource "azurerm_storage_container" "storcont" {
 
 //////INSTANCES///////
 //////////////////////
-resource "azurerm_virtual_machine" "initial-peer" {
-  name                  = "${var.tag_name}-${var.application}-initialpeer"
+resource "azurerm_virtual_machine" "permanent-peer" {
+  name                  = "${var.tag_name}-${var.application}-permanent-peer"
   location              = "${var.azure_region}"
   resource_group_name   = "${azurerm_resource_group.rg.name}"
   network_interface_ids = ["${azurerm_network_interface.nic.0.id}"]
@@ -259,14 +260,14 @@ resource "azurerm_virtual_machine" "initial-peer" {
   }
 
   storage_os_disk {
-    name          = "${var.tag_name}-${var.application}-initialpeer-osdisk"
-    vhd_uri       = "${azurerm_storage_account.stor.primary_blob_endpoint}${azurerm_storage_container.storcont.name}/${var.application}-initialpeer-osdisk.vhd"
+    name          = "${var.tag_name}-${var.application}-permanent-peer-osdisk"
+    vhd_uri       = "${azurerm_storage_account.stor.primary_blob_endpoint}${azurerm_storage_container.storcont.name}/${var.application}-permanent-peer-osdisk.vhd"
     caching       = "ReadWrite"
     create_option = "FromImage"
   }
 
   os_profile {
-    computer_name  = "${var.tag_name}-${var.application}-initialpeer"
+    computer_name  = "${var.tag_name}-${var.application}-permanent-peer"
     admin_username = "${var.azure_image_user}"
     admin_password = "${var.azure_image_password}"
   }
@@ -309,7 +310,7 @@ resource "azurerm_virtual_machine" "initial-peer" {
 
 # Create mongodb instance
 resource "azurerm_virtual_machine" "mongodb" {
-  depends_on            = ["azurerm_virtual_machine.initial-peer"]
+  depends_on            = ["azurerm_network_interface.nic"]
   name                  = "${var.tag_name}-${var.application}-mongodb"
   location              = "${var.azure_region}"
   resource_group_name   = "${azurerm_resource_group.rg.name}"
@@ -359,6 +360,7 @@ resource "azurerm_virtual_machine" "mongodb" {
     service {
       name       = "core/mongodb"
       channel    = "stable"
+      group      = "${var.group}"
       user_toml  = "${file("files/mongo.toml")}"
     }
 
@@ -381,7 +383,8 @@ resource "azurerm_virtual_machine" "mongodb" {
 
 # Create web application instance
 resource "azurerm_virtual_machine" "app" {
-  depends_on            = ["azurerm_virtual_machine.mongodb"]
+  depends_on            = ["azurerm_network_interface.nic"]
+  #depends_on            = ["azurerm_virtual_machine.mongodb"]
   name                  = "${var.tag_name}-${var.application}-app"
   location              = "${var.azure_region}"
   resource_group_name   = "${azurerm_resource_group.rg.name}"
@@ -429,11 +432,11 @@ resource "azurerm_virtual_machine" "app" {
     service_type = "systemd"
 
     service {
-      binds    = ["database:mongodb.default"]
+      binds    = ["database:mongodb.${var.group}"]
       name     = "${var.habitat_origin}/national-parks"
       topology = "standalone"
       group    = "${var.group}"
-      channel  = "${var.release_channel}"
+      channel  = "${var.channel}"
       strategy = "${var.update_strategy}"
     }
 
@@ -456,7 +459,8 @@ resource "azurerm_virtual_machine" "app" {
 
 # Create HAProxy instance
 resource "azurerm_virtual_machine" "haproxy" {
-  depends_on            = ["azurerm_virtual_machine.app"]
+  depends_on            = ["azurerm_network_interface.nic"]
+  #depends_on            = ["azurerm_virtual_machine.app"]
   name                  = "${var.tag_name}-${var.application}-haproxy"
   location              = "${var.azure_region}"
   resource_group_name   = "${azurerm_resource_group.rg.name}"
@@ -504,10 +508,11 @@ resource "azurerm_virtual_machine" "haproxy" {
     service_type = "systemd"
 
     service {
-      binds       = ["backend:national-parks.default"]
+      binds       = ["backend:national-parks.${var.group}"]
       name        = "core/haproxy"
-      channel     = "stable"
       user_toml   = "${file("files/haproxy.toml")}" 
+      channel     = "stable"
+      group       = "${var.group}"
     }
 
     connection {
@@ -521,30 +526,21 @@ resource "azurerm_virtual_machine" "haproxy" {
     X-Dept        = "${var.tag_dept}"
     X-Customer    = "${var.tag_customer}"
     X-Project     = "${var.tag_project}"
-    X-Application = "${var.tag_application}"
+    X-Application = "${var.tag_application}" 
     X-Contact     = "${var.tag_contact}"
     X-TTL         = "${var.tag_ttl}"
   }
 }
 
-# Azure Public IP Data
-
-data "azurerm_public_ip" "permanent-peer" {
-  name = "${azurerm_public_ip.pip.0.name}"
+# Public IP Data
+data "azurerm_public_ip" "app" {
+  name                = "${azurerm_public_ip.pip.2.name}"
   resource_group_name = "${azurerm_resource_group.rg.name}"
-}
-
-data "azurerm_public_ip" "mongodb" {
-  name = "${azurerm_public_ip.pip.1.name}"
-  resource_group_name = "${azurerm_resource_group.rg.name}"
-}
-
-data "azurerm_public_ip" "national-parks" {
-  name = "${azurerm_public_ip.pip.2.name}"
-  resource_group_name = "${azurerm_resource_group.rg.name}"
+  depends_on          = ["azurerm_virtual_machine.app"]
 }
 
 data "azurerm_public_ip" "haproxy" {
-  name = "${azurerm_public_ip.pip.3.name}"
+  name                = "${azurerm_public_ip.pip.3.name}"
   resource_group_name = "${azurerm_resource_group.rg.name}"
+  depends_on          = ["azurerm_virtual_machine.haproxy"]
 }

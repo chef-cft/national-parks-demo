@@ -38,7 +38,7 @@ variable "bldr_url" {
   default = "https://bldr.habitat.sh"
 }
 
-variable "release_channel" {
+variable "channel" {
   default = "stable"
 }
 
@@ -68,3 +68,8 @@ variable "tag_application" {}
 variable "tag_ttl" {
   default = 3600
 }
+
+variable "count" {
+  default = 1
+}
+
