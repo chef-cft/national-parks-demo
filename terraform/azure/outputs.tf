@@ -1,18 +1,16 @@
-output "instance_ips" {
-  value = ["${azurerm_public_ip.pip.*.ip_address}"]
-}
-
-# output "national-parks-public-ip" {
-#   value = "${azurerm_public_ip.pip.2.ip_address}"
-# }
-# output "haproxy-public-ip" {
-#   value = "${azurerm_public_ip.pip.3.ip_address}"
-# }
-
-output "national-parks-public-ip" {
-  value = "${data.azurerm_public_ip.app.ip_address}"
-}
 
 output "haproxy-public-ip" {
-  value = "${data.azurerm_public_ip.haproxy.ip_address}"
+  value = "${azurerm_public_ip.haproxy-pip.ip_address}"
+}
+
+output "mongodb-public-ip" {
+  value = "${azurerm_public_ip.mongodb-pip.ip_address}"
+}
+
+output "permanent-peer-public-ip" {
+  value = "${azurerm_public_ip.permanent-peer-pip.ip_address}"
+}
+
+output "instance_ips" {
+  value = ["${azurerm_public_ip.pip.*.ip_address}"]
 }

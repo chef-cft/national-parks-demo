@@ -50,12 +50,60 @@ resource "azurerm_subnet" "subnet" {
 
 # Create public IPs
 
+resource "azurerm_public_ip" "permanent-peer-pip" {
+  name                         = "${var.tag_name}-${var.application}-permanent-peer-pip"
+  location                     = "${var.azure_region}"
+  resource_group_name          = "${azurerm_resource_group.rg.name}"
+  public_ip_address_allocation = "static"
+
+  tags {
+    X-Dept        = "${var.tag_dept}"
+    X-Customer    = "${var.tag_customer}"
+    X-Project     = "${var.tag_project}"
+    X-Application = "${var.tag_application}"
+    X-Contact     = "${var.tag_contact}"
+    X-TTL         = "${var.tag_ttl}"
+  }
+}
+
+resource "azurerm_public_ip" "mongodb-pip" {
+  name                         = "${var.tag_name}-${var.application}-mongodb-pip"
+  location                     = "${var.azure_region}"
+  resource_group_name          = "${azurerm_resource_group.rg.name}"
+  public_ip_address_allocation = "static"
+
+  tags {
+    X-Dept        = "${var.tag_dept}"
+    X-Customer    = "${var.tag_customer}"
+    X-Project     = "${var.tag_project}"
+    X-Application = "${var.tag_application}"
+    X-Contact     = "${var.tag_contact}"
+    X-TTL         = "${var.tag_ttl}"
+  }
+}
+
+resource "azurerm_public_ip" "haproxy-pip" {
+  name                         = "${var.tag_name}-${var.application}-haproxy-pip"
+  location                     = "${var.azure_region}"
+  resource_group_name          = "${azurerm_resource_group.rg.name}"
+  public_ip_address_allocation = "static"
+
+  tags {
+    X-Dept        = "${var.tag_dept}"
+    X-Customer    = "${var.tag_customer}"
+    X-Project     = "${var.tag_project}"
+    X-Application = "${var.tag_application}"
+    X-Contact     = "${var.tag_contact}"
+    X-TTL         = "${var.tag_ttl}"
+  }
+}
+
 resource "azurerm_public_ip" "pip" {
   name                         = "${var.tag_name}-${var.application}-pip-${count.index}"
   location                     = "${var.azure_region}"
   resource_group_name          = "${azurerm_resource_group.rg.name}"
   public_ip_address_allocation = "static"
-  count = 4
+  count                        = "${var.count}"
 
   tags {
     X-Dept        = "${var.tag_dept}"
@@ -180,12 +228,80 @@ resource "azurerm_network_security_group" "sg" {
 }
 
 # Create network interface
+resource "azurerm_network_interface" "permanent-peer-nic" {
+  name                      = "${var.tag_name}-${var.application}-permanent-peer-nic"
+  location                  = "${var.azure_region}"
+  resource_group_name       = "${azurerm_resource_group.rg.name}"
+  network_security_group_id = "${azurerm_network_security_group.sg.id}"
+
+  ip_configuration {
+    name                          = "permanent-peer-ipconfig"
+    subnet_id                     = "${azurerm_subnet.subnet.id}"
+    private_ip_address_allocation = "dynamic"
+    public_ip_address_id          = "${azurerm_public_ip.permanent-peer-pip.id}"
+  }
+
+  tags {
+    X-Dept        = "${var.tag_dept}"
+    X-Customer    = "${var.tag_customer}"
+    X-Project     = "${var.tag_project}"
+    X-Application = "${var.tag_application}"
+    X-Contact     = "${var.tag_contact}"
+    X-TTL         = "${var.tag_ttl}"
+  }
+}
+
+resource "azurerm_network_interface" "mongodb-nic" {
+  name                      = "${var.tag_name}-${var.application}-mongodb-nic"
+  location                  = "${var.azure_region}"
+  resource_group_name       = "${azurerm_resource_group.rg.name}"
+  network_security_group_id = "${azurerm_network_security_group.sg.id}"
+
+  ip_configuration {
+    name                          = "mongodb-ipconfig"
+    subnet_id                     = "${azurerm_subnet.subnet.id}"
+    private_ip_address_allocation = "dynamic"
+    public_ip_address_id          = "${azurerm_public_ip.mongodb-pip.id}"
+  }
+
+  tags {
+    X-Dept        = "${var.tag_dept}"
+    X-Customer    = "${var.tag_customer}"
+    X-Project     = "${var.tag_project}"
+    X-Application = "${var.tag_application}"
+    X-Contact     = "${var.tag_contact}"
+    X-TTL         = "${var.tag_ttl}"
+  }
+}
+
+resource "azurerm_network_interface" "haproxy-nic" {
+  name                      = "${var.tag_name}-${var.application}-haproxy-nic"
+  location                  = "${var.azure_region}"
+  resource_group_name       = "${azurerm_resource_group.rg.name}"
+  network_security_group_id = "${azurerm_network_security_group.sg.id}"
+
+  ip_configuration {
+    name                          = "haproxy-ipconfig"
+    subnet_id                     = "${azurerm_subnet.subnet.id}"
+    private_ip_address_allocation = "dynamic"
+    public_ip_address_id          = "${azurerm_public_ip.haproxy-pip.id}"
+  }
+
+  tags {
+    X-Dept        = "${var.tag_dept}"
+    X-Customer    = "${var.tag_customer}"
+    X-Project     = "${var.tag_project}"
+    X-Application = "${var.tag_application}"
+    X-Contact     = "${var.tag_contact}"
+    X-TTL         = "${var.tag_ttl}"
+  }
+}
 resource "azurerm_network_interface" "nic" {
   name                      = "${var.tag_name}-${var.application}-nic${count.index}"
   location                  = "${var.azure_region}"
   resource_group_name       = "${azurerm_resource_group.rg.name}"
   network_security_group_id = "${azurerm_network_security_group.sg.id}"
-  count = 4
+  count                     = "${var.count}"
 
   ip_configuration {
     name                          = "ipconfig${count.index}"
@@ -248,7 +364,7 @@ resource "azurerm_virtual_machine" "permanent-peer" {
   name                  = "${var.tag_name}-${var.application}-permanent-peer"
   location              = "${var.azure_region}"
   resource_group_name   = "${azurerm_resource_group.rg.name}"
-  network_interface_ids = ["${azurerm_network_interface.nic.0.id}"]
+  network_interface_ids = ["${azurerm_network_interface.permanent-peer-nic.id}"]
   vm_size               = "Standard_DS1_v2"
   delete_os_disk_on_termination = true
 
@@ -292,7 +408,7 @@ resource "azurerm_virtual_machine" "permanent-peer" {
     service_type   = "systemd"
 
     connection {
-      host        = "${azurerm_public_ip.pip.0.ip_address}"
+      host        = "${azurerm_public_ip.permanent-peer-pip.ip_address}"
       user        = "${var.azure_image_user}"
       password    = "${var.azure_image_password}"
     }
@@ -314,7 +430,7 @@ resource "azurerm_virtual_machine" "mongodb" {
   name                  = "${var.tag_name}-${var.application}-mongodb"
   location              = "${var.azure_region}"
   resource_group_name   = "${azurerm_resource_group.rg.name}"
-  network_interface_ids = ["${azurerm_network_interface.nic.1.id}"]
+  network_interface_ids = ["${azurerm_network_interface.mongodb-nic.id}"]
   vm_size               = "Standard_DS1_v2"
   delete_os_disk_on_termination = true
 
@@ -353,7 +469,7 @@ resource "azurerm_virtual_machine" "mongodb" {
   }
 
   provisioner "habitat" {
-    peer         = "${azurerm_public_ip.pip.0.ip_address}"
+    peer         = "${azurerm_public_ip.permanent-peer-pip.ip_address}"
     use_sudo     = true
     service_type = "systemd"
 
@@ -365,7 +481,7 @@ resource "azurerm_virtual_machine" "mongodb" {
     }
 
     connection {
-      host        = "${azurerm_public_ip.pip.1.ip_address}"
+      host        = "${azurerm_public_ip.mongodb-pip.ip_address}"
       user        = "${var.azure_image_user}"
       password    = "${var.azure_image_password}"
     }
@@ -384,13 +500,13 @@ resource "azurerm_virtual_machine" "mongodb" {
 # Create web application instance
 resource "azurerm_virtual_machine" "app" {
   depends_on            = ["azurerm_network_interface.nic"]
-  #depends_on            = ["azurerm_virtual_machine.mongodb"]
-  name                  = "${var.tag_name}-${var.application}-app"
+  name                  = "${var.tag_name}-${var.application}-app${count.index}"
   location              = "${var.azure_region}"
   resource_group_name   = "${azurerm_resource_group.rg.name}"
-  network_interface_ids = ["${azurerm_network_interface.nic.2.id}"]
+  network_interface_ids = ["${element(azurerm_network_interface.nic.*.id, count.index)}"]
   vm_size               = "Standard_DS1_v2"
   delete_os_disk_on_termination = true
+  count                 = "${var.count}"
 
   storage_image_reference {
     publisher = "Canonical"
@@ -400,14 +516,14 @@ resource "azurerm_virtual_machine" "app" {
   }
 
   storage_os_disk {
-    name          = "${var.tag_name}-${var.application}-app-osdisk"
-    vhd_uri       = "${azurerm_storage_account.stor.primary_blob_endpoint}${azurerm_storage_container.storcont.name}/${var.application}-app-osdisk.vhd"
+    name          = "${var.tag_name}-${var.application}-app${count.index}-osdisk"
+    vhd_uri       = "${azurerm_storage_account.stor.primary_blob_endpoint}${azurerm_storage_container.storcont.name}/${var.application}-app-osdisk${count.index}.vhd"
     caching       = "ReadWrite"
     create_option = "FromImage"
   }
 
   os_profile {
-    computer_name  = "${var.tag_name}-${var.application}-app"
+    computer_name  = "${var.tag_name}-${var.application}-app${count.index}"
     admin_username = "${var.azure_image_user}"
     admin_password = "${var.azure_image_password}"
   }
@@ -427,7 +543,7 @@ resource "azurerm_virtual_machine" "app" {
   }
 
   provisioner "habitat" {
-    peer         = "${azurerm_public_ip.pip.0.ip_address}"
+    peer         = "${azurerm_public_ip.permanent-peer-pip.ip_address}"
     use_sudo     = true
     service_type = "systemd"
 
@@ -441,7 +557,7 @@ resource "azurerm_virtual_machine" "app" {
     }
 
     connection {
-      host        = "${azurerm_public_ip.pip.2.ip_address}"
+      host        = "${element(azurerm_public_ip.pip.*.ip_address, count.index)}"
       user        = "${var.azure_image_user}"
       password    = "${var.azure_image_password}"
     }
@@ -464,7 +580,7 @@ resource "azurerm_virtual_machine" "haproxy" {
   name                  = "${var.tag_name}-${var.application}-haproxy"
   location              = "${var.azure_region}"
   resource_group_name   = "${azurerm_resource_group.rg.name}"
-  network_interface_ids = ["${azurerm_network_interface.nic.3.id}"]
+  network_interface_ids = ["${azurerm_network_interface.haproxy-nic.id}"]
   vm_size               = "Standard_DS1_v2"
   delete_os_disk_on_termination = true
 
@@ -503,7 +619,7 @@ resource "azurerm_virtual_machine" "haproxy" {
   }
 
   provisioner "habitat" {
-    peer         = "${azurerm_public_ip.pip.0.ip_address}"
+    peer         = "${azurerm_public_ip.permanent-peer-pip.ip_address}"
     use_sudo     = true
     service_type = "systemd"
 
@@ -516,7 +632,7 @@ resource "azurerm_virtual_machine" "haproxy" {
     }
 
     connection {
-      host        = "${azurerm_public_ip.pip.3.ip_address}"
+      host        = "${azurerm_public_ip.haproxy-pip.ip_address}"
       user        = "${var.azure_image_user}"
       password    = "${var.azure_image_password}"
     }
@@ -533,14 +649,14 @@ resource "azurerm_virtual_machine" "haproxy" {
 }
 
 # Public IP Data
-data "azurerm_public_ip" "app" {
-  name                = "${azurerm_public_ip.pip.2.name}"
-  resource_group_name = "${azurerm_resource_group.rg.name}"
-  depends_on          = ["azurerm_virtual_machine.app"]
-}
+# data "azurerm_public_ip" "app" {
+#   name                = "${azurerm_public_ip.pip.2.name}"
+#   resource_group_name = "${azurerm_resource_group.rg.name}"
+#   depends_on          = ["azurerm_virtual_machine.app"]
+# }
 
-data "azurerm_public_ip" "haproxy" {
-  name                = "${azurerm_public_ip.pip.3.name}"
-  resource_group_name = "${azurerm_resource_group.rg.name}"
-  depends_on          = ["azurerm_virtual_machine.haproxy"]
-}
+# data "azurerm_public_ip" "haproxy" {
+#   name                = "${azurerm_public_ip.pip.3.name}"
+#   resource_group_name = "${azurerm_resource_group.rg.name}"
+#   depends_on          = ["azurerm_virtual_machine.haproxy"]
+# }
