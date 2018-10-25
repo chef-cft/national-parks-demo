@@ -32,8 +32,8 @@ In order run this repo, you must first install Habitat. You can find setup docs 
 
 You should now be able to hit the front end of the national-parks site as follows:
 
-- Directly - http://localhost:8080/national-parks  
-- HAProxy - http://localhost:8085/national-parks
+- Directly - `http://localhost:8080/national-parks`  
+- HAProxy - `http://localhost:8085/national-parks`
 
 You can also view the admin console for HAProxy to see how the webserver was added dynamically to the load balancer:
 
@@ -80,9 +80,9 @@ national_parks_public_ip = 34.220.209.230
 permanent_peer_public_ip = 34.221.251.189
 ```
 
-http://<haproxy_public_ip>:8085/national-parks
+`http://<haproxy_public_ip>:8085/national-parks`
 or
-http://<haproxy_public_ip>:8000/haproxy-stats
+`http://<haproxy_public_ip>:8000/haproxy-stats`
 
 ### Proivision National-Parks in Azure
 You will need to have an [Azure account already created](https://azure.microsoft.com/en-us/features/azure-portal/)
@@ -108,6 +108,13 @@ instance_ips = [
 mongodb-public-ip = 40.76.17.2
 permanent-peer-public-ip = 40.76.31.133
 ```
+## Scaling out Azure and AWS Deployments
+Both the AWS and Azure deployments support scaling of the web front end instances to demonstrate the concept of 'choreography' vs 'orchestration' with Habitat. The choreography comes from the idea that when the front end instances scale out, the supervisor for the HAProxy instance automatically takes care of the adding the new members to the pool and begins balancing traffic correctly across all instances.
+
+### Scaling out
+1. In your `terraform.tfvars` add a line for `count = 3`
+2. run `terraform apply`
+3. Once provisioning finishes, go to the `http://<haproxy-public-ip>:8000/haproxy-stats` to see the new instances in the pool
 
 
 ## Deploy National-Parks in Google Kubernetes Engine
@@ -183,4 +190,4 @@ statefulset.apps/national-parks-db    1         1         3d1h
 
 Find the `EXTERNAL-IP` for `service/national-parks-lb`:
 
-http://<EXTERNAL-IP>/national-parks
+`http://<EXTERNAL-IP>/national-parks`
