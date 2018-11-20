@@ -30,5 +30,5 @@ do_build()
 do_install()
 {
     cp ${HAB_CACHE_SRC_PATH}/${pkg_dirname}/target/${pkg_name}.war ${PREFIX}/
-    cp -v ${HAB_CACHE_SRC_PATH}/${pkg_dirname}/data/national-parks.json ${PREFIX}/
+    cp -v ${HAB_CACHE_SRC_PATH}/${pkg_dirname}/data/${pkg_name}.json ${PREFIX}/
 }
