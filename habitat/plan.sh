@@ -1,4 +1,4 @@
-pkg_name=national-parks-demo
+pkg_name=national-parks
 pkg_description="A sample JavaEE Web app deployed in the Tomcat8 package"
 pkg_origin=dennis
 pkg_version=9.0.0
