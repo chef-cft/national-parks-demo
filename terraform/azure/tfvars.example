@@ -25,3 +25,12 @@ group = "dev"
 update_strategy = "at-once"
 
 count = "1"
+
+tag_name = "YourFirstAndLastHere" # example: damienoneal or doneal
+
+tag_dept = "YourDepartmentHere" 
+
+tag_contact = "YourEmailHere"
+
+app_application = "AppNameeHere"
+
