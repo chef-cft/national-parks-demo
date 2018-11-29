@@ -38,7 +38,7 @@ variable "tag_contact" {}
 variable "tag_application" {}
 
 variable "tag_ttl" {
-  default = 3600
+  default = 4
 }
 
 variable "aws_key_pair_file" {}
