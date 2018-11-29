@@ -1,0 +1,36 @@
+origin = "yourLocalOriginHere"
+
+azure_public_key_path = "~/path/to_public_key"
+
+azure_private_key_path= "~/path_to_private_key"
+
+azure_image_user = "azureuser"
+
+azuer_image_password = "Azur3pa$$word"
+
+azure_sub_id = "yourSubIDHere"
+
+azure_tenant_id = "yourTenantIDHere"
+
+application = "national-parks"
+
+habitat_origin = "YourOriginOnBuilderHere"
+
+bldr_url = "https://bldr.habitat.sh"
+
+channel = "stable"
+
+group = "dev"
+
+update_strategy = "at-once"
+
+count = "1"
+
+tag_name = "YourFirstAndLastHere" # example: damienoneal or doneal
+
+tag_dept = "YourDepartmentHere" 
+
+tag_contact = "YourEmailHere"
+
+app_application = "AppNameeHere"
+
