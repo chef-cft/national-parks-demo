@@ -85,3 +85,6 @@ variable "count" {
 }
 
 variable "origin" {}
+
+variable "application" {}
+
