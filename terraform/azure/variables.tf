@@ -31,7 +31,7 @@ variable "application" {
 }
 
 variable "habitat_origin" {
-  default = "scottford"
+  default = "damienoneal"
 }
 
 variable "bldr_url" {
@@ -66,7 +66,7 @@ variable "tag_contact" {}
 variable "tag_application" {}
 
 variable "tag_ttl" {
-  default = 3600
+  default = 1
 }
 
 variable "count" {
