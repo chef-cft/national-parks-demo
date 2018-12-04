@@ -66,7 +66,7 @@ variable "tag_contact" {}
 variable "tag_application" {}
 
 variable "tag_ttl" {
-  default = 1
+  default = 4
 }
 
 variable "count" {
