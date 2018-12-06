@@ -108,6 +108,11 @@ instance_ips = [
 mongodb-public-ip = 40.76.17.2
 permanent-peer-public-ip = 40.76.31.133
 ```
+
+Like in the AWS example, you will be able to access either `http://<haproxy_public_ip>:8085/national-parks`
+or
+`http://<haproxy_public_ip>:8000/haproxy-stats`
+
 ## Scaling out Azure and AWS Deployments
 Both the AWS and Azure deployments support scaling of the web front end instances to demonstrate the concept of 'choreography' vs 'orchestration' with Habitat. The choreography comes from the idea that when the front end instances scale out, the supervisor for the HAProxy instance automatically takes care of the adding the new members to the pool and begins balancing traffic correctly across all instances.
 
