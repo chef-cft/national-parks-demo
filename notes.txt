@@ -1,0 +1,2 @@
+How to Show supervisor changing to an older verison bc a package was demoted?
+How to make supervisor watch different channel?
