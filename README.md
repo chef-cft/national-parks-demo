@@ -122,6 +122,18 @@ Both the AWS and Azure deployments support scaling of the web front end instance
 3. Once provisioning finishes, go to the `http://<haproxy-public-ip>:8000/haproxy-stats` to see the new instances in the pool
 
 
+## Prep for GKE:
+You need to have a Docker Hub account set up: https://hub.docker.com/
+Create a mongodb repo on Docker Hub. Fork https://github.com/chef-cft/np-mongo
+do a git clone of YOUR fork ex: `git clone https://github.com/ericheiser/np-mongo.git`
+`cd np-mongo` 
+`hab studio enter`
+`build`
+`hab pkg upload YourOrigin/np-mongo`
+`source results/last_build.env`
+`hab pkg upload results/$pkg_artifact`
+
+
 ## Deploy National-Parks in Google Kubernetes Engine
 You will need to have an [Google Cloud account already created](https://console.cloud.google.com/), and install the [Google Cloud SDK](https://cloud.google.com/sdk/)
 
