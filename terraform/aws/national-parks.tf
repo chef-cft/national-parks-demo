@@ -95,6 +95,31 @@ resource "aws_instance" "mongodb" {
     use_sudo     = true
     service_type = "systemd"
 
+    connection {
+      host        = "${self.public_ip}"
+      type        = "ssh"
+      user        = "${var.aws_centos_image_user}"
+      private_key = "${file("${var.aws_key_pair_file}")}"
+    }
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sleep 20"
+    ]
+
+    connection {
+      host        = "${self.public_ip}"
+      type        = "ssh"
+      user        = "${var.aws_centos_image_user}"
+      private_key = "${file("${var.aws_key_pair_file}")}"
+    }
+  }
+  provisioner "habitat" {
+    peer         = "${aws_instance.permanent_peer.private_ip}"
+    use_sudo     = true
+    service_type = "systemd"
+
     service {
       name     = "core/mongodb"
       channel  = "stable"
@@ -155,6 +180,31 @@ resource "aws_instance" "national_parks" {
     use_sudo     = true
     service_type = "systemd"
 
+    connection {
+      host        = "${self.public_ip}"
+      type        = "ssh"
+      user        = "${var.aws_centos_image_user}"
+      private_key = "${file("${var.aws_key_pair_file}")}"
+    }
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sleep 20"
+    ]
+
+    connection {
+      host        = "${self.public_ip}"
+      type        = "ssh"
+      user        = "${var.aws_centos_image_user}"
+      private_key = "${file("${var.aws_key_pair_file}")}"
+    }
+  }
+  provisioner "habitat" {
+    peer         = "${aws_instance.permanent_peer.private_ip}"
+    use_sudo     = true
+    service_type = "systemd"
+
     service {
       name     = "${var.origin}/national-parks"
       channel  = "${var.prod_channel}"
@@ -210,6 +260,31 @@ resource "aws_instance" "haproxy" {
     }
   }
 
+  provisioner "habitat" {
+    peer         = "${aws_instance.permanent_peer.private_ip}"
+    use_sudo     = true
+    service_type = "systemd"
+
+    connection {
+      host        = "${self.public_ip}"
+      type        = "ssh"
+      user        = "${var.aws_centos_image_user}"
+      private_key = "${file("${var.aws_key_pair_file}")}"
+    }
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sleep 20"
+    ]
+
+    connection {
+      host        = "${self.public_ip}"
+      type        = "ssh"
+      user        = "${var.aws_centos_image_user}"
+      private_key = "${file("${var.aws_key_pair_file}")}"
+    }
+  }
   provisioner "habitat" {
     peer         = "${aws_instance.permanent_peer.private_ip}"
     use_sudo     = true
