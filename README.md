@@ -129,9 +129,14 @@ do a git clone of YOUR fork ex: `git clone https://github.com/ericheiser/np-mong
 `cd np-mongo` 
 `hab studio enter`
 `build`
-`hab pkg upload YourOrigin/np-mongo`
 `source results/last_build.env`
 `hab pkg upload results/$pkg_artifact`
+`hab pkg export docker results/$pkg_artifact`
+
+Login to Docker Hub
+`docker login --username=yourhubusername --password=YourPassword`
+`docker login --username=yourhubusername`  <-- will prompt for password
+`docker push YourOrigin/np-mongo`
 
 
 ## Deploy National-Parks in Google Kubernetes Engine

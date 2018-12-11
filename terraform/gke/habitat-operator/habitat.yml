@@ -17,7 +17,7 @@ customVersion: v1beta2
 spec:
   v1beta2:
     # Make sure to update with your own origin and that you have published to Docker Hub
-    image: scottford/mongodb
+    image: ericheiser/np-mongodb
     count: 1
     service:
       name: mongodb
