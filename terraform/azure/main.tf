@@ -368,6 +368,12 @@ resource "azurerm_virtual_machine" "permanent-peer" {
   vm_size               = "Standard_DS1_v2"
   delete_os_disk_on_termination = true
 
+  connection {
+    host        = "${azurerm_public_ip.permanent-peer-pip.ip_address}"
+    user        = "${var.azure_image_user}"
+    password    = "${var.azure_image_password}"
+  }
+
   storage_image_reference {
     publisher = "Canonical"
     offer     = "UbuntuServer"
@@ -402,16 +408,28 @@ resource "azurerm_virtual_machine" "permanent-peer" {
     storage_uri = "${azurerm_storage_account.stor.primary_blob_endpoint}"
   }
 
-  provisioner "habitat" {
-    permanent_peer = true
-    use_sudo       = true
-    service_type   = "systemd"
+  provisioner "file" {
+    content     = "${data.template_file.install_hab.rendered}"
+    destination = "/tmp/install_hab.sh"
+  }
 
-    connection {
-      host        = "${azurerm_public_ip.permanent-peer-pip.ip_address}"
-      user        = "${var.azure_image_user}"
-      password    = "${var.azure_image_password}"
-    }
+  provisioner "file" {
+    content     = "${data.template_file.permanent_peer.rendered}"
+    destination = "/home/${var.azure_image_user}/hab-sup.service"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo groupadd hab",
+      "sudo useradd hab -g hab",
+      "chmod +x /tmp/install_hab.sh",
+      "sudo /tmp/install_hab.sh",
+      "sudo mv /home/${var.azure_image_user}/hab-sup.service /etc/systemd/system/hab-sup.service",
+      "sudo systemctl daemon-reload",
+      "sudo systemctl start hab-sup",
+      "sudo systemctl enable hab-sup",
+    ]
+
   }
 
   tags {
@@ -433,6 +451,12 @@ resource "azurerm_virtual_machine" "mongodb" {
   network_interface_ids = ["${azurerm_network_interface.mongodb-nic.id}"]
   vm_size               = "Standard_DS1_v2"
   delete_os_disk_on_termination = true
+
+  connection {
+    host        = "${azurerm_public_ip.mongodb-pip.ip_address}"
+    user        = "${var.azure_image_user}"
+    password    = "${var.azure_image_password}"
+  }
 
   storage_image_reference {
     publisher = "Canonical"
@@ -467,24 +491,36 @@ resource "azurerm_virtual_machine" "mongodb" {
     enabled     = "true"
     storage_uri = "${azurerm_storage_account.stor.primary_blob_endpoint}"
   }
+ 
+  provisioner "file" {
+    content     = "${data.template_file.install_hab.rendered}"
+    destination = "/tmp/install_hab.sh"
+  }
 
-  provisioner "habitat" {
-    peer         = "${azurerm_public_ip.permanent-peer-pip.ip_address}"
-    use_sudo     = true
-    service_type = "systemd"
+  provisioner "file" {
+    content     = "${data.template_file.sup_service.rendered}"
+    destination = "/home/${var.azure_image_user}/hab-sup.service"
+  }
 
-    service {
-      name       = "core/mongodb"
-      channel    = "stable"
-      group      = "${var.group}"
-      user_toml  = "${file("files/mongo.toml")}"
-    }
+  provisioner "file" {
+    source     = "files/mongo.toml"
+    destination = "/home/${var.azure_image_user}/mongo.toml"
+  }
 
-    connection {
-      host        = "${azurerm_public_ip.mongodb-pip.ip_address}"
-      user        = "${var.azure_image_user}"
-      password    = "${var.azure_image_password}"
-    }
+  provisioner "remote-exec" {
+    inline = [
+      "sudo groupadd hab",
+      "sudo useradd hab -g hab",
+      "chmod +x /tmp/install_hab.sh",
+      "sudo /tmp/install_hab.sh",
+      "sudo mv /home/${var.azure_image_user}/hab-sup.service /etc/systemd/system/hab-sup.service",
+      "sudo systemctl daemon-reload",
+      "sudo systemctl start hab-sup",
+      "sudo systemctl enable hab-sup",
+      "sleep 20",
+      "sudo hab svc load core/mongodb --group ${var.group}",
+      "sudo hab config apply mongodb.${var.group} $(date +%s) /home/${var.azure_image_user}/mongo.toml"
+    ]
   }
 
   tags {
@@ -507,6 +543,12 @@ resource "azurerm_virtual_machine" "app" {
   vm_size               = "Standard_DS1_v2"
   delete_os_disk_on_termination = true
   count                 = "${var.count}"
+
+  connection {
+    host        = "${element(azurerm_public_ip.pip.*.ip_address, count.index)}"
+    user        = "${var.azure_image_user}"
+    password    = "${var.azure_image_password}"
+  }
 
   storage_image_reference {
     publisher = "Canonical"
@@ -541,27 +583,31 @@ resource "azurerm_virtual_machine" "app" {
     enabled     = "true"
     storage_uri = "${azurerm_storage_account.stor.primary_blob_endpoint}"
   }
-
-  provisioner "habitat" {
-    peer         = "${azurerm_public_ip.permanent-peer-pip.ip_address}"
-    use_sudo     = true
-    service_type = "systemd"
-
-    service {
-      binds    = ["database:mongodb.${var.group}"]
-      name     = "${var.habitat_origin}/national-parks"
-      topology = "standalone"
-      group    = "${var.group}"
-      channel  = "${var.channel}"
-      strategy = "${var.update_strategy}"
-    }
-
-    connection {
-      host        = "${element(azurerm_public_ip.pip.*.ip_address, count.index)}"
-      user        = "${var.azure_image_user}"
-      password    = "${var.azure_image_password}"
-    }
+provisioner "file" {
+    content     = "${data.template_file.install_hab.rendered}"
+    destination = "/tmp/install_hab.sh"
   }
+
+  provisioner "file" {
+    content     = "${data.template_file.sup_service.rendered}"
+    destination = "/home/${var.azure_image_user}/hab-sup.service"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo groupadd hab",
+      "sudo useradd hab -g hab",
+      "chmod +x /tmp/install_hab.sh",
+      "sudo /tmp/install_hab.sh",
+      "sudo mv /home/${var.azure_image_user}/hab-sup.service /etc/systemd/system/hab-sup.service",
+      "sudo systemctl daemon-reload",
+      "sudo systemctl start hab-sup",
+      "sudo systemctl enable hab-sup",
+      "sleep 20",
+      "sudo hab svc load ${var.origin}/national-parks --group ${var.group} --channel ${var.channel} --strategy ${var.update_strategy} --bind database:mongodb.${var.group}"
+    ]
+  }
+
 
   tags {
     X-Dept        = "${var.tag_dept}"
@@ -583,6 +629,12 @@ resource "azurerm_virtual_machine" "haproxy" {
   network_interface_ids = ["${azurerm_network_interface.haproxy-nic.id}"]
   vm_size               = "Standard_DS1_v2"
   delete_os_disk_on_termination = true
+
+  connection {
+    host        = "${azurerm_public_ip.haproxy-pip.ip_address}"
+    user        = "${var.azure_image_user}"
+    password    = "${var.azure_image_password}"
+  }
 
   storage_image_reference {
     publisher = "Canonical"
@@ -618,26 +670,35 @@ resource "azurerm_virtual_machine" "haproxy" {
     storage_uri = "${azurerm_storage_account.stor.primary_blob_endpoint}"
   }
 
-  provisioner "habitat" {
-    peer         = "${azurerm_public_ip.permanent-peer-pip.ip_address}"
-    use_sudo     = true
-    service_type = "systemd"
-
-    service {
-      binds       = ["backend:national-parks.${var.group}"]
-      name        = "core/haproxy"
-      user_toml   = "${file("files/haproxy.toml")}" 
-      channel     = "stable"
-      group       = "${var.group}"
-    }
-
-    connection {
-      host        = "${azurerm_public_ip.haproxy-pip.ip_address}"
-      user        = "${var.azure_image_user}"
-      password    = "${var.azure_image_password}"
-    }
+  provisioner "file" {
+    content     = "${data.template_file.install_hab.rendered}"
+    destination = "/tmp/install_hab.sh"
   }
 
+  provisioner "file" {
+    content     = "${data.template_file.sup_service.rendered}"
+    destination = "/home/${var.azure_image_user}/hab-sup.service"
+  }
+
+  provisioner "file" {
+    source     = "files/haproxy.toml"
+    destination = "/home/${var.azure_image_user}/haproxy.toml"
+  }
+  provisioner "remote-exec" {
+    inline = [
+      "sudo groupadd hab",
+      "sudo useradd hab -g hab",
+      "chmod +x /tmp/install_hab.sh",
+      "sudo /tmp/install_hab.sh",
+      "sudo mv /home/${var.azure_image_user}/hab-sup.service /etc/systemd/system/hab-sup.service",
+      "sudo systemctl daemon-reload",
+      "sudo systemctl start hab-sup",
+      "sudo systemctl enable hab-sup",
+      "sleep 20",
+      "sudo hab svc load core/haproxy --group ${var.group} --bind backend:national-parks.${var.group}",
+      "sudo hab config apply haproxy.${var.group} $(date +%s) /home/${var.azure_image_user}/haproxy.toml"
+    ]
+  }
   tags {
     X-Dept        = "${var.tag_dept}"
     X-Customer    = "${var.tag_customer}"
@@ -648,15 +709,25 @@ resource "azurerm_virtual_machine" "haproxy" {
   }
 }
 
-# Public IP Data
-# data "azurerm_public_ip" "app" {
-#   name                = "${azurerm_public_ip.pip.2.name}"
-#   resource_group_name = "${azurerm_resource_group.rg.name}"
-#   depends_on          = ["azurerm_virtual_machine.app"]
-# }
+////////////////////////////////
+// Templates
 
-# data "azurerm_public_ip" "haproxy" {
-#   name                = "${azurerm_public_ip.pip.3.name}"
-#   resource_group_name = "${azurerm_resource_group.rg.name}"
-#   depends_on          = ["azurerm_virtual_machine.haproxy"]
-# }
+data "template_file" "permanent_peer" {
+  template = "${file("${path.module}/../templates/hab-sup.service")}"
+
+  vars {
+    flags = "--auto-update --listen-gossip 0.0.0.0:9638 --listen-http 0.0.0.0:9631 --permanent-peer"
+  }
+}
+
+data "template_file" "sup_service" {
+  template = "${file("${path.module}/../templates/hab-sup.service")}"
+
+  vars {
+    flags = "--auto-update --peer ${azurerm_public_ip.permanent-peer-pip.ip_address} --listen-gossip 0.0.0.0:9638 --listen-http 0.0.0.0:9631"
+  }
+}
+
+data "template_file" "install_hab" {
+  template = "${file("${path.module}/../templates/install-hab.sh")}"
+}
