@@ -60,9 +60,12 @@ variable "subnet_id" {
 ////////////////////////////////
 // Habitat
 
-variable "channel" {
-  default = "stable"
+variable "channel_list" {
+  description = "Determines the channels to which the software subscribes"
+  type        = "list"
+  default     = ["stable", "unstable"]
 }
+
 
 variable "test_instance_type" {
   default = "t2.micro"

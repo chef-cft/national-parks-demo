@@ -44,7 +44,6 @@ resource "aws_instance" "permanent_peer" {
       "sudo systemctl start hab-sup",
       "sudo systemctl enable hab-sup",
     ]
-
   }
 }
 
@@ -91,7 +90,7 @@ resource "aws_instance" "mongodb" {
     inline = [
       "sudo rm -rf /etc/machine-id",
       "sudo systemd-machine-id-setup",
-      "sudo hostname np-mongodb-${var.prod_channel}",
+      "sudo hostname np-mongodb-${element(var.channel_list, count.index)}",
       "sudo groupadd hab",
       "sudo adduser hab -g hab",
       "chmod +x /tmp/install_hab.sh",
@@ -104,7 +103,6 @@ resource "aws_instance" "mongodb" {
       "sudo hab svc load core/mongodb --group ${var.group}",
       "sudo hab config apply mongodb.${var.group} $(date +%s) /home/${var.aws_ami_user}/mongo.toml"
     ]
-
   }
 }
 
@@ -124,7 +122,7 @@ resource "aws_instance" "national_parks" {
   count                       = "${var.count}"
 
   tags {
-    Name          = "national_parks_${random_id.instance_id.hex}"
+    Name          = "national_parks_${element(var.channel_list, count.index)}_${random_id.instance_id.hex}"
     X-Dept        = "${var.tag_dept}"
     X-Customer    = "${var.tag_customer}"
     X-Project     = "${var.tag_project}"
@@ -157,8 +155,7 @@ resource "aws_instance" "national_parks" {
       "sudo systemctl start hab-sup",
       "sudo systemctl enable hab-sup",
       "sleep 15",
-      "sudo hab svc load ${var.origin}/national-parks --group ${var.group} --channel ${var.prod_channel} --strategy ${var.update_strategy} --bind database:mongodb.${var.group}"
-
+      "sudo hab svc load ${var.origin}/national-parks --group ${var.group} --channel ${element(var.channel_list, count.index)} --strategy ${var.update_strategy} --bind database:mongodb.${var.group}"
     ]
   }
 }
