@@ -1,2 +1,13 @@
 How to Show supervisor changing to an older verison bc a package was demoted?
 How to make supervisor watch different channel?
+
+Commands for Local studio:
+export HAB_DOCKER_OPTS='-p 8000:8000 -p 8080:8080 -p 8085:8085 -p 9631:9631' ;
+hab studio enter
+build
+source results/last_build.env
+hab svc load core/mongodb
+hab config apply mongodb.default $(date +%s) mongo.toml
+hab svc load $pkg_ident --bind database:mongodb.default
+hab svc load core/haproxy --bind backend:national-parks.default
+hab config apply haproxy.default $(date +%s) haproxy.toml

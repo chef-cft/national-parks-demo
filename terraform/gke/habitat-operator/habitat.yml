@@ -20,7 +20,7 @@ spec:
     image: ericheiser/np-mongodb
     count: 1
     service:
-      name: mongodb
+      name: np-mongodb
       # Name of the secret.
       # This is mounted inside of the pod as a user.toml file.
       configSecretName: user-toml
@@ -42,7 +42,7 @@ spec:
       topology: standalone
       bind:
         - name: database
-          service: mongodb
+          service: np-mongodb
           group: default
 ---
 apiVersion: v1
