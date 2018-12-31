@@ -105,7 +105,6 @@ resource "aws_instance" "mongodb" {
       "sudo hab config apply mongodb.${var.group} $(date +%s) /home/${var.aws_ami_user}/mongo.toml"
     ]
 
-<<<<<<< HEAD
     connection {
       host        = "${self.public_ip}"
       type        = "ssh"
@@ -156,8 +155,6 @@ resource "aws_instance" "mongodb" {
       user        = "${var.aws_centos_image_user}"
       private_key = "${file("${var.aws_key_pair_file}")}"
     }
-=======
->>>>>>> 480112624d4d1b7db96cbaa81ee1a4679fd5dcac
   }
 }
 
@@ -212,7 +209,6 @@ resource "aws_instance" "national_parks" {
       "sleep 15",
       "sudo hab svc load ${var.origin}/national-parks --group ${var.group} --channel ${var.prod_channel} --strategy ${var.update_strategy} --bind database:mongodb.${var.group}"
 
-<<<<<<< HEAD
     connection {
       host        = "${self.public_ip}"
       type        = "ssh"
@@ -264,9 +260,7 @@ resource "aws_instance" "national_parks" {
       user        = "${var.aws_centos_image_user}"
       private_key = "${file("${var.aws_key_pair_file}")}"
     }
-=======
     ]
->>>>>>> 480112624d4d1b7db96cbaa81ee1a4679fd5dcac
   }
 }
 
@@ -334,7 +328,6 @@ resource "aws_instance" "haproxy" {
 data "template_file" "permanent_peer" {
   template = "${file("${path.module}/../templates/hab-sup.service")}"
 
-<<<<<<< HEAD
     connection {
       host        = "${self.public_ip}"
       type        = "ssh"
@@ -386,10 +379,8 @@ data "template_file" "permanent_peer" {
       user        = "${var.aws_centos_image_user}"
       private_key = "${file("${var.aws_key_pair_file}")}"
     }
-=======
   vars {
     flags = "--auto-update --listen-gossip 0.0.0.0:9638 --listen-http 0.0.0.0:9631 --permanent-peer"
->>>>>>> 480112624d4d1b7db96cbaa81ee1a4679fd5dcac
   }
 }
 
