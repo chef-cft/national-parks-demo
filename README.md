@@ -109,7 +109,7 @@ mongodb-public-ip = 40.76.17.2
 permanent-peer-public-ip = 40.76.31.133
 ```
 
-Like in the AWS example, you will be able to access either `http://<haproxy_public_ip>:8085/national-parks`
+Like in the AWS example, you will be able to access either `http://<haproxy_public_ip>:8080/national-parks`
 or
 `http://<haproxy_public_ip>:8000/haproxy-stats`
 
@@ -122,23 +122,6 @@ Both the AWS and Azure deployments support scaling of the web front end instance
 3. Once provisioning finishes, go to the `http://<haproxy-public-ip>:8000/haproxy-stats` to see the new instances in the pool
 
 
-## Prep for GKE:
-You need to have a Docker Hub account set up: https://hub.docker.com/
-Create a mongodb repo on Docker Hub. Fork https://github.com/chef-cft/np-mongo
-do a git clone of YOUR fork ex: `git clone https://github.com/ericheiser/np-mongo.git`
-`cd np-mongo` 
-`hab studio enter`
-`build`
-`source results/last_build.env`
-`hab pkg upload results/$pkg_artifact`
-`hab pkg export docker results/$pkg_artifact`
-
-Login to Docker Hub
-`docker login --username=yourhubusername --password=YourPassword`
-`docker login --username=yourhubusername`  <-- will prompt for password
-`docker push YourOrigin/np-mongo`
-
-
 ## Deploy National-Parks in Google Kubernetes Engine
 You will need to have an [Google Cloud account already created](https://console.cloud.google.com/), and install the [Google Cloud SDK](https://cloud.google.com/sdk/)
 
@@ -146,6 +129,34 @@ You will need to have an [Google Cloud account already created](https://console.
 - `git clone https://github.com/habitat-sh/habitat-operator`
 - `git clone https://github.com/habitat-sh/habitat-updater`
 - create a `terraform.tfvars` 
+
+## Prep for GKE:
+You need to have a Docker Hub account set up: https://hub.docker.com/
+go to: https://console.cloud.google.com/
+
+You MUST use: the project that was created created within opscode: (Do not not create a new project!)
+Enable 2 APIs: Compute Engine API, Kubernetes Engine API
+1. From the Dashboard, goto APIs and Services, search for 'compute'
+click on 'Compute Engine API', then click 'Enable'
+2. From the Dashboard, goto APIs and Services, search for 'compute'
+click on 'Kubernetes Engine API', then click 'Enable'
+
+Create a credentials file:
+From the Dashboard, goto APIs and Services, click 'credentials', then click 'create credentials', click 'Service account key', select 'JSON', fill in 'service account name' with something ex: np-gke, role should be set to owner.
+This will download the json file to your local machine. 
+- Update terrafrom.tfvars file: gke_credentials_file = 'location/of/json-creds.json'
+- Shorten the tag_customer, tag_project, and habitat_origin: (the name cannot be longler 40 char)
+- gke_project = 'your-gke-projectid' , ex: gke_project = "eric-heiser-project"
+
+Test the configuration:
+`gcloud init`
+`cd terraform/gke`
+`terraform init`
+`terraform validate`
+`terraform apply`
+
+
+Publish both national-parks-demo and mongodb images to DockerHub with Builder or manually (see end of README for manual steps)
 
 ### Provision Kubernetes
 1. `cd terraform/gke`
@@ -216,3 +227,50 @@ statefulset.apps/national-parks-db    1         1         3d1h
 Find the `EXTERNAL-IP` for `service/national-parks-lb`:
 
 `http://<EXTERNAL-IP>/national-parks`
+
+
+### To update the GKE cluster:
+Make sure that you have the DockerHub integration set with your <origin>/national-parks-demo
+Change the pins from red to blue, or vice-versa
+example: 
+`cp blue-index.html src/main/webapp/index.html`
+
+Initiate the build of the new artifact. This can be done manually or with the Github integration
+Github:
+`git commit -am 'changing from red to blue pins, vX.X.X'`
+`git push`
+Builder will watch your repo (generally national-parks-demo) and kick off a build, then publish to DockerHub.
+At this point the new build is published to both Builder and DockerHub. The habitat-updater is watching for a 
+new 'latest' version in Builder and will create new pod that is referenced with the 'latest' tag in DockerHub
+
+If your DockerHub integration is not working (generally because you changed the integration after saving it the first time), you can do this manually:
+
+
+
+### Create the DockerHub images
+(used chef-cft/np-mongo, but you can also use the core plan core/mongodb)
+Create a mongodb repo on Docker Hub. Fork https://github.com/chef-cft/np-mongo
+do a git clone of YOUR fork ex: `git clone https://github.com/ericheiser/np-mongo.git`
+`cd np-mongo` 
+`hab studio enter`
+`build`
+`source results/last_build.env`
+`hab pkg upload results/$pkg_artifact`
+`hab pkg export docker results/$pkg_artifact`
+
+Login to Docker Hub
+`docker login --username=yourhubusername --password=YourPassword`
+`docker login --username=yourhubusername`  <-- will prompt for password
+`docker push YourOrigin/np-mongo`
+
+### To update the gke cluster manually the steps are:
+  create a new build of national-parks
+  export to docker and push the image to DockerHub
+  push the HART to Builder
+  promote the package to the stable channel
+
+Individual steps as follows:
+`cd national-parks`
+`hab studio enter`
+`build`
+`source results/last_build.env`
