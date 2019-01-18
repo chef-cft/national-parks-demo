@@ -269,13 +269,25 @@ Login to Docker Hub
   push the HART to Builder
   promote the package to the stable channel
 
-Individual steps as follows:
+Individual steps as follows: (as much as possible from within the studio)
 `cd national-parks`
 `hab studio enter`
 `build`
 `source results/last_build.env`
+`hab pkg export docker results/$pkg_artifact`
+`hab pkg install -b core/docker`
+`docker login`
+`docker push <docker_repo>/national-parks:latest`
+`hab pkg upload results/$pkg_artifact`
+`hab pkg promote $pkg_ident stable`
+
+
+
 
 
 to quickly spin up the demo locally after mongodb and national-parks images are pushed to DockerHub.
 change `docker-compose.yml` to use your DockerHub repo line 8.
 ex: `     image: ericheiser/national-parks:latest`
+
+Then run: `docker-compose up`
+To clean up, run: `docker-compose down`
