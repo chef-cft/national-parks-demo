@@ -32,7 +32,7 @@ In order run this repo, you must first install Habitat. You can find setup docs 
 
 You should now be able to hit the front end of the national-parks site as follows:
 
-- Directly - `http://localhost:8085/national-parks`  
+- Directly - `http://localhost:8080/national-parks`  
 - HAProxy - `http://localhost:8085/national-parks`
 
 You can also view the admin console for HAProxy to see how the webserver was added dynamically to the load balancer:
@@ -109,7 +109,7 @@ mongodb-public-ip = 40.76.17.2
 permanent-peer-public-ip = 40.76.31.133
 ```
 
-Like in the AWS example, you will be able to access either `http://<haproxy_public_ip>:8080/national-parks`
+Like in the AWS example, you will be able to access either `http://<haproxy_public_ip>:8085/national-parks`
 or
 `http://<haproxy_public_ip>:8000/haproxy-stats`
 
