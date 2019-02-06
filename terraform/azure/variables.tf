@@ -30,9 +30,7 @@ variable "application" {
   default = "nationalparks"
 }
 
-variable "habitat_origin" {
-  default = "scottford"
-}
+variable "origin" { }
 
 variable "bldr_url" {
   default = "https://bldr.habitat.sh"
@@ -43,7 +41,7 @@ variable "channel" {
 }
 
 variable "group" {
-  default = "dev"
+  default = "default"
 }
 
 variable "update_strategy" {
@@ -66,7 +64,7 @@ variable "tag_contact" {}
 variable "tag_application" {}
 
 variable "tag_ttl" {
-  default = 3600
+  default = 4
 }
 
 variable "count" {

@@ -29,7 +29,7 @@ resource "aws_internet_gateway" "national_parks_gateway" {
   vpc_id = "${aws_vpc.national_parks_vpc.id}"
 
   tags {
-    Name = "${var.tag_name}_national_parks_gateway"
+    Name = "${var.tag_name}_national_parks_gateway-${var.tag_application}"
   }
 }
 
@@ -45,7 +45,7 @@ resource "aws_subnet" "national_parks_subnet" {
   map_public_ip_on_launch = true
 
   tags {
-    Name = "${var.tag_name}_national_parks_subnet"
+    Name = "${var.tag_name}_national_parks_subnet-${var.tag_application}"
   }
 }
 ////////////////////////////////
