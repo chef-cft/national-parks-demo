@@ -100,7 +100,7 @@ resource "aws_instance" "mongodb" {
       "sudo systemctl daemon-reload",
       "sudo systemctl start hab-sup",
       "sudo systemctl enable hab-sup",
-      "sleep 60",
+      "sleep 15",
       "sudo hab svc load core/mongodb --group ${var.group}",
       "sudo hab config apply mongodb.${var.group} $(date +%s) /home/${var.aws_ami_user}/mongo.toml"
     ]
@@ -156,7 +156,7 @@ resource "aws_instance" "national_parks" {
       "sudo systemctl daemon-reload",
       "sudo systemctl start hab-sup",
       "sudo systemctl enable hab-sup",
-      "sleep 60",
+      "sleep 15",
       "sudo hab svc load ${var.origin}/national-parks --group ${var.group} --channel ${var.prod_channel} --strategy ${var.update_strategy} --bind database:mongodb.${var.group}"
 
     ]
@@ -214,7 +214,7 @@ resource "aws_instance" "haproxy" {
       "sudo systemctl daemon-reload",
       "sudo systemctl start hab-sup",
       "sudo systemctl enable hab-sup",
-      "sleep 60",
+      "sleep 15",
       "sudo hab svc load core/haproxy --group ${var.group} --bind backend:national-parks.${var.group}",
       "sudo hab config apply haproxy.${var.group} $(date +%s) /home/${var.aws_ami_user}/haproxy.toml"
     ]

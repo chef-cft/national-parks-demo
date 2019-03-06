@@ -35,7 +35,7 @@ customVersion: v1beta2
 spec:
   v1beta2:
     # Make sure to update with your own origin and that you have published to Docker Hub
-    image: niamhcahill/national-parks
+    image: scottford/national-parks
     count: 1
     service:
       name: national-parks
