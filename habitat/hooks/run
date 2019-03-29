@@ -6,7 +6,7 @@ export CATALINA_OPTS="-DMONGODB_SERVICE_HOST={{bind.database.first.sys.ip}}
 -DMONGODB_DATABASE={{cfg.mongodb_database}}"
 {{/if ~}}
 
-export JAVA_HOME="{{pkgPathFor "core/jre8"}}"
+export JAVA_HOME="{{pkgPathFor "core/corretto"}}"
 export TOMCAT_HOME="{{pkgPathFor "core/tomcat8"}}/tc"
 cp {{pkg.path}}/*.war $TOMCAT_HOME/webapps
 exec ${TOMCAT_HOME}/bin/catalina.sh run
