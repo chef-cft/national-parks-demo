@@ -100,7 +100,7 @@ resource "aws_instance" "mongodb" {
       "sudo systemctl daemon-reload",
       "sudo systemctl start hab-sup",
       "sudo systemctl enable hab-sup",
-      "sleep 15",
+      "sleep 30",
       "sudo hab svc load core/mongodb --group ${var.group}",
       "sudo hab config apply mongodb.${var.group} $(date +%s) /home/${var.aws_ami_user}/mongo.toml"
     ]
@@ -142,7 +142,7 @@ resource "aws_instance" "national_parks" {
     content     = "${data.template_file.sup_service.rendered}"
     destination = "/home/${var.aws_ami_user}/hab-sup.service"
   }
-  
+
   provisioner "remote-exec" {
     inline = [
       "sudo rm -rf /etc/machine-id",
