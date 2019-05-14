@@ -39,6 +39,7 @@ resource "aws_instance" "permanent_peer" {
       "sudo adduser hab -g hab",
       "chmod +x /tmp/install_hab.sh",
       "sudo /tmp/install_hab.sh",
+      "sudo hab license accept",
       "sudo mv /home/${var.aws_ami_user}/hab-sup.service /etc/systemd/system/hab-sup.service",
       "sudo systemctl daemon-reload",
       "sudo systemctl start hab-sup",
@@ -96,6 +97,7 @@ resource "aws_instance" "mongodb" {
       "sudo adduser hab -g hab",
       "chmod +x /tmp/install_hab.sh",
       "sudo /tmp/install_hab.sh",
+      "sudo hab license accept",
       "sudo mv /home/${var.aws_ami_user}/hab-sup.service /etc/systemd/system/hab-sup.service",
       "sudo systemctl daemon-reload",
       "sudo systemctl start hab-sup",
@@ -142,7 +144,7 @@ resource "aws_instance" "national_parks" {
     content     = "${data.template_file.sup_service.rendered}"
     destination = "/home/${var.aws_ami_user}/hab-sup.service"
   }
-  
+
   provisioner "remote-exec" {
     inline = [
       "sudo rm -rf /etc/machine-id",
@@ -152,6 +154,7 @@ resource "aws_instance" "national_parks" {
       "sudo adduser hab -g hab",
       "chmod +x /tmp/install_hab.sh",
       "sudo /tmp/install_hab.sh",
+      "sudo hab license accept",
       "sudo mv /home/${var.aws_ami_user}/hab-sup.service /etc/systemd/system/hab-sup.service",
       "sudo systemctl daemon-reload",
       "sudo systemctl start hab-sup",
@@ -210,6 +213,7 @@ resource "aws_instance" "haproxy" {
       "sudo adduser hab -g hab",
       "chmod +x /tmp/install_hab.sh",
       "sudo /tmp/install_hab.sh",
+      "sudo hab license accept",
       "sudo mv /home/${var.aws_ami_user}/hab-sup.service /etc/systemd/system/hab-sup.service",
       "sudo systemctl daemon-reload",
       "sudo systemctl start hab-sup",
