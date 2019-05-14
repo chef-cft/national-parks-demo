@@ -54,7 +54,7 @@ resource "azurerm_public_ip" "permanent-peer-pip" {
   name                         = "${var.tag_name}-${var.application}-permanent-peer-pip"
   location                     = "${var.azure_region}"
   resource_group_name          = "${azurerm_resource_group.rg.name}"
-  public_ip_address_allocation = "static"
+  allocation_method            = "Static"
 
   tags {
     X-Dept        = "${var.tag_dept}"
@@ -70,7 +70,7 @@ resource "azurerm_public_ip" "mongodb-pip" {
   name                         = "${var.tag_name}-${var.application}-mongodb-pip"
   location                     = "${var.azure_region}"
   resource_group_name          = "${azurerm_resource_group.rg.name}"
-  public_ip_address_allocation = "static"
+  allocation_method            = "Static"
 
   tags {
     X-Dept        = "${var.tag_dept}"
@@ -86,7 +86,7 @@ resource "azurerm_public_ip" "haproxy-pip" {
   name                         = "${var.tag_name}-${var.application}-haproxy-pip"
   location                     = "${var.azure_region}"
   resource_group_name          = "${azurerm_resource_group.rg.name}"
-  public_ip_address_allocation = "static"
+  allocation_method            = "Static"
 
   tags {
     X-Dept        = "${var.tag_dept}"
@@ -102,7 +102,7 @@ resource "azurerm_public_ip" "pip" {
   name                         = "${var.tag_name}-${var.application}-pip-${count.index}"
   location                     = "${var.azure_region}"
   resource_group_name          = "${azurerm_resource_group.rg.name}"
-  public_ip_address_allocation = "static"
+  allocation_method            = "Static"
   count                        = "${var.count}"
 
   tags {
@@ -424,6 +424,7 @@ resource "azurerm_virtual_machine" "permanent-peer" {
       "sudo useradd hab -g hab",
       "chmod +x /tmp/install_hab.sh",
       "sudo /tmp/install_hab.sh",
+      "sudo hab license accept",
       "sudo mv /home/${var.azure_image_user}/hab-sup.service /etc/systemd/system/hab-sup.service",
       "sudo systemctl daemon-reload",
       "sudo systemctl start hab-sup",
@@ -491,7 +492,7 @@ resource "azurerm_virtual_machine" "mongodb" {
     enabled     = "true"
     storage_uri = "${azurerm_storage_account.stor.primary_blob_endpoint}"
   }
- 
+
   provisioner "file" {
     content     = "${data.template_file.install_hab.rendered}"
     destination = "/tmp/install_hab.sh"
@@ -513,6 +514,7 @@ resource "azurerm_virtual_machine" "mongodb" {
       "sudo useradd hab -g hab",
       "chmod +x /tmp/install_hab.sh",
       "sudo /tmp/install_hab.sh",
+      "sudo hab license accept",
       "sudo mv /home/${var.azure_image_user}/hab-sup.service /etc/systemd/system/hab-sup.service",
       "sudo systemctl daemon-reload",
       "sudo systemctl start hab-sup",
@@ -599,6 +601,7 @@ provisioner "file" {
       "sudo useradd hab -g hab",
       "chmod +x /tmp/install_hab.sh",
       "sudo /tmp/install_hab.sh",
+      "sudo hab license accept",
       "sudo mv /home/${var.azure_image_user}/hab-sup.service /etc/systemd/system/hab-sup.service",
       "sudo systemctl daemon-reload",
       "sudo systemctl start hab-sup",
@@ -690,6 +693,7 @@ resource "azurerm_virtual_machine" "haproxy" {
       "sudo useradd hab -g hab",
       "chmod +x /tmp/install_hab.sh",
       "sudo /tmp/install_hab.sh",
+      "sudo hab license accept",
       "sudo mv /home/${var.azure_image_user}/hab-sup.service /etc/systemd/system/hab-sup.service",
       "sudo systemctl daemon-reload",
       "sudo systemctl start hab-sup",
@@ -703,7 +707,7 @@ resource "azurerm_virtual_machine" "haproxy" {
     X-Dept        = "${var.tag_dept}"
     X-Customer    = "${var.tag_customer}"
     X-Project     = "${var.tag_project}"
-    X-Application = "${var.tag_application}" 
+    X-Application = "${var.tag_application}"
     X-Contact     = "${var.tag_contact}"
     X-TTL         = "${var.tag_ttl}"
   }
