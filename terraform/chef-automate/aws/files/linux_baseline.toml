@@ -1,0 +1,7 @@
+sleep_time = 30
+
+[reporter]
+stdout = false
+url = "https://scottford-a2.chef-demo.com/data-collector/v0"
+token = "C_0vwcTOfExhFliY0v1vV4eJqcw="
+verify_ssl = true
