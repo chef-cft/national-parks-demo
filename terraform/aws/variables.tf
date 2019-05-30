@@ -95,4 +95,13 @@ variable "update_strategy" {
   default = "at-once"
 }
 
+variable "sleep" {
+  default = "60"
+}
+
+variable "automate_url" {}
+
+variable "automate_token" {}
+
+variable "automate_user" {}
 
