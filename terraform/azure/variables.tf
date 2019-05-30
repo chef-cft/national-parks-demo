@@ -14,9 +14,7 @@ variable "azure_image_user" {
   default = "azureuser"
 }
 
-variable "azure_image_password" {
-  default = "Azur3pa$$word"
-}
+variable "azure_image_password" {}
 
 variable "azure_sub_id" {
   default = "xxxxxxx-xxxx-xxxx-xxxxxxxxxx"
@@ -71,3 +69,12 @@ variable "count" {
   default = 1
 }
 
+variable "sleep" {
+  default = "60"
+}
+
+variable "automate_url" {}
+
+variable "automate_token" {}
+
+variable "automate_user" {}
