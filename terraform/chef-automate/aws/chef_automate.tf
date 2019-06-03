@@ -147,6 +147,14 @@ data "template_file" "install_chef_automate_cli" {
   }
 }
 
+data "template_file" "automate_eas_config" {
+  template = "${file("${path.module}/templates/chef_automate/automate-eas-config.toml.tpl")}"
+
+  vars {
+    disable_event_tls = "${var.disable_event_tls}"
+  }
+} 
+
 resource "aws_instance" "chef_automate" {
   connection {
     user        = "${var.aws_ubuntu_image_user}"
@@ -182,6 +190,11 @@ resource "aws_instance" "chef_automate" {
   }
 
   provisioner "file" {
+    destination = "/tmp/automate-eas-config.toml"
+    content     = "${data.template_file.automate_eas_config.rendered}"
+  }
+
+  provisioner "file" {
     destination = "/tmp/ssl_cert"
     content = "${var.automate_custom_ssl_cert_chain}"
   }
@@ -196,7 +209,7 @@ resource "aws_instance" "chef_automate" {
       "sudo hostnamectl set-hostname ${var.automate_hostname}",
       "sudo sysctl -w vm.max_map_count=262144",
       "sudo sysctl -w vm.dirty_expire_centisecs=20000",
-      "curl https://packages.chef.io/files/current/latest/chef-automate-cli/chef-automate_linux_amd64.zip |gunzip - > chef-automate && chmod +x chef-automate",
+      "curl https://packages.chef.io/files/${var.channel}/latest/chef-automate-cli/chef-automate_linux_amd64.zip |gunzip - > chef-automate && chmod +x chef-automate",
       "sudo chmod +x /tmp/install_chef_automate_cli.sh",
       "sudo bash /tmp/install_chef_automate_cli.sh",
       "sudo ./chef-automate init-config --file /tmp/config.toml $(if ${var.automate_custom_ssl}; then echo '--certificate /tmp/ssl_cert --private-key /tmp/ssl_key'; fi)",
@@ -209,6 +222,7 @@ resource "aws_instance" "chef_automate" {
       "sudo ./chef-automate applications enable",
       "sudo hab pkg install chef/applications-service -b",
       "sleep 60",
+      "sudo ./chef-automate config patch /tmp/automate-eas-config.toml",
       "sudo chown ubuntu:ubuntu $HOME/automate-credentials.toml",
       "sudo echo -e \"api-token =\" $(sudo chef-automate admin-token) >> $HOME/automate-credentials.toml",
       "sudo cat $HOME/automate-credentials.toml",

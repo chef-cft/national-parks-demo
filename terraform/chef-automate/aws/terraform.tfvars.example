@@ -33,6 +33,10 @@ tag_application=""
 
 automate_hostname="yourname-a2.chef-demo.com"
 automate_license = <YOUR AUTOMATE LICENSE>
+# Requires at least 20190603162928, which isn't in current yet as of this commit. Uncomment if you need the dev channel.
+# channel = "dev"
+# TLS is not supported in the event stream beta. Uncomment until TLS is supported.
+# disable_event_tls = "true"
 
 // NOTE: If you have an acm cert and r53 managed hosted zone, you
 // can use chef_automate_alb.tf.example to build out an ALB with SSL

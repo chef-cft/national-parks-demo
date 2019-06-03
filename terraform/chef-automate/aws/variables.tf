@@ -94,6 +94,11 @@ variable "channel" {
   description = "channel is the habitat channel which will be used for installing A2"
 }
 
+variable "disable_event_tls" {
+  default="false"
+  description = "In its initial state, the events feed does not support tls. Parameterizing to make life easy later."
+}
+
 variable "automate_hostname" {
   description = "automate_hostname is the hostname which will be given to your A2 instance"
 }
