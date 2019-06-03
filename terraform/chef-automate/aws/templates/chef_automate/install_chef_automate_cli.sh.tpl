@@ -13,7 +13,7 @@ if [[ $? != 0 ]]; then
 fi
 
 pushd "/tmp"
-  curl https://packages.chef.io/files/current/automate/latest/chef-automate_linux_amd64.zip |gunzip - > chef-automate && chmod +x chef-automate
+  curl https://packages.chef.io/files/${channel}/automate/latest/chef-automate_linux_amd64.zip |gunzip - > chef-automate && chmod +x chef-automate
   mv chef-automate /usr/sbin/chef-automate
   mkdir -p /etc/chef-automate
 
