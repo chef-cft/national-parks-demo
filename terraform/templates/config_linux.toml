@@ -8,3 +8,4 @@ log_level = "warn"
 enable = "true"
 server_url = "${automate_url}"
 token = "${automate_token}"
+raise_on_failure = true

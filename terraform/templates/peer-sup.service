@@ -2,7 +2,6 @@
 Description=Habitat Supervisor
 
 [Service]
-Environment="HAB_FEAT_EVENT_STREAM=1"
 ExecStartPre=/bin/bash -c /bin/systemctl
 ExecStart=/bin/hab run ${flags}
 

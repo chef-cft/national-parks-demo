@@ -75,6 +75,10 @@ variable "sleep" {
 
 variable "automate_url" {}
 
+variable "automate_ip" {}
+
 variable "automate_token" {}
 
 variable "automate_user" {}
+
+variable "hab_install_opts" {}

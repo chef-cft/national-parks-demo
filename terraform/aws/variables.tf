@@ -64,6 +64,10 @@ variable "channel" {
   default = "stable"
 }
 
+variable "hab_install_opts" {
+  default = ""
+}
+
 variable "test_instance_type" {
   default = "t2.micro"
 }
@@ -101,7 +105,10 @@ variable "sleep" {
 
 variable "automate_url" {}
 
+variable "automate_hostname" {}
+
 variable "automate_token" {}
 
 variable "automate_user" {}
 
+variable "automate_ip" {}

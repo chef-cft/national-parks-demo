@@ -51,6 +51,7 @@ resource "aws_instance" "permanent_peer" {
       "chmod +x /tmp/install_hab.sh",
       "sudo /tmp/install_hab.sh",
       "sudo hab license accept",
+      "sudo hab pkg install core/hab-sup/0.82.0 -c unstable",
       "sudo mv /home/${var.aws_ami_user}/hab-sup.service /etc/systemd/system/hab-sup.service",
       "sudo systemctl daemon-reload",
       "sudo systemctl start hab-sup",
@@ -106,7 +107,7 @@ resource "aws_instance" "mongodb" {
   }
 
   provisioner "file" {
-    content     = "${data.template_file.sup_service.rendered}"
+    content     = "${data.template_file.sup_mongo.rendered}"
     destination = "/home/${var.aws_ami_user}/hab-sup.service"
   }
 
@@ -134,13 +135,14 @@ resource "aws_instance" "mongodb" {
       "chmod +x /tmp/install_hab.sh",
       "sudo /tmp/install_hab.sh",
       "sudo hab license accept",
+      "sudo hab pkg install core/hab-sup/0.82.0 -c unstable",
       "sudo mv /home/${var.aws_ami_user}/hab-sup.service /etc/systemd/system/hab-sup.service",
       "sudo systemctl daemon-reload",
       "sudo systemctl start hab-sup",
       "sudo systemctl enable hab-sup",
       "sleep ${var.sleep}",
       "sudo mkdir -p /hab/user/mongodb/config /hab/user/config-baseline/config /hab/user/audit-baseline/config",
-      "sudo chown hab:hab -p /hab/user",
+      "sudo chown hab:hab /hab/user",
       "sudo /sbin/sysctl -w net.ipv4.conf.all.accept_source_route=0",
       "sudo /sbin/sysctl -w net.ipv4.conf.default.accept_source_route=0",
       "sudo /sbin/sysctl -w net.ipv4.conf.default.accept_redirects=0",
@@ -187,7 +189,7 @@ resource "aws_instance" "national_parks" {
   }
 
   provisioner "file" {
-    content     = "${data.template_file.sup_service.rendered}"
+    content     = "${data.template_file.sup_np.rendered}"
     destination = "/home/${var.aws_ami_user}/hab-sup.service"
   }
 
@@ -211,13 +213,14 @@ resource "aws_instance" "national_parks" {
       "chmod +x /tmp/install_hab.sh",
       "sudo /tmp/install_hab.sh",
       "sudo hab license accept",
+      "sudo hab pkg install core/hab-sup/0.82.0 -c unstable",
       "sudo mv /home/${var.aws_ami_user}/hab-sup.service /etc/systemd/system/hab-sup.service",
       "sudo systemctl daemon-reload",
       "sudo systemctl start hab-sup",
       "sudo systemctl enable hab-sup",
       "sleep ${var.sleep}",
       "sudo mkdir -p /hab/user/haproxy/config /hab/user/config-baseline/config /hab/user/audit-baseline/config",
-      "sudo chown hab:hab -p /hab/user",
+      "sudo chown hab:hab /hab/user",
       "sudo /sbin/sysctl -w net.ipv4.conf.all.accept_source_route=0",
       "sudo /sbin/sysctl -w net.ipv4.conf.default.accept_source_route=0",
       "sudo /sbin/sysctl -w net.ipv4.conf.default.accept_redirects=0",
@@ -262,7 +265,7 @@ resource "aws_instance" "haproxy" {
   }
 
   provisioner "file" {
-    content     = "${data.template_file.sup_service.rendered}"
+    content     = "${data.template_file.sup_haproxy.rendered}"
     destination = "/home/${var.aws_ami_user}/hab-sup.service"
   }
 
@@ -290,13 +293,14 @@ resource "aws_instance" "haproxy" {
       "chmod +x /tmp/install_hab.sh",
       "sudo /tmp/install_hab.sh",
       "sudo hab license accept",
+      "sudo hab pkg install core/hab-sup/0.82.0 -c unstable",
       "sudo mv /home/${var.aws_ami_user}/hab-sup.service /etc/systemd/system/hab-sup.service",
       "sudo systemctl daemon-reload",
       "sudo systemctl start hab-sup",
       "sudo systemctl enable hab-sup",
       "sleep ${var.sleep}",
       "sudo mkdir -p /hab/user/haproxy/config /hab/user/config-baseline/config /hab/user/audit-baseline/config",
-      "sudo chown hab:hab -p /hab/user",
+      "sudo chown hab:hab /hab/user",
       "sudo /sbin/sysctl -w net.ipv4.conf.all.accept_source_route=0",
       "sudo /sbin/sysctl -w net.ipv4.conf.default.accept_source_route=0",
       "sudo /sbin/sysctl -w net.ipv4.conf.default.accept_redirects=0",
