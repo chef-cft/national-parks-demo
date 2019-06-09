@@ -1,0 +1,10 @@
+interval = 1800
+splay = 900
+splay_first_run = 0
+run_lock_timeout = 1800
+log_level = "warn"
+
+[data_collector]
+enable = "true"
+server_url = "${automate_url}"
+token = "${automate_token}"

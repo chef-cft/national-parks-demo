@@ -31,11 +31,22 @@ resource "aws_instance" "permanent_peer" {
     destination = "/home/${var.aws_ami_user}/hab-sup.service"
   }
 
+  provisioner "file" {
+    content     = "${data.template_file.audit_toml_linux.rendered}"
+    destination = "/home/${var.aws_ami_user}/audit_linux.toml"
+  }
+
+  provisioner "file" {
+    content     = "${data.template_file.config_toml_linux.rendered}"
+    destination = "/home/${var.aws_ami_user}/config_linux.toml"
+  }
+
   provisioner "remote-exec" {
     inline = [
       "sudo rm -rf /etc/machine-id",
       "sudo systemd-machine-id-setup",
-      "sudo hostname np-permanent-peer",
+      "sudo hostname permanent-peer",
+      "sudo groupadd hab",
       "sudo adduser hab -g hab",
       "chmod +x /tmp/install_hab.sh",
       "sudo /tmp/install_hab.sh",
@@ -44,6 +55,17 @@ resource "aws_instance" "permanent_peer" {
       "sudo systemctl daemon-reload",
       "sudo systemctl start hab-sup",
       "sudo systemctl enable hab-sup",
+      "sleep ${var.sleep}",
+      "sudo mkdir -p /hab/user/config-baseline/config /hab/user/audit-baseline/config",
+      "sudo chown hab:hab -p /hab/user",
+      "sudo /sbin/sysctl -w net.ipv4.conf.all.accept_source_route=0",
+      "sudo /sbin/sysctl -w net.ipv4.conf.default.accept_source_route=0",
+      "sudo /sbin/sysctl -w net.ipv4.conf.default.accept_redirects=0",
+      "sudo /sbin/sysctl -w net.ipv4.conf.all.accept_redirects=0",
+      "sudo cp /home/${var.aws_ami_user}/audit_linux.toml /hab/user/audit-baseline/config/user.toml",
+      "sudo cp /home/${var.aws_ami_user}/config_linux.toml /hab/user/config-baseline/config/user.toml",
+      "sudo hab svc load effortless/config-baseline --group ${var.group} --strategy at-once --channel stable",
+      "sudo hab svc load effortless/audit-baseline --group ${var.group} --strategy at-once --channel stable",  
     ]
 
   }
@@ -63,6 +85,10 @@ resource "aws_instance" "mongodb" {
   subnet_id                   = "${aws_subnet.national_parks_subnet.id}"
   vpc_security_group_ids      = ["${aws_security_group.national_parks.id}", "${aws_security_group.habitat_supervisor.id}"]
   associate_public_ip_address = true
+
+  root_block_device {
+    volume_size = "40"
+  }
 
   tags {
     Name          = "np_mongodb_${random_id.instance_id.hex}"
@@ -88,11 +114,21 @@ resource "aws_instance" "mongodb" {
     source     = "files/mongo.toml"
     destination = "/home/${var.aws_ami_user}/mongo.toml"
   }
+
+  provisioner "file" {
+    content     = "${data.template_file.audit_toml_linux.rendered}"
+    destination = "/home/${var.aws_ami_user}/audit_linux.toml"
+  }
+
+  provisioner "file" {
+    content     = "${data.template_file.config_toml_linux.rendered}"
+    destination = "/home/${var.aws_ami_user}/config_linux.toml"
+  }
   provisioner "remote-exec" {
     inline = [
       "sudo rm -rf /etc/machine-id",
       "sudo systemd-machine-id-setup",
-      "sudo hostname np-mongodb-${var.prod_channel}",
+      "sudo hostname mongodb-national-parks-${var.prod_channel}",
       "sudo groupadd hab",
       "sudo adduser hab -g hab",
       "chmod +x /tmp/install_hab.sh",
@@ -102,9 +138,19 @@ resource "aws_instance" "mongodb" {
       "sudo systemctl daemon-reload",
       "sudo systemctl start hab-sup",
       "sudo systemctl enable hab-sup",
-      "sleep 15",
-      "sudo hab svc load core/mongodb --group ${var.group}",
-      "sudo hab config apply mongodb.${var.group} $(date +%s) /home/${var.aws_ami_user}/mongo.toml"
+      "sleep ${var.sleep}",
+      "sudo mkdir -p /hab/user/mongodb/config /hab/user/config-baseline/config /hab/user/audit-baseline/config",
+      "sudo chown hab:hab -p /hab/user",
+      "sudo /sbin/sysctl -w net.ipv4.conf.all.accept_source_route=0",
+      "sudo /sbin/sysctl -w net.ipv4.conf.default.accept_source_route=0",
+      "sudo /sbin/sysctl -w net.ipv4.conf.default.accept_redirects=0",
+      "sudo /sbin/sysctl -w net.ipv4.conf.all.accept_redirects=0",
+      "sudo cp /home/${var.aws_ami_user}/audit_linux.toml /hab/user/audit-baseline/config/user.toml",
+      "sudo cp /home/${var.aws_ami_user}/config_linux.toml /hab/user/config-baseline/config/user.toml",
+      "sudo cp /home/${var.aws_ami_user}/mongo.toml /hab/user/mongodb/config/user.toml",
+      "sudo hab svc load effortless/config-baseline --group ${var.group} --strategy at-once --channel stable",
+      "sudo hab svc load effortless/audit-baseline --group ${var.group} --strategy at-once --channel stable",  
+      "sudo hab svc load core/mongodb --group ${var.group}"
     ]
 
   }
@@ -145,6 +191,16 @@ resource "aws_instance" "national_parks" {
     destination = "/home/${var.aws_ami_user}/hab-sup.service"
   }
 
+  provisioner "file" {
+    content     = "${data.template_file.audit_toml_linux.rendered}"
+    destination = "/home/${var.aws_ami_user}/audit_linux.toml"
+  }
+
+  provisioner "file" {
+    content     = "${data.template_file.config_toml_linux.rendered}"
+    destination = "/home/${var.aws_ami_user}/config_linux.toml"
+  }
+
   provisioner "remote-exec" {
     inline = [
       "sudo rm -rf /etc/machine-id",
@@ -159,7 +215,17 @@ resource "aws_instance" "national_parks" {
       "sudo systemctl daemon-reload",
       "sudo systemctl start hab-sup",
       "sudo systemctl enable hab-sup",
-      "sleep 15",
+      "sleep ${var.sleep}",
+      "sudo mkdir -p /hab/user/haproxy/config /hab/user/config-baseline/config /hab/user/audit-baseline/config",
+      "sudo chown hab:hab -p /hab/user",
+      "sudo /sbin/sysctl -w net.ipv4.conf.all.accept_source_route=0",
+      "sudo /sbin/sysctl -w net.ipv4.conf.default.accept_source_route=0",
+      "sudo /sbin/sysctl -w net.ipv4.conf.default.accept_redirects=0",
+      "sudo /sbin/sysctl -w net.ipv4.conf.all.accept_redirects=0",
+      "sudo cp /home/${var.aws_ami_user}/audit_linux.toml /hab/user/audit-baseline/config/user.toml",
+      "sudo cp /home/${var.aws_ami_user}/config_linux.toml /hab/user/config-baseline/config/user.toml",
+      "sudo hab svc load effortless/config-baseline --group ${var.group} --strategy at-once --channel stable",
+      "sudo hab svc load effortless/audit-baseline --group ${var.group} --strategy at-once --channel stable", 
       "sudo hab svc load ${var.origin}/national-parks --group ${var.group} --channel ${var.prod_channel} --strategy ${var.update_strategy} --bind database:mongodb.${var.group}"
 
     ]
@@ -204,6 +270,16 @@ resource "aws_instance" "haproxy" {
     source     = "files/haproxy.toml"
     destination = "/home/${var.aws_ami_user}/haproxy.toml"
   }
+
+  provisioner "file" {
+    content     = "${data.template_file.audit_toml_linux.rendered}"
+    destination = "/home/${var.aws_ami_user}/audit_linux.toml"
+  }
+
+  provisioner "file" {
+    content     = "${data.template_file.config_toml_linux.rendered}"
+    destination = "/home/${var.aws_ami_user}/config_linux.toml"
+  }
   provisioner "remote-exec" {
     inline = [
       "sudo rm -rf /etc/machine-id",
@@ -218,32 +294,19 @@ resource "aws_instance" "haproxy" {
       "sudo systemctl daemon-reload",
       "sudo systemctl start hab-sup",
       "sudo systemctl enable hab-sup",
-      "sleep 15",
-      "sudo hab svc load core/haproxy --group ${var.group} --bind backend:national-parks.${var.group}",
-      "sudo hab config apply haproxy.${var.group} $(date +%s) /home/${var.aws_ami_user}/haproxy.toml"
+      "sleep ${var.sleep}",
+      "sudo mkdir -p /hab/user/haproxy/config /hab/user/config-baseline/config /hab/user/audit-baseline/config",
+      "sudo chown hab:hab -p /hab/user",
+      "sudo /sbin/sysctl -w net.ipv4.conf.all.accept_source_route=0",
+      "sudo /sbin/sysctl -w net.ipv4.conf.default.accept_source_route=0",
+      "sudo /sbin/sysctl -w net.ipv4.conf.default.accept_redirects=0",
+      "sudo /sbin/sysctl -w net.ipv4.conf.all.accept_redirects=0",
+      "sudo cp /home/${var.aws_ami_user}/audit_linux.toml /hab/user/audit-baseline/config/user.toml",
+      "sudo cp /home/${var.aws_ami_user}/config_linux.toml /hab/user/config-baseline/config/user.toml",
+      "sudo cp /home/${var.aws_ami_user}/haproxy.toml /hab/user/haproxy/config/user.toml",
+      "sudo hab svc load effortless/config-baseline --group ${var.group} --strategy at-once --channel stable",
+      "sudo hab svc load effortless/audit-baseline --group ${var.group} --strategy at-once --channel stable",
+      "sudo hab svc load core/haproxy --group ${var.group} --bind backend:national-parks.${var.group}"
     ]
   }
-}
-
-////////////////////////////////
-// Templates
-
-data "template_file" "permanent_peer" {
-  template = "${file("${path.module}/../templates/hab-sup.service")}"
-
-  vars {
-    flags = "--auto-update --listen-gossip 0.0.0.0:9638 --listen-http 0.0.0.0:9631 --permanent-peer"
-  }
-}
-
-data "template_file" "sup_service" {
-  template = "${file("${path.module}/../templates/hab-sup.service")}"
-
-  vars {
-    flags = "--auto-update --peer ${aws_instance.permanent_peer.private_ip} --listen-gossip 0.0.0.0:9638 --listen-http 0.0.0.0:9631"
-  }
-}
-
-data "template_file" "install_hab" {
-  template = "${file("${path.module}/../templates/install-hab.sh")}"
 }

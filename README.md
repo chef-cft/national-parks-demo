@@ -1,5 +1,5 @@
-# National Parks - Java Tomcat Application
-This is an example Java Tomcat application packaged by [Habitat](https://habitat.sh). This example app has existed for some time, and another example can be found [here](https://github.com/habitat-sh/national-parks). The differences with this example versus previous examples are the following:
+# Enterprise Automation Stack - National Parks - Java Tomcat Application
+This is an example Java Tomcat application packaged by [Habitat](https://habitat.sh) on VMs hardened and patched by Chef and Audited by Inspec using the "Effortless" pattern. This example app has existed for some time, and another example can be found [here](https://github.com/habitat-sh/national-parks). The differences with this example versus previous examples are the following:
 
 - `core/mongodb` - Previous examples had you build a version of mongodb that was already populated with data before the application 
 - `mongo.toml` - This repo includes a `user.toml` file for overriding the default configuration of mongodb
@@ -59,13 +59,32 @@ Included in the repo is terraform code for launching the application in AWS and 
 
 [Terraform](https://www.terraform.io/intro/getting-started/install.html).
 
+### Deploy Chef Automate
+1. `cd terraform/chef-automate/(aws|azure|gcp)`
+2. `cp tfvar.example terraform.tfvars`
+3. `$EDITOR terraform.tfvars`
+4. `terraform apply`
+
+Once you automate instance is up it will output credentials to login and an automate token:
+
+```
+Outputs:
+
+a2_admin = admin
+a2_admin_password = <password>
+a2_token = <token>
+a2_url = https://scottford-automate.chef-demo.com
+chef_automate_public_ip = 34.222.124.23
+chef_automate_server_public_r53_dns = scottford-automate.chef-demo.com
+```
+
 ### Proivision National-Parks in AWS
 You will need to have an [AWS account already created](https://aws.amazon.com)
 
 #### Step
 1. `cd terraform/aws`
 2. `cp tfvars.example terraform.tfvars`
-3. edit `terraform.tfvars` with your own values
+3. edit `terraform.tfvars` with your own values and add in the `automate_url` and `automate_token` from the previous step
 4. `terraform apply`
 
 Once the provisioning finishes you will see the output with the various public IP addresses
@@ -92,7 +111,7 @@ You will need to have an [Azure account already created](https://azure.microsoft
 2. `terraform init`
 3. `az login`
 4. `cp tfvars.example terraform.tfvars`
-5. edit `terraform.tfvars` with your own values
+5. edit `terraform.tfvars` with your own values and add in the `automate_url` and `automate_token` from the previous step
 6. `terraform apply`
 
 Once provisioning finishes you will see the output withthe various public IP addresses:

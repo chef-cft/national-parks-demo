@@ -1,0 +1,4 @@
+[data_collector]
+enable = "true"
+server_url = "${automate_url}"
+token = "${automate_token}"

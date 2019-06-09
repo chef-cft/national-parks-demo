@@ -1,0 +1,4 @@
+[data_collector]
+enable = "true"
+server_url = "https://scottford-a2.chef-demo.com/data-collector/v0"
+token = "C_0vwcTOfExhFliY0v1vV4eJqcw="

@@ -1,0 +1,7 @@
+sleep_time = 30
+
+[reporter]
+stdout = false
+url = "https://<automate_lb_url from terraform outputs>/data-collector/v0"
+token = "a2_token from terraform outputs"
+verify_ssl = true
