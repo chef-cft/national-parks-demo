@@ -1,5 +1,5 @@
 terraform {
-  required_version = "> 0.11.0"
+  required_version = "> 0.11.00"
 }
 
 # Configure the Microsoft Azure Provider
@@ -54,7 +54,7 @@ resource "azurerm_public_ip" "permanent-peer-pip" {
   name                         = "${var.tag_name}-${var.application}-permanent-peer-pip"
   location                     = "${var.azure_region}"
   resource_group_name          = "${azurerm_resource_group.rg.name}"
-  public_ip_address_allocation = "static"
+  allocation_method            = "Static"
 
   tags {
     X-Dept        = "${var.tag_dept}"
@@ -70,7 +70,7 @@ resource "azurerm_public_ip" "mongodb-pip" {
   name                         = "${var.tag_name}-${var.application}-mongodb-pip"
   location                     = "${var.azure_region}"
   resource_group_name          = "${azurerm_resource_group.rg.name}"
-  public_ip_address_allocation = "static"
+  allocation_method            = "Static"
 
   tags {
     X-Dept        = "${var.tag_dept}"
@@ -86,7 +86,7 @@ resource "azurerm_public_ip" "haproxy-pip" {
   name                         = "${var.tag_name}-${var.application}-haproxy-pip"
   location                     = "${var.azure_region}"
   resource_group_name          = "${azurerm_resource_group.rg.name}"
-  public_ip_address_allocation = "static"
+  allocation_method            = "Static"
   tags {
     X-Dept        = "${var.tag_dept}"
     X-Customer    = "${var.tag_customer}"
@@ -101,7 +101,7 @@ resource "azurerm_public_ip" "pip" {
   name                         = "${var.tag_name}-${var.application}-pip-${count.index}"
   location                     = "${var.azure_region}"
   resource_group_name          = "${azurerm_resource_group.rg.name}"
-  public_ip_address_allocation = "static"
+  allocation_method            = "Static"
   count                        = "${var.count}"
 
   tags {
