@@ -6,7 +6,7 @@ azure_private_key_path= "~/path_to_private_key"
 
 azure_image_user = "azureuser"
 
-azuer_image_password = "Azur3pa$$word"
+azure_image_password = "Azur3pa$$word"
 
 azure_sub_id = "yourSubIDHere"
 
@@ -28,9 +28,8 @@ count = "1"
 
 tag_name = "YourFirstAndLastHere" # example: damienoneal or doneal
 
-tag_dept = "YourDepartmentHere" 
+tag_dept = "YourDepartmentHere"
 
 tag_contact = "YourEmailHere"
 
 tag_application = "AppNameeHere"
-
