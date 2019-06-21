@@ -82,3 +82,7 @@ variable "automate_token" {}
 variable "automate_user" {}
 
 variable "hab_install_opts" {}
+
+variable "hab-sup-version" {
+  default = "core/hab-sup"
+}
