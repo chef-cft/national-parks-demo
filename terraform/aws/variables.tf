@@ -112,3 +112,7 @@ variable "automate_token" {}
 variable "automate_user" {}
 
 variable "automate_ip" {}
+
+variable "hab-sup-version" {
+  default = "core/hab-sup"
+}
