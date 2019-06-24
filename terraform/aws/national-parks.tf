@@ -107,7 +107,7 @@ resource "aws_instance" "mongodb" {
   }
 
   provisioner "file" {
-    content     = "${data.template_file.sup_mongo.rendered}"
+    content     = "${data.template_file.sup_service.rendered}"
     destination = "/home/${var.aws_ami_user}/hab-sup.service"
   }
 
@@ -189,7 +189,7 @@ resource "aws_instance" "national_parks" {
   }
 
   provisioner "file" {
-    content     = "${data.template_file.sup_np.rendered}"
+    content     = "${data.template_file.sup_service.rendered}"
     destination = "/home/${var.aws_ami_user}/hab-sup.service"
   }
 
@@ -265,7 +265,7 @@ resource "aws_instance" "haproxy" {
   }
 
   provisioner "file" {
-    content     = "${data.template_file.sup_haproxy.rendered}"
+    content     = "${data.template_file.sup_service.rendered}"
     destination = "/home/${var.aws_ami_user}/hab-sup.service"
   }
 
