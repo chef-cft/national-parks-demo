@@ -24,15 +24,6 @@ resource "aws_security_group_rule" "ingress_allow_22_tcp_all" {
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = "${aws_security_group.chef_automate.id}"
 }
-
-resource "aws_security_group_rule" "ingress_allow_4222_tcp_all" {
-  type              = "ingress"
-  from_port         = 4222
-  to_port           = 4222
-  protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = "${aws_security_group.chef_automate.id}"
-}
 /////////////////////////
 // Habitat Supervisor Rules
 # Allow Habitat Supervisor http communication tcp
