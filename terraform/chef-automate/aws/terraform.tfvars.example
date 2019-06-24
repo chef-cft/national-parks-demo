@@ -33,7 +33,7 @@ tag_application=""
 
 automate_hostname="yourname-a2.chef-demo.com"
 automate_license = <YOUR AUTOMATE LICENSE>
-channel = "stable"
+channel = "current"
 # TLS is not supported in the event stream beta. Uncomment until TLS is supported.
 # disable_event_tls = "true"
 
