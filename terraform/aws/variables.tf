@@ -119,6 +119,14 @@ variable "automate_ip" {}
 ////////////////////////////////
 // Automate EAS Beta 
 
+variable "event-stream-enabled" {
+  default = "false"
+}
+
+variable "event-stream-env-var" {
+  default = "Environment=\"HAB_FEAT_EVENT_STREAM=1\""
+}
+
 variable "hab-sup-version" {
   default = "core/hab-sup"
 }

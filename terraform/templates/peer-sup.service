@@ -2,6 +2,7 @@
 Description=Habitat Supervisor
 
 [Service]
+${stream_env}
 ExecStartPre=/bin/bash -c /bin/systemctl
 ExecStart=/bin/hab run ${flags}
 

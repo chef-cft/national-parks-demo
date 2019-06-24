@@ -81,8 +81,26 @@ variable "automate_token" {}
 
 variable "automate_user" {}
 
-variable "hab_install_opts" {}
+variable "hab_install_opts" {
+  default = ""
+}
 
 variable "hab-sup-version" {
   default = "core/hab-sup"
+}
+
+variable "event-stream-enabled" {
+  default = "false"
+}
+
+variable "event-stream-env-var" {
+  default = "Environment=\"HAB_FEAT_EVENT_STREAM=1\""
+}
+
+variable "event-stream-application" {
+  default = "national-parks "
+}
+
+variable "event-stream-environment" {
+  default = "demo"
 }
