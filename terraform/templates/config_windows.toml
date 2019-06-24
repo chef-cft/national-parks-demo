@@ -1,4 +1,4 @@
 [data_collector]
 enable = "true"
-server_url = "${automate_url}"
+server_url = "${automate_url}/data-collector/v0/"
 token = "${automate_token}"

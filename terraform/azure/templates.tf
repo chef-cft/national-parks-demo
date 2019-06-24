@@ -5,7 +5,7 @@ data "template_file" "permanent_peer" {
   template = "${file("${path.module}/../templates/hab-sup.service")}"
 
   vars {
-    flags = "--auto-update --listen-gossip 0.0.0.0:9638 --listen-http 0.0.0.0:9631 --permanent-peer --event-stream-application=national-parks --event-stream-environment=demo-prod --event-stream-site=national-parks --event-stream-url=${var.automate_ip}:4222 --event-stream-token=${var.automate_token}"
+    flags = "--auto-update --listen-gossip 0.0.0.0:9638 --listen-http 0.0.0.0:9631 --permanent-peer --event-stream-application=national-parks --event-stream-environment=demo-prod --event-stream-site=${var.azure_region} --event-stream-url=${var.automate_ip}:4222 --event-stream-token=${var.automate_token}"
   }
 }
 
@@ -13,7 +13,7 @@ data "template_file" "sup_service" {
   template = "${file("${path.module}/../templates/hab-sup.service")}"
 
   vars {
-    flags = "--auto-update --peer ${azurerm_public_ip.permanent-peer-pip.ip_address} --listen-gossip 0.0.0.0:9638 --listen-http 0.0.0.0:9631 --event-stream-application=national-parks --event-stream-environment=demo-prod --event-stream-site=national-parks --event-stream-url=${var.automate_ip}:4222 --event-stream-token=${var.automate_token}"
+    flags = "--auto-update --peer ${azurerm_public_ip.permanent-peer-pip.ip_address} --listen-gossip 0.0.0.0:9638 --listen-http 0.0.0.0:9631 --event-stream-application=national-parks --event-stream-environment=demo-prod --event-stream-site=${var.azure_region} --event-stream-url=${var.automate_ip}:4222 --event-stream-token=${var.automate_token}"
   }
 }
 
