@@ -65,7 +65,7 @@ Included in the repo is terraform code for launching the application in AWS and 
 3. `$EDITOR terraform.tfvars`
 4. `terraform apply`
 
-#### Note: To Deploy Chef Automate with EAS Beta you must set the disable_event_tls variable to "true" in your terraform.tfvars.
+#### Note: To Deploy Chef Automate with EAS Beta you must deploy in AWS (see [this issue](https://github.com/chef-cft/national-parks-demo/issues/29) if you want to add to azure) and set the disable_event_tls variable to "true" in your terraform.tfvars.
 
 ```
 disable_event_tls = "true"
