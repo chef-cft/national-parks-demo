@@ -97,9 +97,12 @@ You will need to have an [AWS account already created](https://aws.amazon.com)
 1. Follow instructions for Chef-Automate setup with EAS beta
 2. Enable the event stream in your terraform.tfvars as follows:
 `event-stream-enabled = "true"`
-3. Set Habitat Supervisors to version 0.83.0-dev by setting the hab-sup-version varaible in your terraform.tfvars as follows:  
+3. Ensure your terraform.tfvars file has values (from your chef-automate terraform output) set for:
+`automate_ip`
+`automate_token`
+4. Set Habitat Supervisors to version 0.83.0-dev by setting the hab-sup-version varaible in your terraform.tfvars as follows:  
 `hab-sup-version = "core/hab-sup/0.83.0-dev -c unstable"`
-4. When you log into the Automate UX type 'beta' Turn ON the "EAS Application" Feature. When you refresh the page a new Applications tab will appear. 
+5. When you log into the Automate UX type 'beta' Turn ON the "EAS Application" Feature. When you refresh the page a new Applications tab will appear. 
 
 Once the provisioning finishes you will see the output with the various public IP addresses
 ```
