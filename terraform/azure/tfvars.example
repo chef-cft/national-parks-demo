@@ -33,3 +33,19 @@ tag_dept = "YourDepartmentHere"
 tag_contact = "YourEmailHere"
 
 tag_application = "AppNameeHere"
+
+event-stream-enabled = "false"
+
+automate_url = "https://myurl"
+
+automate_hostname = "myhostname"
+
+automate_ip = "myip"
+
+automate_token = "mytoken"
+
+automate_user = "admin"
+
+# Event stream requires minimum hab-sup 0.83.0
+# Until this is promoted to stable, uncomment if using EAS dashboards.
+# hab-sup-version = "core/hab-sup/0.83.0-dev -c unstable"
