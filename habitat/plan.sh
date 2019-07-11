@@ -1,7 +1,7 @@
 pkg_name=national-parks
 pkg_description="A sample JavaEE Web app deployed in the Tomcat8 package"
 pkg_origin=tbagio
-pkg_version=7.1.1
+pkg_version=7.1.2
 pkg_maintainer="Tio Bagio <tbagio@chef.io>"
 pkg_license=('Apache-2.0')
 pkg_deps=(core/tomcat8 core/corretto core/mongo-tools)
