@@ -1,0 +1,10 @@
+
+interval = 300
+report_to_stdout = false
+
+# Uncomment and replace values to report to Automate.
+# This can also be applied at runtime via `hab config apply`
+[automate]
+url = "${automate_url}"
+token = "${automate_token}"
+user = "${automate_user}"

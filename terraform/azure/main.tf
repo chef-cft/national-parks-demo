@@ -1,5 +1,5 @@
 terraform {
-  required_version = "> 0.11.0"
+  required_version = "~> 0.11"
 }
 
 # Configure the Microsoft Azure Provider
@@ -54,7 +54,7 @@ resource "azurerm_public_ip" "permanent-peer-pip" {
   name                         = "${var.tag_name}-${var.application}-permanent-peer-pip"
   location                     = "${var.azure_region}"
   resource_group_name          = "${azurerm_resource_group.rg.name}"
-  public_ip_address_allocation = "static"
+  allocation_method            = "Static"
 
   tags {
     X-Dept        = "${var.tag_dept}"
@@ -70,7 +70,7 @@ resource "azurerm_public_ip" "mongodb-pip" {
   name                         = "${var.tag_name}-${var.application}-mongodb-pip"
   location                     = "${var.azure_region}"
   resource_group_name          = "${azurerm_resource_group.rg.name}"
-  public_ip_address_allocation = "static"
+  allocation_method            = "Static"
 
   tags {
     X-Dept        = "${var.tag_dept}"
@@ -86,8 +86,7 @@ resource "azurerm_public_ip" "haproxy-pip" {
   name                         = "${var.tag_name}-${var.application}-haproxy-pip"
   location                     = "${var.azure_region}"
   resource_group_name          = "${azurerm_resource_group.rg.name}"
-  public_ip_address_allocation = "static"
-
+  allocation_method            = "Static"
   tags {
     X-Dept        = "${var.tag_dept}"
     X-Customer    = "${var.tag_customer}"
@@ -102,7 +101,7 @@ resource "azurerm_public_ip" "pip" {
   name                         = "${var.tag_name}-${var.application}-pip-${count.index}"
   location                     = "${var.azure_region}"
   resource_group_name          = "${azurerm_resource_group.rg.name}"
-  public_ip_address_allocation = "static"
+  allocation_method            = "Static"
   count                        = "${var.count}"
 
   tags {
@@ -368,10 +367,16 @@ resource "azurerm_virtual_machine" "permanent-peer" {
   vm_size               = "Standard_DS1_v2"
   delete_os_disk_on_termination = true
 
+  connection {
+    host        = "${azurerm_public_ip.permanent-peer-pip.ip_address}"
+    user        = "${var.azure_image_user}"
+    password    = "${var.azure_image_password}"
+  }
+
   storage_image_reference {
-    publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "16.04.0-LTS"
+    publisher = "OpenLogic"
+    offer     = "CentOS"
+    sku       = "7.6"
     version   = "latest"
   }
 
@@ -383,7 +388,7 @@ resource "azurerm_virtual_machine" "permanent-peer" {
   }
 
   os_profile {
-    computer_name  = "${var.tag_name}-${var.application}-permanent-peer"
+    computer_name  = "permanent-peer"
     admin_username = "${var.azure_image_user}"
     admin_password = "${var.azure_image_password}"
   }
@@ -402,16 +407,48 @@ resource "azurerm_virtual_machine" "permanent-peer" {
     storage_uri = "${azurerm_storage_account.stor.primary_blob_endpoint}"
   }
 
-  provisioner "habitat" {
-    permanent_peer = true
-    use_sudo       = true
-    service_type   = "systemd"
+  provisioner "file" {
+    content     = "${data.template_file.install_hab.rendered}"
+    destination = "/tmp/install_hab.sh"
+  }
 
-    connection {
-      host        = "${azurerm_public_ip.permanent-peer-pip.ip_address}"
-      user        = "${var.azure_image_user}"
-      password    = "${var.azure_image_password}"
-    }
+  provisioner "file" {
+    content     = "${data.template_file.permanent_peer.rendered}"
+    destination = "/home/${var.azure_image_user}/hab-sup.service"
+  }
+
+  provisioner "file" {
+    content     = "${data.template_file.audit_toml_linux.rendered}"
+    destination = "/home/${var.azure_image_user}/audit_linux.toml"
+  }
+
+  provisioner "file" {
+    content     = "${data.template_file.config_toml_linux.rendered}"
+    destination = "/home/${var.azure_image_user}/config_linux.toml"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "echo ${var.azure_image_password} | sudo -S yum update -y",
+      "sudo groupadd hab",
+      "sudo useradd hab -g hab",
+      "chmod +x /tmp/install_hab.sh",
+      "sudo /tmp/install_hab.sh",
+      "sudo hab license accept",
+      "sudo hab pkg install ${var.hab-sup-version}",
+      "sudo mv /home/${var.azure_image_user}/hab-sup.service /etc/systemd/system/hab-sup.service",
+      "sudo systemctl daemon-reload",
+      "sudo systemctl start hab-sup",
+      "sudo systemctl enable hab-sup",
+      "sleep ${var.sleep}",
+      "sudo mkdir -p /hab/user/audit-baseline/config /hab/user/config-baseline/config",
+      "sudo chown -R hab:hab /hab/user",
+      "sudo cp /home/${var.azure_image_user}/audit_linux.toml /hab/user/audit-baseline/config/user.toml",
+      "sudo cp /home/${var.azure_image_user}/config_linux.toml /hab/user/config-baseline/config/user.toml",
+      "sudo hab svc load effortless/audit-baseline --channel stable --strategy at-once --group ${var.group}",
+      "sudo hab svc load effortless/config-baseline --channel stable --strategy at-once --group ${var.group}",
+    ]
+
   }
 
   tags {
@@ -434,10 +471,16 @@ resource "azurerm_virtual_machine" "mongodb" {
   vm_size               = "Standard_DS1_v2"
   delete_os_disk_on_termination = true
 
+  connection {
+    host        = "${azurerm_public_ip.mongodb-pip.ip_address}"
+    user        = "${var.azure_image_user}"
+    password    = "${var.azure_image_password}"
+  }
+
   storage_image_reference {
-    publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "16.04.0-LTS"
+    publisher = "OpenLogic"
+    offer     = "CentOS"
+    sku       = "7.6"
     version   = "latest"
   }
 
@@ -449,7 +492,7 @@ resource "azurerm_virtual_machine" "mongodb" {
   }
 
   os_profile {
-    computer_name  = "${var.tag_name}-${var.application}-mongodb"
+    computer_name  = "national-parks-mongodb"
     admin_username = "${var.azure_image_user}"
     admin_password = "${var.azure_image_password}"
   }
@@ -468,23 +511,54 @@ resource "azurerm_virtual_machine" "mongodb" {
     storage_uri = "${azurerm_storage_account.stor.primary_blob_endpoint}"
   }
 
-  provisioner "habitat" {
-    peer         = "${azurerm_public_ip.permanent-peer-pip.ip_address}"
-    use_sudo     = true
-    service_type = "systemd"
+  provisioner "file" {
+    content     = "${data.template_file.install_hab.rendered}"
+    destination = "/tmp/install_hab.sh"
+  }
 
-    service {
-      name       = "core/mongodb"
-      channel    = "stable"
-      group      = "${var.group}"
-      user_toml  = "${file("files/mongo.toml")}"
-    }
+  provisioner "file" {
+    content     = "${data.template_file.sup_service.rendered}"
+    destination = "/home/${var.azure_image_user}/hab-sup.service"
+  }
 
-    connection {
-      host        = "${azurerm_public_ip.mongodb-pip.ip_address}"
-      user        = "${var.azure_image_user}"
-      password    = "${var.azure_image_password}"
-    }
+  provisioner "file" {
+    source     = "files/mongo.toml"
+    destination = "/home/${var.azure_image_user}/mongo.toml"
+  }
+
+  provisioner "file" {
+    content     = "${data.template_file.audit_toml_linux.rendered}"
+    destination = "/home/${var.azure_image_user}/audit_linux.toml"
+  }
+
+  provisioner "file" {
+    content     = "${data.template_file.config_toml_linux.rendered}"
+    destination = "/home/${var.azure_image_user}/config_linux.toml"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "echo ${var.azure_image_password} | sudo -S yum update -y",
+      "sudo groupadd hab",
+      "sudo useradd hab -g hab",
+      "chmod +x /tmp/install_hab.sh",
+      "sudo /tmp/install_hab.sh",
+      "sudo hab license accept",
+      "sudo hab pkg install ${var.hab-sup-version}",
+      "sudo mv /home/${var.azure_image_user}/hab-sup.service /etc/systemd/system/hab-sup.service",
+      "sudo systemctl daemon-reload",
+      "sudo systemctl start hab-sup",
+      "sudo systemctl enable hab-sup",
+      "sleep ${var.sleep}",
+      "sudo mkdir -p /hab/user/mongodb/config /hab/user/audit-baseline/config /hab/user/config-baseline/config",
+      "sudo chown -R hab:hab /hab/user",
+      "sudo cp /home/${var.azure_image_user}/audit_linux.toml /hab/user/audit-baseline/config/user.toml",
+      "sudo cp /home/${var.azure_image_user}/config_linux.toml /hab/user/config-baseline/config/user.toml",
+      "sudo cp /home/${var.azure_image_user}/mongo.toml /hab/user/mongodb/config/user.toml",
+      "sudo hab svc load effortless/audit-baseline --channel stable --strategy at-once --group ${var.group}",
+      "sudo hab svc load effortless/config-baseline --channel stable --strategy at-once --group ${var.group}",
+      "sudo hab svc load core/mongodb --group ${var.group}"
+    ]
   }
 
   tags {
@@ -508,10 +582,16 @@ resource "azurerm_virtual_machine" "app" {
   delete_os_disk_on_termination = true
   count                 = "${var.count}"
 
+  connection {
+    host        = "${element(azurerm_public_ip.pip.*.ip_address, count.index)}"
+    user        = "${var.azure_image_user}"
+    password    = "${var.azure_image_password}"
+  }
+
   storage_image_reference {
-    publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "16.04.0-LTS"
+    publisher = "OpenLogic"
+    offer     = "CentOS"
+    sku       = "7.6"
     version   = "latest"
   }
 
@@ -523,7 +603,7 @@ resource "azurerm_virtual_machine" "app" {
   }
 
   os_profile {
-    computer_name  = "${var.tag_name}-${var.application}-app${count.index}"
+    computer_name  = "national-parks-${count.index}"
     admin_username = "${var.azure_image_user}"
     admin_password = "${var.azure_image_password}"
   }
@@ -541,27 +621,50 @@ resource "azurerm_virtual_machine" "app" {
     enabled     = "true"
     storage_uri = "${azurerm_storage_account.stor.primary_blob_endpoint}"
   }
-
-  provisioner "habitat" {
-    peer         = "${azurerm_public_ip.permanent-peer-pip.ip_address}"
-    use_sudo     = true
-    service_type = "systemd"
-
-    service {
-      binds    = ["database:mongodb.${var.group}"]
-      name     = "${var.habitat_origin}/national-parks"
-      topology = "standalone"
-      group    = "${var.group}"
-      channel  = "${var.channel}"
-      strategy = "${var.update_strategy}"
-    }
-
-    connection {
-      host        = "${element(azurerm_public_ip.pip.*.ip_address, count.index)}"
-      user        = "${var.azure_image_user}"
-      password    = "${var.azure_image_password}"
-    }
+  provisioner "file" {
+    content     = "${data.template_file.install_hab.rendered}"
+    destination = "/tmp/install_hab.sh"
   }
+
+  provisioner "file" {
+    content     = "${data.template_file.sup_service.rendered}"
+    destination = "/home/${var.azure_image_user}/hab-sup.service"
+  }
+
+  provisioner "file" {
+    content     = "${data.template_file.audit_toml_linux.rendered}"
+    destination = "/home/${var.azure_image_user}/audit_linux.toml"
+  }
+
+  provisioner "file" {
+    content     = "${data.template_file.config_toml_linux.rendered}"
+    destination = "/home/${var.azure_image_user}/config_linux.toml"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "echo ${var.azure_image_password} | sudo -S yum update -y",
+      "sudo groupadd hab",
+      "sudo useradd hab -g hab",
+      "chmod +x /tmp/install_hab.sh",
+      "sudo /tmp/install_hab.sh",
+      "sudo hab license accept",
+      "sudo hab pkg install ${var.hab-sup-version}",
+      "sudo mv /home/${var.azure_image_user}/hab-sup.service /etc/systemd/system/hab-sup.service",
+      "sudo systemctl daemon-reload",
+      "sudo systemctl start hab-sup",
+      "sudo systemctl enable hab-sup",
+      "sleep ${var.sleep}",
+      "sudo mkdir -p /hab/user/audit-baseline/config /hab/user/config-baseline/config",
+      "sudo chown -R hab:hab /hab/user",
+      "sudo cp /home/${var.azure_image_user}/audit_linux.toml /hab/user/audit-baseline/config/user.toml",
+      "sudo cp /home/${var.azure_image_user}/config_linux.toml /hab/user/config-baseline/config/user.toml",
+      "sudo hab svc load effortless/audit-baseline --channel stable --strategy at-once --group ${var.group}",
+      "sudo hab svc load effortless/config-baseline --channel stable --strategy at-once --group ${var.group}",
+      "sudo hab svc load ${var.origin}/national-parks --group ${var.group} --channel ${var.channel} --strategy ${var.update_strategy} --bind database:mongodb.${var.group}"
+    ]
+  }
+
 
   tags {
     X-Dept        = "${var.tag_dept}"
@@ -584,10 +687,16 @@ resource "azurerm_virtual_machine" "haproxy" {
   vm_size               = "Standard_DS1_v2"
   delete_os_disk_on_termination = true
 
+  connection {
+    host        = "${azurerm_public_ip.haproxy-pip.ip_address}"
+    user        = "${var.azure_image_user}"
+    password    = "${var.azure_image_password}"
+  }
+
   storage_image_reference {
-    publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "16.04.0-LTS"
+    publisher = "OpenLogic"
+    offer     = "CentOS"
+    sku       = "7.6"
     version   = "latest"
   }
 
@@ -599,7 +708,7 @@ resource "azurerm_virtual_machine" "haproxy" {
   }
 
   os_profile {
-    computer_name  = "${var.tag_name}-${var.application}-haproxy"
+    computer_name  = "haproxy-national-parks"
     admin_username = "${var.azure_image_user}"
     admin_password = "${var.azure_image_password}"
   }
@@ -618,45 +727,59 @@ resource "azurerm_virtual_machine" "haproxy" {
     storage_uri = "${azurerm_storage_account.stor.primary_blob_endpoint}"
   }
 
-  provisioner "habitat" {
-    peer         = "${azurerm_public_ip.permanent-peer-pip.ip_address}"
-    use_sudo     = true
-    service_type = "systemd"
-
-    service {
-      binds       = ["backend:national-parks.${var.group}"]
-      name        = "core/haproxy"
-      user_toml   = "${file("files/haproxy.toml")}" 
-      channel     = "stable"
-      group       = "${var.group}"
-    }
-
-    connection {
-      host        = "${azurerm_public_ip.haproxy-pip.ip_address}"
-      user        = "${var.azure_image_user}"
-      password    = "${var.azure_image_password}"
-    }
+  provisioner "file" {
+    content     = "${data.template_file.install_hab.rendered}"
+    destination = "/tmp/install_hab.sh"
   }
 
+  provisioner "file" {
+    content     = "${data.template_file.sup_service.rendered}"
+    destination = "/home/${var.azure_image_user}/hab-sup.service"
+  }
+
+  provisioner "file" {
+    source     = "files/haproxy.toml"
+    destination = "/home/${var.azure_image_user}/haproxy.toml"
+  }
+  provisioner "file" {
+    content     = "${data.template_file.audit_toml_linux.rendered}"
+    destination = "/home/${var.azure_image_user}/audit_linux.toml"
+  }
+
+  provisioner "file" {
+    content     = "${data.template_file.config_toml_linux.rendered}"
+    destination = "/home/${var.azure_image_user}/config_linux.toml"
+  }
+  provisioner "remote-exec" {
+    inline = [
+      "echo ${var.azure_image_password} | sudo -S yum update -y",
+      "sudo groupadd hab",
+      "sudo useradd hab -g hab",
+      "chmod +x /tmp/install_hab.sh",
+      "sudo /tmp/install_hab.sh",
+      "sudo hab license accept",
+      "sudo hab pkg install ${var.hab-sup-version}",
+      "sudo mv /home/${var.azure_image_user}/hab-sup.service /etc/systemd/system/hab-sup.service",
+      "sudo systemctl daemon-reload",
+      "sudo systemctl start hab-sup",
+      "sudo systemctl enable hab-sup",
+      "sleep ${var.sleep}",
+      "sudo mkdir -p /hab/user/haproxy/config /hab/user/audit-baseline/config /hab/user/config-baseline/config",
+      "sudo chown -R hab:hab /hab/user",
+      "sudo cp /home/${var.azure_image_user}/audit_linux.toml /hab/user/audit-baseline/config/user.toml",
+      "sudo cp /home/${var.azure_image_user}/config_linux.toml /hab/user/config-baseline/config/user.toml",
+      "sudo cp /home/${var.azure_image_user}/haproxy.toml /hab/user/haproxy/config/user.toml",
+      "sudo hab svc load effortless/audit-baseline --channel stable --strategy at-once --group ${var.group}",
+      "sudo hab svc load effortless/config-baseline --channel stable --strategy at-once --group ${var.group}",
+      "sudo hab svc load core/haproxy --group ${var.group} --bind backend:national-parks.${var.group}"
+    ]
+  }
   tags {
     X-Dept        = "${var.tag_dept}"
     X-Customer    = "${var.tag_customer}"
     X-Project     = "${var.tag_project}"
-    X-Application = "${var.tag_application}" 
+    X-Application = "${var.tag_application}"
     X-Contact     = "${var.tag_contact}"
     X-TTL         = "${var.tag_ttl}"
   }
 }
-
-# Public IP Data
-# data "azurerm_public_ip" "app" {
-#   name                = "${azurerm_public_ip.pip.2.name}"
-#   resource_group_name = "${azurerm_resource_group.rg.name}"
-#   depends_on          = ["azurerm_virtual_machine.app"]
-# }
-
-# data "azurerm_public_ip" "haproxy" {
-#   name                = "${azurerm_public_ip.pip.3.name}"
-#   resource_group_name = "${azurerm_resource_group.rg.name}"
-#   depends_on          = ["azurerm_virtual_machine.haproxy"]
-# }

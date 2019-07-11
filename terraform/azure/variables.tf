@@ -14,9 +14,7 @@ variable "azure_image_user" {
   default = "azureuser"
 }
 
-variable "azure_image_password" {
-  default = "Azur3pa$$word"
-}
+variable "azure_image_password" {}
 
 variable "azure_sub_id" {
   default = "xxxxxxx-xxxx-xxxx-xxxxxxxxxx"
@@ -30,9 +28,7 @@ variable "application" {
   default = "nationalparks"
 }
 
-variable "habitat_origin" {
-  default = "damienoneal"
-}
+variable "origin" { }
 
 variable "bldr_url" {
   default = "https://bldr.habitat.sh"
@@ -43,7 +39,7 @@ variable "channel" {
 }
 
 variable "group" {
-  default = "dev"
+  default = "default"
 }
 
 variable "update_strategy" {
@@ -73,3 +69,38 @@ variable "count" {
   default = 1
 }
 
+variable "sleep" {
+  default = "60"
+}
+
+variable "automate_url" {}
+
+variable "automate_ip" {}
+
+variable "automate_token" {}
+
+variable "automate_user" {}
+
+variable "hab_install_opts" {
+  default = ""
+}
+
+variable "hab-sup-version" {
+  default = "core/hab-sup"
+}
+
+variable "event-stream-enabled" {
+  default = "false"
+}
+
+variable "event-stream-env-var" {
+  default = "Environment=\"HAB_FEAT_EVENT_STREAM=1\""
+}
+
+variable "event-stream-application" {
+  default = "national-parks "
+}
+
+variable "event-stream-environment" {
+  default = "demo"
+}

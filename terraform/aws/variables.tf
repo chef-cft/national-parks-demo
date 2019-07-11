@@ -14,8 +14,8 @@ variable "aws_centos_image_user" {
   default = "centos"
 }
 
-variable "aws_image_user" {
-  default = "ubuntu"
+variable "aws_ami_user" {
+  default = "centos"
 }
 
 variable "aws_amazon_image_user" {
@@ -64,6 +64,10 @@ variable "channel" {
   default = "stable"
 }
 
+variable "hab_install_opts" {
+  default = ""
+}
+
 variable "test_instance_type" {
   default = "t2.micro"
 }
@@ -86,5 +90,53 @@ variable "count" {
 
 variable "origin" {}
 
-variable "application" {}
+
+variable "group" {
+  default = "default"
+}
+
+variable "update_strategy" {
+  default = "at-once"
+}
+
+variable "sleep" {
+  default = "60"
+}
+
+////////////////////////////////
+// Automate Info 
+
+variable "automate_url" {}
+
+variable "automate_hostname" {}
+
+variable "automate_token" {}
+
+variable "automate_user" {}
+
+variable "automate_ip" {}
+
+////////////////////////////////
+// Automate EAS Beta 
+
+variable "event-stream-enabled" {
+  default = "false"
+}
+
+variable "event-stream-env-var" {
+  default = "Environment=\"HAB_FEAT_EVENT_STREAM=1\""
+}
+
+variable "hab-sup-version" {
+  default = "core/hab-sup"
+}
+
+variable "event-stream-application" {
+  default = "national-parks "
+}
+
+variable "event-stream-environment" {
+  default = "demo"
+}
+
 

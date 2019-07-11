@@ -1,5 +1,5 @@
-# National Parks - Java Tomcat Application
-This is an example Java Tomcat application packaged by [Habitat](https://habitat.sh). This example app has existed for some time, and another example can be found [here](https://github.com/habitat-sh/national-parks). The differences with this example versus previous examples are the following:
+# Enterprise Automation Stack - National Parks - Java Tomcat Application
+This is an example Java Tomcat application packaged by [Habitat](https://habitat.sh) on VMs hardened and patched by Chef and Audited by Inspec using the "Effortless" pattern. This example app has existed for some time, and another example can be found [here](https://github.com/habitat-sh/national-parks). The differences with this example versus previous examples are the following:
 
 - `core/mongodb` - Previous examples had you build a version of mongodb that was already populated with data before the application 
 - `mongo.toml` - This repo includes a `user.toml` file for overriding the default configuration of mongodb
@@ -59,14 +59,50 @@ Included in the repo is terraform code for launching the application in AWS and 
 
 [Terraform](https://www.terraform.io/intro/getting-started/install.html).
 
+### Deploy Chef Automate
+1. `cd terraform/chef-automate/(aws|azure|gcp)`
+2. `cp tfvar.example terraform.tfvars`
+3. `$EDITOR terraform.tfvars`
+4. `terraform apply`
+
+#### Note: To Deploy Chef Automate with EAS Beta you must deploy in AWS (see [this issue](https://github.com/chef-cft/national-parks-demo/issues/29) if you want to add to azure) and set the disable_event_tls variable to "true" in your terraform.tfvars.
+
+```
+disable_event_tls = "true"
+```
+Once you automate instance is up it will outpfut credentials to login and an automate token:
+
+```
+Outputs:
+
+a2_admin = admin
+a2_admin_password = <password>
+a2_token = <token>
+a2_url = https://scottford-automate.chef-demo.com
+chef_automate_public_ip = 34.222.124.23
+chef_automate_server_public_r53_dns = scottford-automate.chef-demo.com
+```
+
 ### Proivision National-Parks in AWS
 You will need to have an [AWS account already created](https://aws.amazon.com)
 
 #### Step
 1. `cd terraform/aws`
 2. `cp tfvars.example terraform.tfvars`
-3. edit `terraform.tfvars` with your own values
+3. edit `terraform.tfvars` with your own values and add in the `automate_url` and `automate_token` from the previous step
 4. `terraform apply`
+
+#### Note: To Deploy the national parks application with EAS Beta you must follow these additional instructions:
+
+1. Follow instructions for Chef-Automate setup with EAS beta
+2. Enable the event stream in your terraform.tfvars as follows:
+`event-stream-enabled = "true"`
+3. Ensure your terraform.tfvars file has values (from your chef-automate terraform output) set for:
+`automate_ip`
+`automate_token`
+4. Set Habitat Supervisors to version 0.83.0-dev by setting the hab-sup-version varaible in your terraform.tfvars as follows:  
+`hab-sup-version = "core/hab-sup/0.83.0-dev -c unstable"`
+5. When you log into the Automate UX type 'beta' Turn ON the "EAS Application" Feature. When you refresh the page a new Applications tab will appear. 
 
 Once the provisioning finishes you will see the output with the various public IP addresses
 ```
@@ -92,7 +128,7 @@ You will need to have an [Azure account already created](https://azure.microsoft
 2. `terraform init`
 3. `az login`
 4. `cp tfvars.example terraform.tfvars`
-5. edit `terraform.tfvars` with your own values
+5. edit `terraform.tfvars` with your own values and add in the `automate_url` and `automate_token` from the previous step
 6. `terraform apply`
 
 Once provisioning finishes you will see the output withthe various public IP addresses:
@@ -130,6 +166,34 @@ You will need to have an [Google Cloud account already created](https://console.
 - `git clone https://github.com/habitat-sh/habitat-updater`
 - create a `terraform.tfvars` 
 
+## Prep for GKE:
+You need to have a Docker Hub account set up: https://hub.docker.com/
+go to: https://console.cloud.google.com/
+
+You MUST use: the project that was created created within opscode: (Do not not create a new project!)
+Enable 2 APIs: Compute Engine API, Kubernetes Engine API
+1. From the Dashboard, goto APIs and Services, search for 'compute'
+click on 'Compute Engine API', then click 'Enable'
+2. From the Dashboard, goto APIs and Services, search for 'compute'
+click on 'Kubernetes Engine API', then click 'Enable'
+
+Create a credentials file:
+From the Dashboard, goto APIs and Services, click 'credentials', then click 'create credentials', click 'Service account key', select 'JSON', fill in 'service account name' with something ex: np-gke, role should be set to owner.
+This will download the json file to your local machine. 
+- Update terrafrom.tfvars file: gke_credentials_file = 'location/of/json-creds.json'
+- Shorten the tag_customer, tag_project, and habitat_origin: (the name cannot be longler 40 char)
+- gke_project = 'your-gke-projectid' , ex: gke_project = "eric-heiser-project"
+
+Test the configuration:
+`gcloud init`
+`cd terraform/gke`
+`terraform init`
+`terraform validate`
+`terraform apply`
+
+
+Publish both national-parks-demo and mongodb images to DockerHub with Builder or manually (see end of README for manual steps)
+
 ### Provision Kubernetes
 1. `cd terraform/gke`
 2. `terraform apply`
@@ -144,12 +208,14 @@ First we need to deploy the Habitat Operator
 2. `cd habitat-operator`
 3. `kubectl apply -f examples/rbac/rbac.yml`
 4. `kubectl apply -f examples/rbac/habitat-operator.yml`
+kubectl apply -f examples/rbac/rbac.yml && kubectl apply -f examples/rbac/habitat-operator.yml
 
 Now we can deploy the Habitat Updater
 1. `git clone https://github.com/habitat-sh/habitat-updater`
 2. `cd habitat-updater`
 3. `kubectl apply -f kubernetes/rbac/rbac.yml`
 4. `kubectl apply -f kubernetes/rbac/updater.yml`
+kubectl apply -f kubernetes/rbac/rbac.yml && kubectl apply -f kubernetes/rbac/updater.yml
 
 ### Deploy National-Parks into Kubernetes
 Now that we have k8s stood up and the Habitat Operator and Updater deployed we are are ready to deploy our app.
@@ -157,6 +223,7 @@ Now that we have k8s stood up and the Habitat Operator and Updater deployed we a
 2. Deploy the GKE load balancer: `kubectl create -f gke-service.yml`
 3. Next, edit the `habitat.yml` template with the proper origin names on lines 19 and 36
 4. Deploy the application: `kubectl create -f habitat.yml`
+kubectl create -f gke-service.yml && kubectl create -f habitat.yml
 
 Once deployment finishes you can run `kubectl get all` and see the running pods:
 ```
@@ -196,3 +263,67 @@ statefulset.apps/national-parks-db    1         1         3d1h
 Find the `EXTERNAL-IP` for `service/national-parks-lb`:
 
 `http://<EXTERNAL-IP>/national-parks`
+
+
+### To update the GKE cluster:
+Make sure that you have the DockerHub integration set with your <origin>/national-parks-demo
+Change the pins from red to blue, or vice-versa
+example: 
+`cp blue-index.html src/main/webapp/index.html`
+
+Initiate the build of the new artifact. This can be done manually or with the Github integration
+Github:
+`git commit -am 'changing from red to blue pins, vX.X.X'`
+`git push`
+Builder will watch your repo (generally national-parks-demo) and kick off a build, then publish to DockerHub.
+At this point the new build is published to both Builder and DockerHub. The habitat-updater is watching for a 
+new 'latest' version in Builder and will create new pod that is referenced with the 'latest' tag in DockerHub
+
+If your DockerHub integration is not working (generally because you changed the integration after saving it the first time), you can do this manually:
+
+
+
+### Create the DockerHub images
+(used chef-cft/np-mongo, but you can also use the core plan core/mongodb)
+Create a mongodb repo on Docker Hub. Fork https://github.com/chef-cft/np-mongo
+do a git clone of YOUR fork ex: `git clone https://github.com/ericheiser/np-mongo.git`
+`cd np-mongo` 
+`hab studio enter`
+`build`
+`source results/last_build.env`
+`hab pkg upload results/$pkg_artifact`
+`hab pkg export docker results/$pkg_artifact`
+
+Login to Docker Hub
+`docker login --username=yourhubusername --password=YourPassword`
+`docker login --username=yourhubusername`  <-- will prompt for password
+`docker push YourOrigin/np-mongo`
+
+### To update the gke cluster manually the steps are:
+  create a new build of national-parks
+  export to docker and push the image to DockerHub
+  push the HART to Builder
+  promote the package to the stable channel
+
+Individual steps as follows: (as much as possible from within the studio)
+`cd national-parks`
+`hab studio enter`
+`build`
+`source results/last_build.env`
+`hab pkg export docker results/$pkg_artifact`
+`hab pkg install -b core/docker`
+`docker login`
+`docker push <docker_repo>/national-parks:latest`
+`hab pkg upload results/$pkg_artifact`
+`hab pkg promote $pkg_ident stable`
+
+
+
+
+
+to quickly spin up the demo locally after mongodb and national-parks images are pushed to DockerHub.
+change `docker-compose.yml` to use your DockerHub repo line 8.
+ex: `     image: ericheiser/national-parks:latest`
+
+Then run: `docker-compose up`
+To clean up, run: `docker-compose down`
