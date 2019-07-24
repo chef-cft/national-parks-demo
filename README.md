@@ -65,7 +65,12 @@ Included in the repo is terraform code for launching the application in AWS and 
 3. `$EDITOR terraform.tfvars`
 4. `terraform apply`
 
-Once you automate instance is up it will output credentials to login and an automate token:
+#### Note: To Deploy Chef Automate with EAS Beta you must deploy in AWS (see [this issue](https://github.com/chef-cft/national-parks-demo/issues/29) if you want to add to azure) and set the disable_event_tls variable to "true" in your terraform.tfvars.
+
+```
+disable_event_tls = "true"
+```
+Once you automate instance is up it will outpfut credentials to login and an automate token:
 
 ```
 Outputs:
@@ -86,6 +91,18 @@ You will need to have an [AWS account already created](https://aws.amazon.com)
 2. `cp tfvars.example terraform.tfvars`
 3. edit `terraform.tfvars` with your own values and add in the `automate_url` and `automate_token` from the previous step
 4. `terraform apply`
+
+#### Note: To Deploy the national parks application with EAS Beta you must follow these additional instructions:
+
+1. Follow instructions for Chef-Automate setup with EAS beta
+2. Enable the event stream in your terraform.tfvars as follows:
+`event-stream-enabled = "true"`
+3. Ensure your terraform.tfvars file has values (from your chef-automate terraform output) set for:
+`automate_ip`
+`automate_token`
+4. Set Habitat Supervisors to version 0.83.0-dev by setting the hab-sup-version varaible in your terraform.tfvars as follows:  
+`hab-sup-version = "core/hab-sup/0.83.0-dev -c unstable"`
+5. When you log into the Automate UX type 'beta' Turn ON the "EAS Application" Feature. When you refresh the page a new Applications tab will appear. 
 
 Once the provisioning finishes you will see the output with the various public IP addresses
 ```

@@ -6,7 +6,7 @@ azure_private_key_path= "~/path_to_private_key"
 
 azure_image_user = "azureuser"
 
-azuer_image_password = "Azur3pa$$word"
+azure_image_password = "Azur3pa$$word"
 
 azure_sub_id = "yourSubIDHere"
 
@@ -28,9 +28,24 @@ count = "1"
 
 tag_name = "YourFirstAndLastHere" # example: damienoneal or doneal
 
-tag_dept = "YourDepartmentHere" 
+tag_dept = "YourDepartmentHere"
 
 tag_contact = "YourEmailHere"
 
 tag_application = "AppNameeHere"
 
+event-stream-enabled = "false"
+
+automate_url = "https://myurl"
+
+automate_hostname = "myhostname"
+
+automate_ip = "myip"
+
+automate_token = "mytoken"
+
+automate_user = "admin"
+
+# Event stream requires minimum hab-sup 0.83.0
+# Until this is promoted to stable, uncomment if using EAS dashboards.
+# hab-sup-version = "core/hab-sup/0.83.0-dev -c unstable"

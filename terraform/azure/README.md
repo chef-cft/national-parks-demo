@@ -3,7 +3,7 @@
 This Terraform spins up the National Parks application using [Habitat](https://www.habitat.sh) in Microsoft Azure!
 
 #### Requirements
-* Terraform >= 0.11.0
+* Terraform ~> 0.11
 * Microsoft Azure Account
 * [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
 * Cloned or Forked copy of this repository

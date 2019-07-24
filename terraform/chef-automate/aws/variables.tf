@@ -134,6 +134,6 @@ variable "automate_custom_ssl_cert_chain" {
 }
 
 variable "automate_server_instance_type" {
-  default = "m4.xlarge"
+  default = "m5.xlarge"
   description = "automate_server_instance_type is the AWS instance type to be used for A2"
 }
