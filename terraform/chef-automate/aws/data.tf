@@ -1,10 +1,6 @@
 
 terraform {
-<<<<<<< HEAD
-  required_version = "= 0.11.14" // Terraform frequently puts breaking changes into minor and patch version releases. _Always_ hard pin to the latest known and tested working version. Do not trust semantic versioning.
-=======
   required_version = "~> 0.11" // Terraform frequently puts breaking changes into minor and patch version releases. _Always_ hard pin to the latest known and tested working version. Do not trust semantic versioning.
->>>>>>> e3d697c6ce00e1e2b2226146dd11f9ab1245445d
 }
 
 provider "aws" {
