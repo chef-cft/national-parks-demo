@@ -1,10 +1,13 @@
-
 interval = 300
-report_to_stdout = false
+splay = 30
+splay_first_run = 0
+log_level = 'warn'
 
-# Uncomment and replace values to report to Automate.
-# This can also be applied at runtime via `hab config apply`
+[chef_license]
+acceptance = "accept-no-persist"
+
 [automate]
-url = "${automate_url}"
+enable = true
+server_url = "${automate_url}"
 token = "${automate_token}"
 user = "${automate_user}"
