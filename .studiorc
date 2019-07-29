@@ -1,0 +1,5 @@
+install_mongodb() {
+  hab pkg install core/mongodb/3.2.10/20171016003652
+}
+
+install_mongodb
