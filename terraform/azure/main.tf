@@ -557,7 +557,7 @@ resource "azurerm_virtual_machine" "mongodb" {
       "sudo cp /home/${var.azure_image_user}/mongo.toml /hab/user/mongodb/config/user.toml",
       "sudo hab svc load effortless/audit-baseline --channel stable --strategy at-once --group ${var.group}",
       "sudo hab svc load effortless/config-baseline --channel stable --strategy at-once --group ${var.group}",
-      "sudo hab svc load core/mongodb --group ${var.group}"
+      "sudo hab svc load core/mongodb/3.2.10/20171016003652 --group ${var.group}"
     ]
   }
 

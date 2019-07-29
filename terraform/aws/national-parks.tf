@@ -152,7 +152,7 @@ resource "aws_instance" "mongodb" {
       "sudo cp /home/${var.aws_ami_user}/mongo.toml /hab/user/mongodb/config/user.toml",
       "sudo hab svc load effortless/config-baseline --group ${var.group} --strategy at-once --channel stable",
       "sudo hab svc load effortless/audit-baseline --group ${var.group} --strategy at-once --channel stable",  
-      "sudo hab svc load core/mongodb --group ${var.group}"
+      "sudo hab svc load core/mongodb/3.2.10/20171016003652 --group ${var.group}"
     ]
 
   }
