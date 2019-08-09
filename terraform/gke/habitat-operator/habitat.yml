@@ -37,6 +37,9 @@ spec:
     # Make sure to update with your own origin and that you have published to Docker Hub
     image: scottford/national-parks
     count: 1
+    env:
+      - name: HAB_LICENSE
+        value: "accept"
     service:
       name: national-parks
       topology: standalone
