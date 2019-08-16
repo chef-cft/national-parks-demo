@@ -3,12 +3,17 @@ services:
   mongodb:
     image: core/mongodb
     environment:
-      HAB_MONGODB: "[mongod.net]\nbind_ip = '0.0.0.0'\n[mongod.security]\ncluster_auth_mode = ''" 
+      HAB_MONGODB: "[mongod.net]\nbind_ip = '0.0.0.0'\n[mongod.security]\ncluster_auth_mode = ''"
+      HAB_LICENSE: "accept-no-persist" 
   national-parks:
     image: scottford/national-parks:latest
+    environment:
+      HAB_LICENSE: "accept-no-persist"
     command: --peer mongodb --bind database:mongodb.default
   haproxy:
     image: core/haproxy:latest
+    environment:
+      HAB_LICENSE: "accept-no-persist"
     command: --peer national-parks --bind backend:national-parks.default
     ports:
       - 8085:8085
