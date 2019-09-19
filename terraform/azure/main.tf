@@ -441,12 +441,12 @@ resource "azurerm_virtual_machine" "permanent-peer" {
       "sudo systemctl start hab-sup",
       "sudo systemctl enable hab-sup",
       "sleep ${var.sleep}",
-      "sudo mkdir -p /hab/user/audit-baseline/config /hab/user/config-baseline/config",
+      "sudo mkdir -p /hab/user/audit-baseline/config /hab/user/${var.infra-package}/config",
       "sudo chown -R hab:hab /hab/user",
       "sudo cp /home/${var.azure_image_user}/audit_linux.toml /hab/user/audit-baseline/config/user.toml",
-      "sudo cp /home/${var.azure_image_user}/config_linux.toml /hab/user/config-baseline/config/user.toml",
-      "sudo hab svc load effortless/audit-baseline --channel stable --strategy at-once --group ${var.group}",
-      "sudo hab svc load effortless/config-baseline --channel stable --strategy at-once --group ${var.group}",
+      "sudo cp /home/${var.azure_image_user}/config_linux.toml /hab/user/${var.infra-package}/config/user.toml",
+      "sudo hab svc load ${var.inspec-origin}/${var.inspec-package} --channel stable --strategy at-once --group ${var.group}",
+      "sudo hab svc load ${var.infra-origin}/${var.infra-package} --channel stable --strategy at-once --group ${var.group}",
     ]
 
   }
@@ -550,13 +550,13 @@ resource "azurerm_virtual_machine" "mongodb" {
       "sudo systemctl start hab-sup",
       "sudo systemctl enable hab-sup",
       "sleep ${var.sleep}",
-      "sudo mkdir -p /hab/user/mongodb/config /hab/user/audit-baseline/config /hab/user/config-baseline/config",
+      "sudo mkdir -p /hab/user/mongodb/config /hab/user/audit-baseline/config /hab/user/${var.infra-package}/config",
       "sudo chown -R hab:hab /hab/user",
       "sudo cp /home/${var.azure_image_user}/audit_linux.toml /hab/user/audit-baseline/config/user.toml",
-      "sudo cp /home/${var.azure_image_user}/config_linux.toml /hab/user/config-baseline/config/user.toml",
+      "sudo cp /home/${var.azure_image_user}/config_linux.toml /hab/user/${var.infra-package}/config/user.toml",
       "sudo cp /home/${var.azure_image_user}/mongo.toml /hab/user/mongodb/config/user.toml",
-      "sudo hab svc load effortless/audit-baseline --channel stable --strategy at-once --group ${var.group}",
-      "sudo hab svc load effortless/config-baseline --channel stable --strategy at-once --group ${var.group}",
+      "sudo hab svc load ${var.inspec-origin}/${var.inspec-package} --channel stable --strategy at-once --group ${var.group}",
+      "sudo hab svc load ${var.infra-origin}/${var.infra-package} --channel stable --strategy at-once --group ${var.group}",
       "sudo hab svc load core/mongodb --group ${var.group}"
     ]
   }
@@ -655,12 +655,12 @@ resource "azurerm_virtual_machine" "app" {
       "sudo systemctl start hab-sup",
       "sudo systemctl enable hab-sup",
       "sleep ${var.sleep}",
-      "sudo mkdir -p /hab/user/audit-baseline/config /hab/user/config-baseline/config",
+      "sudo mkdir -p /hab/user/audit-baseline/config /hab/user/${var.infra-package}/config",
       "sudo chown -R hab:hab /hab/user",
       "sudo cp /home/${var.azure_image_user}/audit_linux.toml /hab/user/audit-baseline/config/user.toml",
-      "sudo cp /home/${var.azure_image_user}/config_linux.toml /hab/user/config-baseline/config/user.toml",
-      "sudo hab svc load effortless/audit-baseline --channel stable --strategy at-once --group ${var.group}",
-      "sudo hab svc load effortless/config-baseline --channel stable --strategy at-once --group ${var.group}",
+      "sudo cp /home/${var.azure_image_user}/config_linux.toml /hab/user/${var.infra-package}/config/user.toml",
+      "sudo hab svc load ${var.inspec-origin}/${var.inspec-package} --channel stable --strategy at-once --group ${var.group}",
+      "sudo hab svc load ${var.infra-origin}/${var.infra-package} --channel stable --strategy at-once --group ${var.group}",
       "sudo hab svc load ${var.origin}/national-parks --group ${var.group} --channel ${var.channel} --strategy ${var.update_strategy} --bind database:mongodb.${var.group}"
     ]
   }
@@ -764,13 +764,13 @@ resource "azurerm_virtual_machine" "haproxy" {
       "sudo systemctl start hab-sup",
       "sudo systemctl enable hab-sup",
       "sleep ${var.sleep}",
-      "sudo mkdir -p /hab/user/haproxy/config /hab/user/audit-baseline/config /hab/user/config-baseline/config",
+      "sudo mkdir -p /hab/user/haproxy/config /hab/user/audit-baseline/config /hab/user/${var.infra-package}/config",
       "sudo chown -R hab:hab /hab/user",
       "sudo cp /home/${var.azure_image_user}/audit_linux.toml /hab/user/audit-baseline/config/user.toml",
-      "sudo cp /home/${var.azure_image_user}/config_linux.toml /hab/user/config-baseline/config/user.toml",
+      "sudo cp /home/${var.azure_image_user}/config_linux.toml /hab/user/${var.infra-package}/config/user.toml",
       "sudo cp /home/${var.azure_image_user}/haproxy.toml /hab/user/haproxy/config/user.toml",
-      "sudo hab svc load effortless/audit-baseline --channel stable --strategy at-once --group ${var.group}",
-      "sudo hab svc load effortless/config-baseline --channel stable --strategy at-once --group ${var.group}",
+      "sudo hab svc load ${var.inspec-origin}/${var.inspec-package} --channel stable --strategy at-once --group ${var.group}",
+      "sudo hab svc load ${var.infra-origin}/${var.infra-package} --channel stable --strategy at-once --group ${var.group}",
       "sudo hab svc load core/haproxy --group ${var.group} --bind backend:national-parks.${var.group}"
     ]
   }

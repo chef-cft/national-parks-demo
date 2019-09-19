@@ -4,7 +4,15 @@ splay_first_run = 0
 run_lock_timeout = 1800
 log_level = "warn"
 
+# Leaving this here for legacy support. 
+# Latest effortless packages use [automate] for this.
 [data_collector]
+enable = "true"
+server_url = "${automate_url}/data-collector/v0/"
+token = "${automate_token}"
+# End legacy section.
+
+[automate]
 enable = "true"
 server_url = "${automate_url}/data-collector/v0/"
 token = "${automate_token}"

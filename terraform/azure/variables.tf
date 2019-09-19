@@ -104,3 +104,22 @@ variable "event-stream-application" {
 variable "event-stream-environment" {
   default = "demo"
 }
+
+# Specify Origin and Package for Chef Infra runs on all servers
+variable "infra-origin" {
+  default = "effortless"
+}
+
+variable "infra-package" {
+  default = "config-baseline"
+}
+
+# Specify Origin and Package for Chef InSpec runs on all servers
+
+variable "inspec-origin" {
+  default = "effortless"
+}
+
+variable "inspec-package" {
+  default = "audit-baseline"
+}
