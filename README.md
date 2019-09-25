@@ -19,7 +19,7 @@ In order run this repo, you must first install Habitat. You can find setup docs 
 5. `build`
 6. `source results/last_build.env`
 7. Load `core/mongodb` package from the public depot:  
-  `hab svc load core/mongodb`
+  `hab svc load core/mongodb/3.2.10/20171016003652`
 8. Override the default configuration of mongodb:
    `hab config apply mongodb.default $(date +%s) mongo.toml`
 9. Load the most recent build of national-parks: 
