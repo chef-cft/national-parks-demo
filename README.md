@@ -11,11 +11,11 @@ This is an example Java Tomcat application packaged by [Habitat](https://habitat
 In order run this repo, you must first install Habitat. You can find setup docs on the [Habitat Website](https://www.habitat.sh/docs/install-habitat/).
 
 ## Demo Tracks
-- Start Here: [Building national parks and running locally in the studio](examples/local_demo.md)
-- [Habitat via containers on Azure Kubernetes Service](examples/aks_demo.md)
-- [Habitat via containers on Google Kubernetes Engine](examples/gke_demo.md)
-- [Habitat + Terraform - Running natively on VMs](examples/terraform_demo.md)
-- [Continued local testing with Habitat + Docker Compose](examples/docker_compose_demo.md)
+1. [Building national parks and running locally in the studio](examples/local_demo.md) (start here)
+1. [Habitat via containers on Azure Kubernetes Service](examples/aks_demo.md)
+1. [Habitat via containers on Google Kubernetes Engine](examples/gke_demo.md)
+1. [Habitat + Terraform - Running natively on VMs](examples/terraform_demo.md)
+1. [Continued local testing with Habitat + Docker Compose](examples/docker_compose_demo.md)
 
 
 ## Deploy National-Parks in Google Kubernetes Engine
