@@ -1,7 +1,7 @@
 # Running National Parks on VMs with Terraform
 Included in the repo is terraform code for launching the application in AWS and Google Kubernetes Engine. Provision either AWS, GKE, or both, and then you can watch Habitat update across cloud deployments. 
 
-[Terraform](https://www.terraform.io/intro/getting-started/install.html).
+Terraform installation guide is [here](https://www.terraform.io/intro/getting-started/install.html).
 
 ## Deploy Chef Automate
 1. `cd terraform/chef-automate/(aws|azure|gcp)`
