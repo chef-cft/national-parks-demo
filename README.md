@@ -16,15 +16,3 @@ In order run this repo, you must first install Habitat. You can find setup docs 
 1. [Habitat via containers on Google Kubernetes Engine](examples/gke_demo.md)
 1. [Habitat + Terraform - Running natively on VMs](examples/terraform_demo.md)
 1. [Continued local testing with Habitat + Docker Compose](examples/docker_compose_demo.md)
-
-
-## Deploy National-Parks in Google Kubernetes Engine
-Follow [these directions](gke_demo.md) to build and run national parks on Google Kubernetes Engine
-
-
-## Deploy National-Parks in Azure AKS
-Follow [these directions](aks_demo.md) to build and run national parks on Azure AKS
-
-
-## Deploy National-Parks with Docker Compose
-Follow [these directions](docker_compose_demo.md) to build and run national parks locally with docker compose
