@@ -1,0 +1,237 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: habitat-operator
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: habitat-operator
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: habitat-operator
+subjects:
+- kind: ServiceAccount
+  name: habitat-operator
+  namespace: default
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: habitat-operator
+# Keep Cluster wide permissions at the top of the list and then update
+# `TestRolesAndClusterRolesSync` in `test/sync/rbac` package to exclude
+# those rules
+rules:
+- apiGroups:
+  - apiextensions.k8s.io
+  resources:
+  - customresourcedefinitions
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: [""]
+  resources:
+  - namespaces
+  verbs: ["list"]
+- apiGroups:
+  - habitat.sh
+  resources:
+  - habitats
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups:
+  - apps
+  resources:
+  - statefulsets
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: [""]
+  resources:
+  - configmaps
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: [""]
+  resources:
+  - secrets
+  verbs: ["get"]
+- apiGroups: [""]
+  resources:
+  - pods
+  verbs: ["get", "list", "watch", "deletecollection"]
+- apiGroups: [""]
+  resources:
+  - events
+  verbs: [ "create", "patch" ]
+
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: habitat-operator
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: habitat-operator
+    spec:
+      containers:
+      - name: habitat-operator
+        image: jvdevfestacr.azurecr.io/habitat-operator:latest
+      serviceAccountName: habitat-operator
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hab-bastion
+spec:
+  ports:
+  - name: gossip-listener
+    protocol: UDP
+    port: 9638
+    targetPort: 9638
+  - name: http-gateway
+    protocol: TCP
+    port: 9631
+    targetPort: 9631
+  selector:
+    app: hab-bastion
+  clusterIP: None
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: hab-bastion
+spec:
+  selector:
+    matchLabels:
+      app: hab-bastion
+  serviceName: hab-bastion
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: hab-bastion
+    spec:
+      terminationGracePeriodSeconds: 10
+      securityContext:
+        fsGroup: 42
+      containers:
+      - name: hab-bastion
+        image: jvdevfestacr.azurecr.io/hab_bastion:latest
+        args:
+        - '--permanent-peer'
+        resources:
+          requests:
+            memory: "100Mi"
+            cpu: "100m" # equivalent to 0.1 of a CPU core
+        ports:
+        - name: gossip-listener
+          protocol: UDP
+          containerPort: 9638
+        - name: http-gateway
+          protocol: TCP
+          containerPort: 9631
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 9631
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 9631
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        volumeMounts:
+        - name: hab-bastion
+          mountPath: /hab/sup
+        env:
+          - name: HAB_LICENSE
+            value: "accept-no-persist"
+  volumeClaimTemplates:
+  - metadata:
+      name: hab-bastion
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      # uncomment if you don't have a default storageclass
+      # storageClassName: "standard"
+      resources:
+        requests:
+          storage: 10Gi
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: user-toml
+type: Opaque
+data:
+  # Each item needs to be base64-encoded.
+  # This overrides the port set in the Redis Habitat service.
+  # Plain text content of the secret: "[mongod.net]\nbind_ip = '0.0.0.0'\n[mongod.security]\ncluster_auth_mode = ''"
+  user.toml: W21vbmdvZC5uZXRdCmJpbmRfaXAgPSAnMC4wLjAuMCcKW21vbmdvZC5zZWN1cml0eV0KY2x1c3Rlcl9hdXRoX21vZGUgPSAnJwo=
+
+---
+apiVersion: habitat.sh/v1beta1
+kind: Habitat
+metadata:
+  name: national-parks-db
+customVersion: v1beta2
+spec:
+  v1beta2:
+    # Make sure to update with your own origin and that you have published to Docker Hub
+    image: jvdevfestacr.azurecr.io/mongodb:latest
+    count: 1
+    env:
+      - name: HAB_LICENSE
+        value: "accept-no-persist"
+    service:
+      name: mongodb
+      # Name of the secret.
+      # This is mounted inside of the pod as a user.toml file.
+      configSecretName: user-toml
+      peer: hab-bastion
+      topology: leader
+      group: default
+
+---
+apiVersion: habitat.sh/v1beta1
+kind: Habitat
+metadata:
+  name: national-parks-app
+customVersion: v1beta2
+spec:
+  v1beta2:
+    # Make sure to update with your own origin and that you have published to Docker Hub
+    image: jvdevfestacr.azurecr.io/national-parks:latest
+    count: 1
+    env:
+      - name: HAB_LICENSE
+        value: "accept-no-persist"
+    service:
+      name: national-parks
+      topology: leader
+      peer: hab-bastion
+      bind:
+        - name: database
+          service: mongodb
+          group: default
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: national-parks
+spec:
+  selector:
+    habitat-name: national-parks-app
+  type: LoadBalancer
+  ports:
+  - name: web
+    targetPort: 8080
+    port: 80
+    protocol: TCP

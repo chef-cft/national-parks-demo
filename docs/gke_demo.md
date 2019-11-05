@@ -1,5 +1,7 @@
-### Demoing in GKE
-You will need to have an [Google Cloud account already created](https://console.cloud.google.com/), and install the [Google Cloud SDK](https://cloud.google.com/sdk/)
+### Running National Parks in GKE
+You will need to have a [Google Cloud account already created](https://console.cloud.google.com/), and install the [Google Cloud SDK](https://cloud.google.com/sdk/)
+
+NOTE: the habitat operator / updater pattern below was replace by the habitat-bastion pattern here.  Refer to the AKS demo example for a practical example, or read the docs [here](https://www.habitat.sh/docs/best-practices/#kubernetes)
 
 ### Before you begin
 - `git clone https://github.com/habitat-sh/habitat-operator`

@@ -1,0 +1,142 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hab-bastion
+spec:
+  ports:
+  - name: gossip-listener
+    protocol: UDP
+    port: 9638
+    targetPort: 9638
+  - name: http-gateway
+    protocol: TCP
+    port: 9631
+    targetPort: 9631
+  selector:
+    app: hab-bastion
+  clusterIP: None
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: hab-bastion
+spec:
+  selector:
+    matchLabels:
+      app: hab-bastion
+  serviceName: hab-bastion
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: hab-bastion
+    spec:
+      securityContext:
+        fsGroup: 42
+      containers:
+      - name: hab-bastion
+        image: jvogtacr.azurecr.io/hab_bastion:latest
+        args:
+        - '--permanent-peer'
+        ports:
+        - name: gossip-listener
+          protocol: UDP
+          containerPort: 9638
+        - name: http-gateway
+          protocol: TCP
+          containerPort: 9631
+        env:
+          - name: HAB_LICENSE
+            value: "accept-no-persist"
+
+
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: national-parks-db
+spec:
+  selector:
+    matchLabels:
+      app: national-parks-db
+  serviceName: national-parks-db
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: national-parks-db
+    spec:
+      securityContext:
+        fsGroup: 42
+      containers:
+      - name: national-parks-db
+        image: jvogtacr.azurecr.io/mongodb:3.2.10
+        args:
+        - --peer
+        - hab-bastion
+        - --topology
+        - leader
+        ports:
+        - name: mongodb
+          containerPort: 27017
+        env:
+          - name: HAB_LICENSE
+            value: "accept-no-persist"
+          - name: HAB_MONGODB
+            value: '{"mongod": {"net": {"bind_ip": "0.0.0.0"}, "security":{"cluster_auth_mode": ""}}}'
+
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: national-parks-app
+spec:
+  selector:
+    matchLabels:
+      app: national-parks-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: national-parks-app
+    spec:
+      securityContext:
+        fsGroup: 42
+      containers:
+      - name: national-parks-app
+        image: jvogtacr.azurecr.io/national-parks:7.0.0
+        args:
+        - --peer
+        - hab-bastion
+        - --topology
+        - leader
+        - --bind
+        - 'database:mongodb.default'
+        ports:
+        - name: app
+          containerPort: 8080
+        env:
+          - name: HAB_LICENSE
+            value: "accept-no-persist"
+
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: national-parks
+spec:
+  selector:
+    app: national-parks-app
+  type: LoadBalancer
+  ports:
+  - name: web
+    targetPort: 8080
+    port: 80
+    protocol: TCP
