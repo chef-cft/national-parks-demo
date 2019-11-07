@@ -1,19 +1,20 @@
+// GKE Project Name
 gke_project = "national-parks-kube"
-
+// GKE credentials file (local path)
 gke_credentials_file = "/Users/scottford/national-parks-kube-148d217b554e.json"
-
+// Habitat origin
 habitat_origin = "scottford"
-
+// Contact Tag
 tag_contact = "sford@chef.io"
-
+// Department Tag
 tag_dept = "sales"
-
+// Customer Tag
 tag_customer = "slalom"
-
+// Project Tag
 tag_project = "hab"
-
+// GKE Username
 gke_basic_username = "admin"
-
+// GKE Password
 gke_basic_password = "sH9YrjoTBDFHYhV4"
-
+// GKE Region
 gke_region = "us-west1"
