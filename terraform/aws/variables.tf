@@ -46,7 +46,7 @@ variable "aws_key_pair_file" {}
 variable "aws_key_pair_name" {}
 
 variable "automate_server_instance_type" {
-  default = "m4.xlarge"
+  default = "m5.xlarge"
 }
 
 variable "vpc_id" {
@@ -81,7 +81,7 @@ variable "prod_channel" {
 }
 
 variable "test_server_instance_type" {
-  default = "m4.xlarge"
+  default = "m5.xlarge"
 }
 
 variable "count" {
