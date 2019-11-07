@@ -1,5 +1,5 @@
 # Enterprise Automation Stack - National Parks - Java Tomcat Application
-This is an example Java Tomcat application packaged by [Habitat](https://habitat.sh) on VMs hardened and patched by Chef and Audited by Inspec using the "Effortless" pattern. This example app has existed for some time, and another example can be found [here](https://github.com/habitat-sh/national-parks). The differences with this example versus previous examples are the following:
+This is an example Java Tomcat application packaged by [Habitat](https://habitat.sh) on VMs hardened and patched by Chef Infra and Audited by Inspec using the "Effortless" pattern. This example app has existed for some time, and another example can be found [here](https://github.com/habitat-sh/national-parks). The differences with this example versus previous examples are the following:
 
 - `core/mongodb` - Previous examples had you build a version of mongodb that was already populated with data before the application 
 - `mongo.toml` - This repo includes a `user.toml` file for overriding the default configuration of mongodb
@@ -55,9 +55,12 @@ There is also an `index.html` file in the root of the repo that updates the map 
 
 
 ## Terraform
-Included in the repo is terraform code for launching the application in AWS and Google Kubernetes Engine. Provision either AWS, GKE, or both, and then you can watch Habitat update across cloud deployments. 
+Included in the repo is Terraform code (Version `0.11.11`) for launching the application in AWS and Google Kubernetes Engine. Provision either AWS, GKE, or both, and then you can watch Habitat update across cloud deployments.
+
+Due to how often Terraform is updated, it's recommended to use `tfswitch`. This will help alleviate any problems with version incompatabilities.
 
 [Terraform](https://www.terraform.io/intro/getting-started/install.html).
+[tfswitch](https://github.com/warrensbox/terraform-switcher)
 
 ### Deploy Chef Automate
 1. `cd terraform/chef-automate/(aws|azure|gcp)`
