@@ -53,17 +53,23 @@ az login
 ```
 az group create --name exampledemo --location westus
 ```
+NOTE: replace `exampledemo` with a name of your choice.
+
 #### Create the container registry
 ```
 az acr create --resource-group exampledemo --name exampleacr --sku Basic
 ```
-Note: acr name must be alphanumeric (no dashes or hyphens). sku is compute size, listed [here](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-skus)
+NOTE 1: Replace `exampledemo` with your resource group name, and `exampleacr` with a name of your choice.
+
+NOTE 2: ALSO, the ACR name must be alphanumeric (no dashes or hyphens). sku is compute size, listed [here](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-skus)
+
+NOTE 3: This ACR name must be unique to you and your project as it lives in a global public namespace.
 
 #### Login to the acr
 ```
 az acr login --name exampleacr
 ```
-NOTE: this must be unique to you and your project as it lives in a global public namespace
+
 
 #### Get the login server
 ```
@@ -96,7 +102,9 @@ az aks create \
     --generate-ssh-keys \
     --attach-acr exampleacr
 ```
-NOTE: If you get a authorization error, you may have to login to azure again by running `az login`.
+NOTE 1: Remember to replace `example` with a name of your choice.
+
+NOTE 2: If you get a authorization error, you may have to login to azure again by running `az login`.
 
 #### Get AKS Credentials
 ```
@@ -109,7 +117,7 @@ az aks get-credentials --resource-group exampledemo --name exampleaks
 #### Replace your images namespaces in the manifest file, and push to AKS
 Replace my namespaces with what you created.
 
-(Replace any line that looks like: `image: jvogtacr.azurecr.io/mongodb:3.2.10` with _your_ ACR ie: `exampleacr.azurecr.io/mongodb:3.2.10`)
+(Replace any line that looks like: `image: exampleacr.azurecr.io/mongodb:3.2.10` with _your_ ACR ie: `youracr.azurecr.io/mongodb:3.2.10`)
 ```
 vi examples/k8s-manifest-with-bastion.yml
 kubectl apply -f examples/k8s-manifest-with-bastion.yml
