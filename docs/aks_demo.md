@@ -96,12 +96,13 @@ az aks create \
     --generate-ssh-keys \
     --attach-acr exampleacr
 ```
+NOTE: If you get a authorization error, you may have to login to azure again by running `az login`.
 
 #### Get AKS Credentials
 ```
 az aks get-credentials --resource-group exampledemo --name exampleaks
 ```
-(stores creds in $HOME/.kube/config)
+(stores creds in `$HOME/.kube/config`)
 
 ### Step 4: Load your containers into k8s using a manifest file
 
@@ -121,7 +122,7 @@ Open in browser
 
 ### Running an Update
 1. Update an index page (`cp red-index.html src/main/webapp/index.html`)
-2. Bump package version (`vi habitat/plan.sh`)
+2. Bump package version to 7.1.0 (`vi habitat/plan.sh`)
 3. Produce a new build:
 ```
 hab studio enter
