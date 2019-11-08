@@ -1,7 +1,8 @@
 ////////////////////////////////
 // AWS Connection
 
-variable "aws_profile" {}
+variable "aws_profile" {
+}
 
 variable "aws_region" {
   default = "us-west-2"
@@ -25,25 +26,33 @@ variable "aws_amazon_image_user" {
 ////////////////////////////////
 // Tags
 
-variable "tag_customer" {}
+variable "tag_customer" {
+}
 
-variable "tag_project" {}
+variable "tag_project" {
+}
 
-variable "tag_name" {}
+variable "tag_name" {
+}
 
-variable "tag_dept" {}
+variable "tag_dept" {
+}
 
-variable "tag_contact" {}
+variable "tag_contact" {
+}
 
-variable "tag_application" {}
+variable "tag_application" {
+}
 
 variable "tag_ttl" {
   default = 4
 }
 
-variable "aws_key_pair_file" {}
+variable "aws_key_pair_file" {
+}
 
-variable "aws_key_pair_name" {}
+variable "aws_key_pair_name" {
+}
 
 variable "automate_server_instance_type" {
   default = "m5.xlarge"
@@ -84,12 +93,12 @@ variable "test_server_instance_type" {
   default = "m5.xlarge"
 }
 
-variable "count" {
+variable "node_count" {
   default = "1"
 }
 
-variable "origin" {}
-
+variable "origin" {
+}
 
 variable "group" {
   default = "default"
@@ -106,15 +115,20 @@ variable "sleep" {
 ////////////////////////////////
 // Automate Info 
 
-variable "automate_url" {}
+variable "automate_url" {
+}
 
-variable "automate_hostname" {}
+variable "automate_hostname" {
+}
 
-variable "automate_token" {}
+variable "automate_token" {
+}
 
-variable "automate_user" {}
+variable "automate_user" {
+}
 
-variable "automate_ip" {}
+variable "automate_ip" {
+}
 
 ////////////////////////////////
 // Automate EAS Beta 
@@ -138,5 +152,4 @@ variable "event-stream-application" {
 variable "event-stream-environment" {
   default = "demo"
 }
-
 
