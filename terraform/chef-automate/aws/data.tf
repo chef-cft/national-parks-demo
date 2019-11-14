@@ -1,6 +1,4 @@
-# terraform {
-#   required_version = "~> 0.11.11" // Terraform frequently puts breaking changes into minor and patch version releases. _Always_ hard pin to the latest known and tested working version. Do not trust semantic versioning.
-# }
+
 
 provider "aws" {
   region                  = var.aws_region
