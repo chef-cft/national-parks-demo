@@ -1,3 +1,7 @@
+terraform {
+  required_version = ">= 0.12"
+}
+
 provider "google" {
   credentials = file(var.gke_credentials_file)
   project     = var.gke_project #TODO

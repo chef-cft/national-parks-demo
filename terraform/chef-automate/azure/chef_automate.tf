@@ -1,3 +1,7 @@
+terraform {
+  required_version = ">= 0.12"
+}
+
 resource "azurerm_public_ip" "automate_pip" {
   name                = "chef-automate-${random_id.instance_id.hex}-pip"
   resource_group_name = azurerm_resource_group.rg.name

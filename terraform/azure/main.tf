@@ -1,4 +1,6 @@
-
+terraform {
+  required_version = ">= 0.12"
+}
 
 # Configure the Microsoft Azure Provider
 provider "azurerm" {
