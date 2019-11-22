@@ -24,7 +24,7 @@ group = "dev"
 
 update_strategy = "at-once"
 
-count = "1"
+node_count = "1"
 
 tag_name = "YourFirstAndLastHere" # example: damienoneal or doneal
 

@@ -18,7 +18,7 @@ tag_contact = "sford@chef.io"
 
 tag_application = "national_parks"
 
-count = "1"
+node_count = "1"
 
 event-stream-enabled = "false"
 
