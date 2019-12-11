@@ -32,7 +32,7 @@ hab pkg export docker core/mongodb/3.2.10
 ### hab bastion
 This is a noop hab service we can export to docker and use as a permanent peer in kubernetes [see here for details](https://www.habitat.sh/docs/best-practices/#kubernetes)
 ```
-cd examples/kubernetes/hab-bastion
+cd examples/kubernetes-hab-bastion
 hab studio enter
 build
 source results/last_build.env
