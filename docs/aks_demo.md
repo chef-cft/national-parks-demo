@@ -40,7 +40,7 @@ hab pkg export docker results/$pkg_artifact
 ```
 
 #### Local testing with docker-compose
-Use the directions [here](docs/docker_compose_demo.md) to test this with docker compose.
+Use the directions [here](docker_compose_demo.md) to test this with docker compose.
 
 ### Step 2: Create an Azure Container Registry
 
