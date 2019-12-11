@@ -134,7 +134,7 @@ Open in browser
 3. Produce a new build:
 ```
 hab studio enter
-hab pkg build
+build
 hab pkg export kubernetes jvdemo/national-parks
 ```
 4. Tag and upload it (outside of studio)
