@@ -146,3 +146,10 @@ docker push exampleacr.azurecr.io/national-parks:7.1.0
 ```
 kubectl set image deployment national-parks-app national-parks-app=exampleacr.azurecr.io/national-parks:7.1.0
 ```
+
+### Post-Demo Clean Up
+1. Go into the national parks directory and run:  
+``` 
+kubectl delete -f examples/k8s-manifest-with-bastion.yml
+```
+2. Go into azure and delete the resource group you created (`exampledemo`)
