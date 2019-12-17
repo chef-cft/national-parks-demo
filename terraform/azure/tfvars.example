@@ -1,49 +1,50 @@
+// Habitat Origin
 origin = "yourLocalOriginHere"
-
+// Azure Public Key Path (locally)
 azure_public_key_path = "~/path/to_public_key"
-
+// Azure Private Key Path (locally)
 azure_private_key_path= "~/path_to_private_key"
-
+// Azure Image User
 azure_image_user = "azureuser"
-
+// Azure Image Password
 azure_image_password = "Azur3pa$$word"
-
+// Azure Subscription ID
 azure_sub_id = "yourSubIDHere"
-
+// Azure Tenant ID
 azure_tenant_id = "yourTenantIDHere"
-
+// Habitat Application Name
 application = "national-parks"
-
+// Habitat Origin
 habitat_origin = "YourOriginOnBuilderHere"
-
+// Habitat Builder URL
 bldr_url = "https://bldr.habitat.sh"
-
+// Habitat Channel
 channel = "stable"
-
+// Habitat Group
 group = "dev"
-
+// Habitat Update Strategy
 update_strategy = "at-once"
-
+// Number of instances
 count = "1"
-
+// Name Tag
 tag_name = "YourFirstAndLastHere" # example: damienoneal or doneal
-
+// Department Tag
 tag_dept = "YourDepartmentHere"
-
+// Contact Tag
 tag_contact = "YourEmailHere"
-
+// Application Tag
 tag_application = "AppNameeHere"
-
+// Event Stream Enabled (options are true or false)
 event-stream-enabled = "false"
-
+// Chef Automate URL to consume
 automate_url = "https://myurl"
-
+// Chef Automate Hostname to consume
 automate_hostname = "myhostname"
-
+// Chef Automate IP to consume
 automate_ip = "myip"
-
+// Chef Automate Token to consume
 automate_token = "mytoken"
-
+// Chef Automate User to consume
 automate_user = "admin"
 
 # Event stream requires minimum hab-sup 0.83.0

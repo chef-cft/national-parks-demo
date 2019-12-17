@@ -1,35 +1,36 @@
+// Habitat Origin
 origin = "scottford"
-
+// AWS Profile to use
 aws_profile = "chefsa"
-
+// AWS Key Pair file to use (path locally)
 aws_key_pair_file = "~/.ssh/scottford"
-
+// AWS Key Pair on AWS to use
 aws_key_pair_name = "scottford"
-
+// Customer Tag
 tag_customer = "testing"
-
+// Project Tag
 tag_project = "hab_demos"
-
+// Name Tag
 tag_name = "scottford"
-
+// Department Tag
 tag_dept = "sales"
-
+// Contact Tag
 tag_contact = "sford@chef.io"
-
+// Application Tag
 tag_application = "national_parks"
-
+// Number of instances to spin up
 count = "1"
-
+// Event Stream enabled (options true or false)
 event-stream-enabled = "false"
-
+// Chef Automate URL to consume
 automate_url = "https://myurl"
-
+// Chef Automate Hostname to consume
 automate_hostname = "myhostname"
-
+// Chef Automate IP Address to consume
 automate_ip = "myip"
-
+// Chef Automate Token to consume
 automate_token = "mytoken"
-
+// Chef Automate username to consume
 automate_user = "admin"
 
 # Event stream requires minimum hab-sup 0.83.0
