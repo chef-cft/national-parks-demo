@@ -1,23 +1,24 @@
+// Azure Region
 azure_region  = "westus2"
-
+// Azure Subscription ID
 azure_sub_id = "xxxxxxx-xxxx-xxxx-xxxxxxxxxx"
-
+// Azure Tenant ID
 azure_tenant_id = "xxxxxxx-xxxx-xxxx-xxxxxxxxxx"
-
+// Azure Client ID
 azure_client_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-
+// Azure Client Secret
 azure_client_secret = "xxxxxxxxxxxxxxxxxxxx"
-
+// Azure public key path (locally)
 azure_public_key_path = "/path/to/ssh/key.pub"
-
+// Azure private key path (locally)
 azure_private_key_path = "/path/to/ssh/key.pem"
-
+// Customer Tag
 tag_customer = "cust"
-
+// Project Tag
 tag_project = "proj"
-
+// Department Tag
 tag_dept = "sales"
-
+// Contacdt Tag
 tag_contact = "me@somewhere.com"
-
+// Chef Automate Hostname
 automate_hostname = "jmery-a2"
