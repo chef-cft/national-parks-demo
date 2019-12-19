@@ -233,7 +233,6 @@ resource "aws_instance" "chef_automate" {
       "sudo mv /tmp/config.toml /etc/chef-automate/config.toml",
       "sudo ./chef-automate deploy /etc/chef-automate/config.toml --accept-terms-and-mlsa",
       "sudo ./chef-automate applications enable",
-      "sudo hab pkg install chef/applications-service -b",
       "sleep 60",
       "sudo ./chef-automate config patch /tmp/automate-eas-config.toml",
       "sudo chown ubuntu:ubuntu $HOME/automate-credentials.toml",
