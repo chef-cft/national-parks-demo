@@ -1,19 +1,24 @@
-provider "google" {
-  credentials = "${file("${var.gke_credentials_file}")}"
-  project     = "${var.gke_project}"                     #TODO
-  region      = "${var.gke_region}"
+terraform {
+  required_version = ">= 0.12"
 }
 
-data "google_compute_zones" "available" {}
+provider "google" {
+  credentials = file(var.gke_credentials_file)
+  project     = var.gke_project #TODO
+  region      = var.gke_region
+}
+
+data "google_compute_zones" "available" {
+}
 
 resource "google_container_cluster" "primary" {
   name               = "${var.habitat_origin}-${var.tag_application}-${var.tag_customer}-cluster"
-  zone               = "${data.google_compute_zones.available.names[0]}"
+  zone               = data.google_compute_zones.available.names[0]
   initial_node_count = 3
 
   master_auth {
-    username = "${var.gke_basic_username}"
-    password = "${var.gke_basic_password}"
+    username = var.gke_basic_username
+    password = var.gke_basic_password
   }
 
   node_config {
@@ -25,3 +30,4 @@ resource "google_container_cluster" "primary" {
     ]
   }
 }
+

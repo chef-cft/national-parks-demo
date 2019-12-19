@@ -14,7 +14,8 @@ variable "azure_image_user" {
   default = "azureuser"
 }
 
-variable "azure_image_password" {}
+variable "azure_image_password" {
+}
 
 variable "azure_sub_id" {
   default = "xxxxxxx-xxxx-xxxx-xxxxxxxxxx"
@@ -28,7 +29,8 @@ variable "application" {
   default = "nationalparks"
 }
 
-variable "origin" { }
+variable "origin" {
+}
 
 variable "bldr_url" {
   default = "https://bldr.habitat.sh"
@@ -49,23 +51,29 @@ variable "update_strategy" {
 ////////////////////////////////
 // Tags
 
-variable "tag_customer" {}
+variable "tag_customer" {
+}
 
-variable "tag_project" {}
+variable "tag_project" {
+}
 
-variable "tag_name" {}
+variable "tag_name" {
+}
 
-variable "tag_dept" {}
+variable "tag_dept" {
+}
 
-variable "tag_contact" {}
+variable "tag_contact" {
+}
 
-variable "tag_application" {}
+variable "tag_application" {
+}
 
 variable "tag_ttl" {
   default = 4
 }
 
-variable "count" {
+variable "node_count" {
   default = 1
 }
 
@@ -73,13 +81,17 @@ variable "sleep" {
   default = "60"
 }
 
-variable "automate_url" {}
+variable "automate_url" {
+}
 
-variable "automate_ip" {}
+variable "automate_ip" {
+}
 
-variable "automate_token" {}
+variable "automate_token" {
+}
 
-variable "automate_user" {}
+variable "automate_user" {
+}
 
 variable "hab_install_opts" {
   default = ""
@@ -104,3 +116,4 @@ variable "event-stream-application" {
 variable "event-stream-environment" {
   default = "demo"
 }
+

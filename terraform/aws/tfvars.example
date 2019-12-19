@@ -19,7 +19,7 @@ tag_contact = "sford@chef.io"
 // Application Tag
 tag_application = "national_parks"
 // Number of instances to spin up
-count = "1"
+node_count = "1"
 // Event Stream enabled (options true or false)
 event-stream-enabled = "false"
 // Chef Automate URL to consume

@@ -25,7 +25,7 @@ group = "dev"
 // Habitat Update Strategy
 update_strategy = "at-once"
 // Number of instances
-count = "1"
+node_count = "1"
 // Name Tag
 tag_name = "YourFirstAndLastHere" # example: damienoneal or doneal
 // Department Tag
