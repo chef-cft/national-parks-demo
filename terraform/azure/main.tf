@@ -431,7 +431,9 @@ resource "azurerm_virtual_machine" "permanent-peer" {
 
   provisioner "remote-exec" {
     inline = [
-      "echo ${var.azure_image_password} | sudo -S yum update -y",
+      "echo ${var.azure_image_password} | sudo -S whoami",
+      "echo \"azureuser ALL=(ALL) NOPASSWD:ALL\"| sudo tee -a /etc/sudoers",
+      "sudo yum update -y",
       "sudo groupadd hab",
       "sudo useradd hab -g hab",
       "chmod +x /tmp/install_hab.sh",
@@ -540,7 +542,9 @@ resource "azurerm_virtual_machine" "mongodb" {
 
   provisioner "remote-exec" {
     inline = [
-      "echo ${var.azure_image_password} | sudo -S yum update -y",
+      "echo ${var.azure_image_password} | sudo -S whoami",
+      "echo \"azureuser ALL=(ALL) NOPASSWD:ALL\"| sudo tee -a /etc/sudoers",
+      "sudo yum update -y",
       "sudo groupadd hab",
       "sudo useradd hab -g hab",
       "chmod +x /tmp/install_hab.sh",
@@ -646,7 +650,9 @@ resource "azurerm_virtual_machine" "app" {
 
   provisioner "remote-exec" {
     inline = [
-      "echo ${var.azure_image_password} | sudo -S yum update -y",
+      "echo ${var.azure_image_password} | sudo -S whoami",
+      "echo \"azureuser ALL=(ALL) NOPASSWD:ALL\"| sudo tee -a /etc/sudoers",
+      "sudo yum update -y",
       "sudo groupadd hab",
       "sudo useradd hab -g hab",
       "chmod +x /tmp/install_hab.sh",
@@ -756,7 +762,9 @@ resource "azurerm_virtual_machine" "haproxy" {
   }
   provisioner "remote-exec" {
     inline = [
-      "echo ${var.azure_image_password} | sudo -S yum update -y",
+      "echo ${var.azure_image_password} | sudo -S whoami",
+      "echo \"azureuser ALL=(ALL) NOPASSWD:ALL\"| sudo tee -a /etc/sudoers",
+      "sudo yum update -y",
       "sudo groupadd hab",
       "sudo useradd hab -g hab",
       "chmod +x /tmp/install_hab.sh",
