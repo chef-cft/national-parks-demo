@@ -49,7 +49,7 @@ resource "aws_instance" "dca" {
     inline = [
       "sudo rm -rf /etc/machine-id",
       "sudo systemd-machine-id-setup",
-      "sudo hostname dca-${var.node_count}",
+      "sudo hostname dca-${count.index}",
       "sudo groupadd hab",
       "sudo adduser hab -g hab",
       "chmod +x /tmp/install_hab.sh",

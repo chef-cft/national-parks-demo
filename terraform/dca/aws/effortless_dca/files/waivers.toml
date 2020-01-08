@@ -5,7 +5,7 @@ splay = 5
 [waivers.'sysctl-14']
 run = false
 justification = "Conflict with corporate networking policy. Skip."
-[waivers.'os-06']
+[waivers.'os-08']
 expiration_date = "2020-04-01"
 run = false
 justification = "We have a plan to fix this in Q1. Alert after spring."
