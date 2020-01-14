@@ -50,6 +50,7 @@ resource "aws_instance" "dca" {
       "sudo rm -rf /etc/machine-id",
       "sudo systemd-machine-id-setup",
       "sudo hostname dca-${count.index}",
+      "curl -L https://omnitruck.chef.io/install.sh | sudo bash",
       "sudo groupadd hab",
       "sudo adduser hab -g hab",
       "chmod +x /tmp/install_hab.sh",
