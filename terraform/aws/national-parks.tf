@@ -232,7 +232,7 @@ resource "aws_instance" "national_parks" {
       "sudo cp /home/${var.aws_ami_user}/config_linux.toml /hab/user/config-baseline/config/user.toml",
       "sudo hab svc load effortless/config-baseline --group ${var.group} --strategy at-once --channel stable",
       "sudo hab svc load effortless/audit-baseline --group ${var.group} --strategy at-once --channel stable",
-      "sudo hab svc load ${var.origin}/national-parks --group ${var.group} --channel ${var.prod_channel} --strategy ${var.update_strategy} --bind database:mongodb.${var.group}",
+      "sudo hab svc load ${var.origin}/national-parks --group ${var.group} --channel ${var.prod_channel} --strategy ${var.update_strategy} --update-condition ${var.update_condition} --bind database:mongodb.${var.group}",
     ]
   }
 }

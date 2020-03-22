@@ -167,6 +167,16 @@ data "template_file" "install_chef_automate_cli" {
   }
 }
 
+data "template_file" "set_chef_automate_token" {
+  template = file(
+    "${path.module}/templates/chef_automate/set_chef_automate_token.sh.tpl",
+  )
+
+  vars = {
+    automate_token = var.automate_token
+  }
+}
+
 data "template_file" "automate_eas_config" {
   template = file(
     "${path.module}/templates/chef_automate/automate-eas-config.toml.tpl",
@@ -213,6 +223,11 @@ resource "aws_instance" "chef_automate" {
     content     = data.template_file.install_chef_automate_cli.rendered
   }
 
+ provisioner "file" {
+    destination = "/tmp/set_chef_automate_token.sh"
+    content     = data.template_file.set_chef_automate_token.rendered
+  }
+
   provisioner "file" {
     destination = "/tmp/automate-eas-config.toml"
     content     = data.template_file.automate_eas_config.rendered
@@ -242,12 +257,16 @@ resource "aws_instance" "chef_automate" {
       "sudo sed -i 's/license = \".*\"/license = \"${var.automate_license}\"/g' /tmp/config.toml",
       "sudo rm -f /tmp/ssl_cert /tmp/ssl_key",
       "sudo mv /tmp/config.toml /etc/chef-automate/config.toml",
+      "sudo ./chef-automate deploy ${var.automate_products} /etc/chef-automate/config.toml --accept-terms-and-mlsa",
       "sudo ./chef-automate deploy /etc/chef-automate/config.toml --accept-terms-and-mlsa",
       "sudo ./chef-automate applications enable",
       "sudo ./chef-automate config patch /tmp/automate-eas-config.toml",
       "sudo chown ubuntu:ubuntu $HOME/automate-credentials.toml",
       "sudo echo -e \"api-token =\" $(sudo chef-automate admin-token) >> $HOME/automate-credentials.toml",
       "sudo cat $HOME/automate-credentials.toml",
+      "sudo chef-automate iam admin-access restore ${var.automate_password}",
+      "sudo chmod +x /tmp/set_chef_automate_token.sh",
+      "sudo bash /tmp/set_chef_automate_token.sh",
     ]
   }
 

@@ -108,6 +108,10 @@ variable "update_strategy" {
   default = "at-once"
 }
 
+variable "update_condition" {
+  default = "track-channel"
+}
+
 variable "sleep" {
   default = "60"
 }
