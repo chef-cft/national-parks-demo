@@ -48,6 +48,10 @@ variable "update_strategy" {
   default = "at-once"
 }
 
+variable "update_condition" {
+  default = "track-channel"
+}
+
 ////////////////////////////////
 // Tags
 

@@ -136,3 +136,16 @@ variable "automate_server_instance_type" {
   description = "automate_server_instance_type is the AWS instance type to be used for A2"
 }
 
+variable "automate_password" {
+  description = "automate admin password no default"
+}
+
+variable "automate_token" {
+  default     = "x9GfO534d4mpctuQlKq4TA6SpDE="
+  description = "automate admin password no default"
+}
+
+variable "automate_products" {
+  default     = "--product automate"
+  description = "default Automate only options as follows: --product builder --product automate --product chef-server"
+} 
