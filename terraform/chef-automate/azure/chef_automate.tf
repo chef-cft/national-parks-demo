@@ -24,6 +24,11 @@ locals {
   ip_conf_name = "automate-ipconfig"
 }
 
+resource "azurerm_subnet_network_security_group_association" "automate" {
+  subnet_id                 = azurerm_subnet.subnet.id
+  network_security_group_id = azurerm_network_security_group.sg.id
+}
+
 resource "azurerm_network_interface" "automate_nic" {
   name                      = "chef-automate-${random_id.instance_id.hex}-nic"
   location                  = azurerm_resource_group.rg.location
