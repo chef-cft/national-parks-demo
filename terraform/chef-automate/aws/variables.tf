@@ -137,7 +137,7 @@ variable "automate_password" {
 
 variable "automate_token" {
   default     = "x9GfO534d4mpctuQlKq4TA6SpDE="
-  description = "automate admin password no default"
+  description = "default token please change"
 }
 
 variable "automate_products" {
