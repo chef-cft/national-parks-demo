@@ -122,9 +122,6 @@ variable "sleep" {
 variable "automate_url" {
 }
 
-variable "automate_hostname" {
-}
-
 variable "automate_token" {
 }
 

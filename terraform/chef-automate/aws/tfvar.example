@@ -1,43 +1,28 @@
 ////////////////////////////////
 // AWS Connection
-// AWS Region
+
 aws_region="us-west-2"
-// AWS Profile
 aws_profile="default"
-// AWS Credentials File (locally)
 aws_credentials_file="~/.aws/credentials"
-// AWS Key Pair (locally)
 aws_key_pair_file = "~/.ssh/id_rs"
-// AWS Key Pair Name (on AWS)
-aws_key_pair_name = ""
-// Habitat Origin
-origin = ""
+aws_key_pair_name = "scottford"
 
 ////////////////////////////////
 // Object Tags
-// Customer Tag
-tag_customer=""
-//Project Tag
-tag_project=""
-// Name Tag
-tag_name=""
-// Department Tag
-tag_dept=""
-// Contact Tag
+
+tag_customer="testing"
+tag_project="hab_demos"
+tag_name="scottford"
+tag_dept="sales"
 tag_contact="myemail@chef.io"
-// Applications Tag
-tag_application=""
+tag_application="national_parks"
 
 ////////////////////////////////
 // Automate Config
-// Chef Automate Hostname
+
 automate_hostname="yourname-a2.chef-demo.com"
-// Chef Automate Hostnamne
 automate_license = <YOUR AUTOMATE LICENSE>
-// Chef Automate Channel
 channel = "current"
-# TLS is not supported in the event stream beta. Uncomment until TLS is supported.
-# disable_event_tls = "true"
 
 // NOTE: If you have an acm cert and r53 managed hosted zone, you
 // can use chef_automate_alb.tf.example to build out an ALB with SSL

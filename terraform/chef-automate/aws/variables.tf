@@ -30,10 +30,6 @@ variable "aws_ami_id" {
   default     = ""
 }
 
-variable "origin" {
-  default = ""
-}
-
 ////////////////////////////////
 // Object Tags
 
@@ -92,8 +88,8 @@ variable "channel" {
 }
 
 variable "disable_event_tls" {
-  default     = "false"
-  description = "In its initial state, the events feed does not support tls. Parameterizing to make life easy later."
+  default     = "true"
+  description = "Demo does not support encryption for event stream, see automate docs for production deploys with encryption"
 }
 
 variable "automate_hostname" {
