@@ -4,6 +4,8 @@ terraform {
 
 # Configure the Microsoft Azure Provider
 provider "azurerm" {
+  features {}
+  version = "~>2.0"
   subscription_id = var.azure_sub_id
   tenant_id       = var.azure_tenant_id
 }
@@ -226,12 +228,16 @@ resource "azurerm_network_security_group" "sg" {
   }
 }
 
+resource "azurerm_subnet_network_security_group_association" "national-parks" {
+  subnet_id                 = azurerm_subnet.subnet.id
+  network_security_group_id = azurerm_network_security_group.sg.id
+}
+
 # Create network interface
 resource "azurerm_network_interface" "permanent-peer-nic" {
   name                      = "${var.tag_name}-${var.application}-permanent-peer-nic"
   location                  = var.azure_region
   resource_group_name       = azurerm_resource_group.rg.name
-  network_security_group_id = azurerm_network_security_group.sg.id
 
   ip_configuration {
     name                          = "permanent-peer-ipconfig"
@@ -254,7 +260,6 @@ resource "azurerm_network_interface" "mongodb-nic" {
   name                      = "${var.tag_name}-${var.application}-mongodb-nic"
   location                  = var.azure_region
   resource_group_name       = azurerm_resource_group.rg.name
-  network_security_group_id = azurerm_network_security_group.sg.id
 
   ip_configuration {
     name                          = "mongodb-ipconfig"
@@ -277,7 +282,6 @@ resource "azurerm_network_interface" "haproxy-nic" {
   name                      = "${var.tag_name}-${var.application}-haproxy-nic"
   location                  = var.azure_region
   resource_group_name       = azurerm_resource_group.rg.name
-  network_security_group_id = azurerm_network_security_group.sg.id
 
   ip_configuration {
     name                          = "haproxy-ipconfig"
@@ -300,7 +304,6 @@ resource "azurerm_network_interface" "nic" {
   name                      = "${var.tag_name}-${var.application}-nic${count.index}"
   location                  = var.azure_region
   resource_group_name       = azurerm_resource_group.rg.name
-  network_security_group_id = azurerm_network_security_group.sg.id
   count                     = var.node_count
 
   ip_configuration {
@@ -353,7 +356,6 @@ resource "azurerm_storage_account" "stor" {
 
 resource "azurerm_storage_container" "storcont" {
   name                  = "vhds"
-  resource_group_name   = azurerm_resource_group.rg.name
   storage_account_name  = azurerm_storage_account.stor.name
   container_access_type = "private"
 }
@@ -431,7 +433,9 @@ resource "azurerm_virtual_machine" "permanent-peer" {
 
   provisioner "remote-exec" {
     inline = [
-      "echo ${var.azure_image_password} | sudo -S yum update -y",
+      "echo ${var.azure_image_password} | sudo -S whoami",
+      "echo \"azureuser ALL=(ALL) NOPASSWD:ALL\"| sudo tee -a /etc/sudoers",
+      "sudo yum update -y",
       "sudo groupadd hab",
       "sudo useradd hab -g hab",
       "chmod +x /tmp/install_hab.sh",
@@ -540,8 +544,9 @@ resource "azurerm_virtual_machine" "mongodb" {
 
   provisioner "remote-exec" {
     inline = [
-      "echo ${var.azure_image_password} | sudo -S yum update -y",
-      "sudo groupadd hab",
+      "echo ${var.azure_image_password} | sudo -S whoami",
+      "echo \"azureuser ALL=(ALL) NOPASSWD:ALL\"| sudo tee -a /etc/sudoers",
+      "sudo yum update -y",      "sudo groupadd hab",
       "sudo useradd hab -g hab",
       "chmod +x /tmp/install_hab.sh",
       "sudo /tmp/install_hab.sh",
@@ -646,8 +651,9 @@ resource "azurerm_virtual_machine" "app" {
 
   provisioner "remote-exec" {
     inline = [
-      "echo ${var.azure_image_password} | sudo -S yum update -y",
-      "sudo groupadd hab",
+      "echo ${var.azure_image_password} | sudo -S whoami",
+      "echo \"azureuser ALL=(ALL) NOPASSWD:ALL\"| sudo tee -a /etc/sudoers",
+      "sudo yum update -y",      "sudo groupadd hab",
       "sudo useradd hab -g hab",
       "chmod +x /tmp/install_hab.sh",
       "sudo /tmp/install_hab.sh",
@@ -756,8 +762,9 @@ resource "azurerm_virtual_machine" "haproxy" {
   }
   provisioner "remote-exec" {
     inline = [
-      "echo ${var.azure_image_password} | sudo -S yum update -y",
-      "sudo groupadd hab",
+      "echo ${var.azure_image_password} | sudo -S whoami",
+      "echo \"azureuser ALL=(ALL) NOPASSWD:ALL\"| sudo tee -a /etc/sudoers",
+      "sudo yum update -y",      "sudo groupadd hab",
       "sudo useradd hab -g hab",
       "chmod +x /tmp/install_hab.sh",
       "sudo /tmp/install_hab.sh",
