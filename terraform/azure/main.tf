@@ -546,7 +546,8 @@ resource "azurerm_virtual_machine" "mongodb" {
     inline = [
       "echo ${var.azure_image_password} | sudo -S whoami",
       "echo \"azureuser ALL=(ALL) NOPASSWD:ALL\"| sudo tee -a /etc/sudoers",
-      "sudo yum update -y",      "sudo groupadd hab",
+      "sudo yum update -y",
+      "sudo groupadd hab",
       "sudo useradd hab -g hab",
       "chmod +x /tmp/install_hab.sh",
       "sudo /tmp/install_hab.sh",
@@ -653,7 +654,8 @@ resource "azurerm_virtual_machine" "app" {
     inline = [
       "echo ${var.azure_image_password} | sudo -S whoami",
       "echo \"azureuser ALL=(ALL) NOPASSWD:ALL\"| sudo tee -a /etc/sudoers",
-      "sudo yum update -y",      "sudo groupadd hab",
+      "sudo yum update -y",
+      "sudo groupadd hab",
       "sudo useradd hab -g hab",
       "chmod +x /tmp/install_hab.sh",
       "sudo /tmp/install_hab.sh",
@@ -764,7 +766,8 @@ resource "azurerm_virtual_machine" "haproxy" {
     inline = [
       "echo ${var.azure_image_password} | sudo -S whoami",
       "echo \"azureuser ALL=(ALL) NOPASSWD:ALL\"| sudo tee -a /etc/sudoers",
-      "sudo yum update -y",      "sudo groupadd hab",
+      "sudo yum update -y",
+      "sudo groupadd hab",
       "sudo useradd hab -g hab",
       "chmod +x /tmp/install_hab.sh",
       "sudo /tmp/install_hab.sh",
