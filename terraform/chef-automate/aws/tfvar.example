@@ -23,6 +23,7 @@ tag_application="national_parks"
 automate_hostname="yourname-a2.chef-demo.com"
 automate_license = <YOUR AUTOMATE LICENSE>
 channel = "current"
+disable_event_tls = "true"
 
 // NOTE: If you have an acm cert and r53 managed hosted zone, you
 // can use chef_automate_alb.tf.example to build out an ALB with SSL

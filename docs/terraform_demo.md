@@ -1,10 +1,12 @@
 # Running National Parks on VMs with Terraform
-Included in the repo is Terraform code (Version `0.11.11`) for launching the application in AWS and Google Kubernetes Engine. Provision either AWS, GKE, or both, and then you can watch Habitat update across cloud deployments.
+Included in the repo is Terraform code (Version `0.12`) for launching the application in AWS and Google Kubernetes Engine. Provision either AWS, GKE, or both, and then you can watch Habitat update across cloud deployments.
 
 Due to how often Terraform is updated, it's recommended to use `tfswitch`. This will help alleviate any problems with version incompatabilities.
 
 Terraform installation guide is [here](https://www.terraform.io/intro/getting-started/install.html).
 The `tfswitch` tool is available [here](https://github.com/warrensbox/terraform-switcher)
+
+The demo now sets a specific Chef Automate password and Chef Automate token for simplicity. Please change the default token value in your `terraform.tfvars` 
 
 ## Deploy Chef Automate
 1. `cd terraform/chef-automate/(aws|azure|gcp)`
@@ -12,7 +14,7 @@ The `tfswitch` tool is available [here](https://github.com/warrensbox/terraform-
 3. `$EDITOR terraform.tfvars`
 4. `terraform apply`
 
-#### Note: To Deploy Chef Automate with EAS Beta you must deploy in AWS (see [this issue](https://github.com/chef-cft/national-parks-demo/issues/29) if you want to add to azure) and set the disable_event_tls variable to "true" in your terraform.tfvars.
+#### Note: The Chef Automate with EAS demo is currently only working in AWS (see [this issue](https://github.com/chef-cft/national-parks-demo/issues/29) if you want to add to azure). The demo disables tls for just the application service. This is the default setting for production deploys please see Chef Automate docs for enabling encryption.
 
 ```
 disable_event_tls = "true"
@@ -37,18 +39,6 @@ You will need to have an [AWS account already created](https://aws.amazon.com)
 2. `cp tfvars.example terraform.tfvars`
 3. edit `terraform.tfvars` with your own values and add in the `automate_url` and `automate_token` from the previous step
 4. `terraform apply`
-
-#### Note: To Deploy the national parks application with EAS Beta you must follow these additional instructions:
-
-1. Follow instructions for Chef-Automate setup with EAS beta
-2. Enable the event stream in your terraform.tfvars as follows:
-`event-stream-enabled = "true"`
-3. Ensure your terraform.tfvars file has values (from your chef-automate terraform output) set for:
-`automate_ip`
-`automate_token`
-4. Set Habitat Supervisors to version 0.83.0-dev by setting the hab-sup-version varaible in your terraform.tfvars as follows:  
-`hab-sup-version = "core/hab-sup/0.83.0-dev -c unstable"`
-5. When you log into the Automate UX type 'beta' Turn ON the "EAS Application" Feature. When you refresh the page a new Applications tab will appear. 
 
 Once the provisioning finishes you will see the output with the various public IP addresses
 ```
