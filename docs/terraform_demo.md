@@ -63,7 +63,7 @@ You will need to have an [Azure account already created](https://azure.microsoft
 2. `terraform init`
 3. `az login`
 4. `cp tfvars.example terraform.tfvars`
-5. edit `terraform.tfvars` with your own values and add in the `automate_url` and `automate_token` from the previous step
+5. edit `terraform.tfvars` with your own values and add in the `automate_url`, `automate_ip`  and `automate_token` from the previous step
 6. `terraform apply`
 
 Once provisioning finishes you will see the output with the various public IP addresses:
