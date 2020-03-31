@@ -30,10 +30,6 @@ variable "aws_ami_id" {
   default     = ""
 }
 
-variable "origin" {
-  default = ""
-}
-
 ////////////////////////////////
 // Object Tags
 
@@ -92,8 +88,8 @@ variable "channel" {
 }
 
 variable "disable_event_tls" {
-  default     = "false"
-  description = "In its initial state, the events feed does not support tls. Parameterizing to make life easy later."
+  default     = "true"
+  description = "Demo does not support encryption for event stream, see automate docs for production deploys with encryption"
 }
 
 variable "automate_hostname" {
@@ -135,3 +131,16 @@ variable "automate_server_instance_type" {
   description = "automate_server_instance_type is the AWS instance type to be used for A2"
 }
 
+variable "automate_password" {
+  description = "automate admin password no default"
+}
+
+variable "automate_token" {
+  default     = "x9GfO534d4mpctuQlKq4TA6SpDE="
+  description = "default token please change"
+}
+
+variable "automate_products" {
+  default     = "--product automate"
+  description = "default Automate only options as follows: --product builder --product automate --product chef-server"
+}

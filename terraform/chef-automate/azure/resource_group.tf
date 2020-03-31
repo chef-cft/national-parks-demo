@@ -2,6 +2,8 @@
 
 # Configure the Microsoft Azure Provider
 provider "azurerm" {
+  features {}
+  version = "~>2.0"
   subscription_id = var.azure_sub_id
   tenant_id       = var.azure_tenant_id
 }

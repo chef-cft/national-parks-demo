@@ -24,6 +24,11 @@ locals {
   ip_conf_name = "automate-ipconfig"
 }
 
+resource "azurerm_subnet_network_security_group_association" "automate" {
+  subnet_id                 = azurerm_subnet.subnet.id
+  network_security_group_id = azurerm_network_security_group.sg.id
+}
+
 resource "azurerm_network_interface" "automate_nic" {
   name                      = "chef-automate-${random_id.instance_id.hex}-nic"
   location                  = azurerm_resource_group.rg.location
@@ -57,6 +62,16 @@ data "template_file" "install_chef_automate_cli" {
   template = file(
     "${path.module}/templates/chef_automate/install_chef_automate_cli.sh.tpl",
   )
+}
+
+data "template_file" "set_chef_automate_token" {
+  template = file(
+    "${path.module}/templates/chef_automate/set_chef_automate_token.sh.tpl",
+  )
+
+  vars = {
+    automate_token = var.automate_token
+  }
 }
 
 locals {
@@ -120,6 +135,11 @@ resource "azurerm_virtual_machine" "chef_automate" {
   }
 
   provisioner "file" {
+    destination = "/tmp/set_chef_automate_token.sh"
+    content     = data.template_file.set_chef_automate_token.rendered
+  }
+
+  provisioner "file" {
     destination = "/tmp/ssl_cert"
     content     = var.automate_custom_ssl ? var.automate_custom_ssl_cert_chain : local.full_cert_chain
   }
@@ -142,13 +162,14 @@ resource "azurerm_virtual_machine" "chef_automate" {
       "sudo sed -i 's/license = \".*\"/license = \"${var.automate_license}\"/g' /tmp/config.toml",
       "sudo rm -f /tmp/ssl_cert /tmp/ssl_key",
       "sudo mv /tmp/config.toml /etc/chef-automate/config.toml",
-      "sudo ./chef-automate deploy /etc/chef-automate/config.toml --accept-terms-and-mlsa",
-      "sudo ./chef-automate applications enable",
-      "sudo hab pkg install chef/applications-service -b",
+      "sudo ./chef-automate deploy ${var.automate_products} /etc/chef-automate/config.toml --accept-terms-and-mlsa",
       "sleep 60",
       "sudo chown ${var.azure_image_user}:${var.azure_image_user} $HOME/automate-credentials.toml",
       "sudo echo -e api-token = \"$(sudo chef-automate admin-token)\" >> $HOME/automate-credentials.toml",
       "sudo cat $HOME/automate-credentials.toml",
+      "sudo chef-automate iam admin-access restore ${var.automate_password}",
+      "sudo chmod +x /tmp/set_chef_automate_token.sh",
+      "sudo bash /tmp/set_chef_automate_token.sh",
     ]
   }
 

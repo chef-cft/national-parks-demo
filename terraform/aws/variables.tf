@@ -108,6 +108,10 @@ variable "update_strategy" {
   default = "at-once"
 }
 
+variable "update_condition" {
+  default = "track-channel"
+}
+
 variable "sleep" {
   default = "60"
 }
@@ -116,9 +120,6 @@ variable "sleep" {
 // Automate Info 
 
 variable "automate_url" {
-}
-
-variable "automate_hostname" {
 }
 
 variable "automate_token" {
@@ -131,15 +132,7 @@ variable "automate_ip" {
 }
 
 ////////////////////////////////
-// Automate EAS Beta 
-
-variable "event-stream-enabled" {
-  default = "false"
-}
-
-variable "event-stream-env-var" {
-  default = "Environment=\"HAB_FEAT_EVENT_STREAM=1\""
-}
+// Automate EAS  
 
 variable "hab-sup-version" {
   default = "core/hab-sup"

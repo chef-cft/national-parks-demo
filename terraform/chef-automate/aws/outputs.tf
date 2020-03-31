@@ -11,11 +11,11 @@ output "a2_admin" {
 }
 
 output "a2_admin_password" {
-  value = data.external.a2_secrets.result["a2_password"]
+  value = var.automate_password
 }
 
 output "a2_token" {
-  value = data.external.a2_secrets.result["a2_token"]
+  value = var.automate_token
 }
 
 output "a2_url" {

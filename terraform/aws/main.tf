@@ -3,6 +3,7 @@ terraform {
 }
 
 provider "aws" {
+  version = "~> 2.54"
   region                  = var.aws_region
   profile                 = var.aws_profile
   shared_credentials_file = "~/.aws/credentials"

@@ -672,7 +672,7 @@ resource "azurerm_virtual_machine" "app" {
       "sudo cp /home/${var.azure_image_user}/config_linux.toml /hab/user/config-baseline/config/user.toml",
       "sudo hab svc load effortless/audit-baseline --channel stable --strategy at-once --group ${var.group}",
       "sudo hab svc load effortless/config-baseline --channel stable --strategy at-once --group ${var.group}",
-      "sudo hab svc load ${var.origin}/national-parks --group ${var.group} --channel ${var.channel} --strategy ${var.update_strategy} --bind database:mongodb.${var.group}",
+      "sudo hab svc load ${var.origin}/national-parks --group ${var.group} --channel ${var.channel} --strategy ${var.update_strategy} --update-condition ${var.update_condition} --bind database:mongodb.${var.group}",
     ]
   }
 

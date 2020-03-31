@@ -3,11 +3,9 @@ variable "azure_region" {
 }
 
 variable "azure_public_key_path" {
-  default = "/path/to/ssh/key"
 }
 
 variable "azure_private_key_path" {
-  default = "/path/to/ssh/key"
 }
 
 variable "azure_image_user" {
@@ -18,11 +16,9 @@ variable "azure_image_password" {
 }
 
 variable "azure_sub_id" {
-  default = "xxxxxxx-xxxx-xxxx-xxxxxxxxxx"
 }
 
 variable "azure_tenant_id" {
-  default = "xxxxxxx-xxxx-xxxx-xxxxxxxxxx"
 }
 
 variable "application" {
@@ -46,6 +42,10 @@ variable "group" {
 
 variable "update_strategy" {
   default = "at-once"
+}
+
+variable "update_condition" {
+  default = "track-channel"
 }
 
 ////////////////////////////////
