@@ -1,9 +1,9 @@
 #!/bin/bash
 
-if [ "$(sudo chef-automate iam version)" = 'IAM v2.1' ]
+if [[ "$(sudo chef-automate iam version)" = "IAM v2."* ]]
 then
   export TOKEN=`sudo chef-automate iam token create demo --admin`
-  echo version 2.1!
+  echo version 2.x!
 fi
 
 if [ "$(sudo chef-automate iam version)" = 'IAM v1.0' ]
