@@ -1,9 +1,16 @@
 #!/bin/bash
 
-echo "Adding hardcoded api token"
-export TOKEN=`sudo chef-automate admin-token`
+if [[ "$(sudo chef-automate iam version)" = "IAM v2."* ]]
+then
+  export TOKEN=`sudo chef-automate iam token create demo --admin`
+  echo version 2.x!
+fi
 
-echo "setting automate_token"
+if [ "$(sudo chef-automate iam version)" = 'IAM v1.0' ]
+then
+  export TOKEN=`sudo chef-automate admin-token`
+  echo version 1.0!
+fi
 
 curl -X POST \
   https://localhost/api/v0/auth/tokens \
