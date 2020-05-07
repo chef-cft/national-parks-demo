@@ -2,31 +2,20 @@
 // AWS Connection
 
 aws_region="us-west-2"
-
 aws_profile="default"
-
 aws_credentials_file="~/.aws/credentials"
-
 aws_key_pair_file = "~/.ssh/id_rs"
-
-aws_key_pair_name = ""
-
-origin = ""
+aws_key_pair_name = "scottford"
 
 ////////////////////////////////
 // Object Tags
 
-tag_customer=""
-
-tag_project=""
-
-tag_name=""
-
-tag_dept=""
-
+tag_customer="testing"
+tag_project="hab_demos"
+tag_name="scottford"
+tag_dept="sales"
 tag_contact="myemail@chef.io"
-
-tag_application=""
+tag_application="national_parks"
 
 ////////////////////////////////
 // Automate Config
@@ -34,13 +23,13 @@ tag_application=""
 automate_hostname="yourname-a2.chef-demo.com"
 automate_license = <YOUR AUTOMATE LICENSE>
 channel = "current"
-# TLS is not supported in the event stream beta. Uncomment until TLS is supported.
-# disable_event_tls = "true"
+disable_event_tls = "true"
 
 // NOTE: If you have an acm cert and r53 managed hosted zone, you
 // can use chef_automate_alb.tf.example to build out an ALB with SSL
 // and DNS via R53.
 // ** You do not need to set custom ssl key and chain in this scenario **
-
+// Chef Automate AWS ALB matcher
 automate_alb_acm_matcher = "*.chef-demo.com"
+// Chef Automate AWS ALB Route54 matcher
 automate_alb_r53_matcher = "chef-demo.com."

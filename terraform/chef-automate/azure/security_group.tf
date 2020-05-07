@@ -1,8 +1,8 @@
 # Create Network Security Group and rule
 resource "azurerm_network_security_group" "chef_automate" {
   name                = "chef-automate-${random_id.instance_id.hex}-sg"
-  location            = "${azurerm_resource_group.rg.location}"
-  resource_group_name = "${azurerm_resource_group.rg.name}"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
 
   security_rule {
     name                       = "SSH"
@@ -64,13 +64,13 @@ resource "azurerm_network_security_group" "chef_automate" {
     destination_address_prefix = "*"
   }
 
-
-  tags {
-    X-Dept        = "${var.tag_dept}"
-    X-Customer    = "${var.tag_customer}"
-    X-Project     = "${var.tag_project}"
-    X-Application = "${var.tag_application}"
-    X-Contact     = "${var.tag_contact}"
-    X-TTL         = "${var.tag_ttl}"
+  tags = {
+    X-Dept        = var.tag_dept
+    X-Customer    = var.tag_customer
+    X-Project     = var.tag_project
+    X-Application = var.tag_application
+    X-Contact     = var.tag_contact
+    X-TTL         = var.tag_ttl
   }
 }
+
