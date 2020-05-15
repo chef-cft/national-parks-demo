@@ -5,6 +5,7 @@ data "template_file" "permanent_peer" {
   template = file("${path.module}/../templates/peer-sup.service")
 
   vars = {
+    HAB_AUTH_TOKEN ="${var.HAB_AUTH_TOKEN}"
     flags      = "--auto-update --listen-gossip 0.0.0.0:9638 --listen-http 0.0.0.0:9631 --permanent-peer --event-stream-application=${var.event-stream-application} --event-stream-environment=${var.event-stream-environment} --event-stream-site=${var.aws_region} --event-stream-url=${var.automate_ip}:4222 --event-stream-token=${var.automate_token}"
   }
 }
@@ -13,6 +14,8 @@ data "template_file" "sup_service" {
   template = file("${path.module}/../templates/hab-sup.service")
 
   vars = {
+    HAB_AUTH_TOKEN ="${var.HAB_AUTH_TOKEN}"
+    UPDATE_STRATEGY_FREQUENCY_MS  ="${var.UPDATE_STRATEGY_FREQUENCY_MS}"
     flags      = "--auto-update --peer ${aws_instance.permanent_peer.private_ip} --listen-gossip 0.0.0.0:9638 --listen-http 0.0.0.0:9631 --event-stream-application=${var.event-stream-application} --event-stream-environment=${var.event-stream-environment} --event-stream-site=${var.aws_region} --event-stream-url=${var.automate_ip}:4222 --event-stream-token=${var.automate_token}"
   }
 }

@@ -2,6 +2,10 @@
 Description=Habitat Supervisor
 
 [Service]
+
+Environment=HAB_AUTH_TOKEN=${HAB_AUTH_TOKEN}
+Environment=HAB_UPDATE_STRATEGY_FREQUENCY_BYPASS_CHECK=1
+Environment=HAB_UPDATE_STRATEGY_FREQUENCY_MS=${UPDATE_STRATEGY_FREQUENCY_MS}
 ExecStartPre=/bin/bash -c /bin/systemctl
 ExecStart=/bin/hab run ${flags}
 
