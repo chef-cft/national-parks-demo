@@ -112,6 +112,14 @@ variable "effortless_inspec" {
   default = "audit-baseline"
 }
 
+variable "effortless_infra_channel" {
+  default = "stable"
+}
+
+variable "effortless_inspec_channel" {
+  default = "stable"
+}
+
 variable "group" {
   default = "default"
 }
