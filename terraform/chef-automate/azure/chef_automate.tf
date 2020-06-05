@@ -25,19 +25,18 @@ locals {
 }
 
 resource "azurerm_subnet_network_security_group_association" "automate" {
-  subnet_id                 = azurerm_subnet.subnet.id
-  network_security_group_id = azurerm_network_security_group.sg.id
+  subnet_id                 = azurerm_subnet.frontend.id
+  network_security_group_id = azurerm_network_security_group.chef_automate.id
 }
 
 resource "azurerm_network_interface" "automate_nic" {
   name                      = "chef-automate-${random_id.instance_id.hex}-nic"
   location                  = azurerm_resource_group.rg.location
   resource_group_name       = azurerm_resource_group.rg.name
-  network_security_group_id = azurerm_network_security_group.chef_automate.id
 
   ip_configuration {
     name                          = local.ip_conf_name
-    subnet_id                     = azurerm_subnet.backend.id
+    subnet_id                     = azurerm_subnet.frontend.id
     private_ip_address_allocation = "dynamic"
     public_ip_address_id          = azurerm_public_ip.automate_pip.id
   }
@@ -88,7 +87,7 @@ resource "azurerm_virtual_machine" "chef_automate" {
   delete_os_disk_on_termination = true
 
   connection {
-    host        = "" # TF-UPGRADE-TODO: Set this to the IP address of the machine's primary network interface
+    host        = "${azurerm_dns_a_record.automate_dns.name}.${var.automate_app_gateway_dns_zone}"
     type        = "ssh"
     user        = var.azure_image_user
     private_key = file(var.azure_private_key_path)
@@ -103,10 +102,10 @@ resource "azurerm_virtual_machine" "chef_automate" {
 
   storage_os_disk {
     name          = "${var.automate_hostname}-fe-${random_id.randomId.hex}-osdisk"
-    vhd_uri       = "${azurerm_storage_account.stor.primary_blob_endpoint}${azurerm_storage_container.storcont.name}/${var.tag_application}-chef_automate-osdisk.vhd"
     caching       = "ReadWrite"
     create_option = "FromImage"
     disk_size_gb  = "100"
+    managed_disk_type = "Standard_LRS"
   }
 
   os_profile {

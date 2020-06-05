@@ -20,7 +20,7 @@ resource "azurerm_availability_set" "avset" {
   resource_group_name          = azurerm_resource_group.rg.name
   platform_fault_domain_count  = 2
   platform_update_domain_count = 2
-  #managed                      = true
+  managed                      = true
 }
 
 resource "azurerm_lb" "automate_lb" {
