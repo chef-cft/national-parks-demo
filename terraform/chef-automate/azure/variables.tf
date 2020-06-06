@@ -148,4 +148,9 @@ variable "automate_token" {
 variable "automate_products" {
   default     = "--product automate"
   description = "default Automate only options as follows: --product builder --product automate --product chef-server"
-} 
+}
+
+variable "disable_event_tls" {
+  default     = "true"
+  description = "Demo does not support encryption for event stream, see automate docs for production deploys with encryption"
+}

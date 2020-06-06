@@ -73,6 +73,16 @@ data "template_file" "set_chef_automate_token" {
   }
 }
 
+data "template_file" "automate_eas_config" {
+  template = file(
+    "${path.module}/templates/chef_automate/automate-eas-config.toml.tpl",
+  )
+
+  vars = {
+    disable_event_tls = var.disable_event_tls
+  }
+}
+
 locals {
   full_cert_chain = "${acme_certificate.automate_cert.certificate_pem}${acme_certificate.automate_cert.issuer_pem}"
 }
@@ -139,6 +149,11 @@ resource "azurerm_virtual_machine" "chef_automate" {
   }
 
   provisioner "file" {
+    destination = "/tmp/automate-eas-config.toml"
+    content     = data.template_file.automate_eas_config.rendered
+  }
+
+  provisioner "file" {
     destination = "/tmp/ssl_cert"
     content     = var.automate_custom_ssl ? var.automate_custom_ssl_cert_chain : local.full_cert_chain
   }
@@ -162,6 +177,7 @@ resource "azurerm_virtual_machine" "chef_automate" {
       "sudo rm -f /tmp/ssl_cert /tmp/ssl_key",
       "sudo mv /tmp/config.toml /etc/chef-automate/config.toml",
       "sudo ./chef-automate deploy ${var.automate_products} /etc/chef-automate/config.toml --accept-terms-and-mlsa",
+      "sudo ./chef-automate config patch /tmp/automate-eas-config.toml",
       "sleep 60",
       "sudo chown ${var.azure_image_user}:${var.azure_image_user} $HOME/automate-credentials.toml",
       "sudo echo -e api-token = \"$(sudo chef-automate admin-token)\" >> $HOME/automate-credentials.toml",
@@ -202,4 +218,3 @@ data "external" "a2_secrets" {
     a2_ip    = azurerm_public_ip.automate_pip.ip_address
   }
 }
-
