@@ -28,11 +28,8 @@ steps:
     secureFile: 'ghenkhaus-sa-oregon.pem'
   displayName: 'Download AWS Instance Key'
 
-- task: CopyFiles@2
-  inputs:
-    SourceFolder: '$(awsInstanceKey.secureFilePath)'
-    Contents: 'ghenkhaus-sa-oregon.pem'
-    TargetFolder: '/home/chef/.ssh'
+- script: |
+    cp $(awsInstanceKey.secureFilePath) /home/chef/.ssh/ghenkhaus-sa-oregon.pem
 
 - task: TerraformTaskV1@0
   inputs:
