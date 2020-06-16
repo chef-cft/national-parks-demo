@@ -17,8 +17,9 @@ steps:
   displayName: "Install Terraform"
 
 - task: DownloadSecureFile@1
+  name: aws-tf-vars
   inputs:
-    secureFile: 'aws-tf-vars'
+    secureFile: 'terraform.tfvars'
   displayName: 'Download terraform.tfvars'
 
 - task: TerraformTaskV1@0
