@@ -28,7 +28,7 @@ steps:
     command: 'init'
     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
     backendServiceAWS: 'AWS-ADO-Pipeline'
-    backendAWSBucketName: 'a-s3-tf-backend'
+    backendAWSBucketName: 'sa-s3-tf-backend'
     backendAWSKey: 'terraform_state'
   displayName: "Terraform Init"
 
