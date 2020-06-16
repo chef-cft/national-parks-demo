@@ -1,16 +1,6 @@
-resources:
-  repositories:
-  - repository: national-parks-demo-repo
-    type: github
-    endpoint: ghenkhaus
-    name: chef-cft/national-parks-demo
-
 pool: henkhaus-forest
 
 steps:
-- checkout: national-parks-demo-repo
-  displayName: 'Checkout National Parks Repo'
-
 - task: vsts-habitat-install@3
   displayName: 'Install Habitat'
 
