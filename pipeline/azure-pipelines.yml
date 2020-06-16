@@ -5,7 +5,6 @@ steps:
   inputs:
     script: |
       sudo yum -y install https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm
-      
       sudo yum install -y git unzip
   displayName: 'Install Dependencies'
 
@@ -35,17 +34,10 @@ steps:
 - task: TerraformTaskV1@0
   inputs:
     provider: 'aws'
-    command: 'validate'
+    command: 'apply'
     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
-  displayName: "Terraform Validate"
-
-# - task: TerraformTaskV1@0
-#   inputs:
-#     provider: 'aws'
-#     command: 'plan'
-#     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
-#     environmentServiceNameAWS: 'AWS-ADO-Pipeline'
-#   displayName: "Terraform Plan"
+    commandOptions: '-var-file=$(System.DefaultWorkingDirectory)/terraform.tfvars'
+    environmentServiceNameAWS: 'AWS-ADO-Pipeline'
 
 # # TERRAFORM DESTORY
 # - task: TerraformTaskV1@0
