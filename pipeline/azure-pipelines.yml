@@ -46,15 +46,13 @@ steps:
     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
   displayName: "Terraform Validate"
 
-- task: TerraformTaskV1@0
-  inputs:
-    provider: 'aws'
-    command: 'plan'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
-    environmentServiceNameAWS: 'AWS-ADO-Pipeline'
-  displayName: "Terraform Plan"
-
-
+# - task: TerraformTaskV1@0
+#   inputs:
+#     provider: 'aws'
+#     command: 'plan'
+#     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
+#     environmentServiceNameAWS: 'AWS-ADO-Pipeline'
+#   displayName: "Terraform Plan"
 
 # # TERRAFORM DESTORY
 # - task: TerraformTaskV1@0
