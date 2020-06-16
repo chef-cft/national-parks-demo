@@ -8,6 +8,7 @@ steps:
       
       sudo yum install -y git unzip
   displayName: 'Install Dependencies'
+
 - task: vsts-habitat-install@3
   displayName: 'Install Habitat'
 
