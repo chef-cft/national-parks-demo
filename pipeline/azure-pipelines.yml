@@ -17,7 +17,7 @@ steps:
   displayName: "Install Terraform"
 
 - task: DownloadSecureFile@1
-  name: aws-tf-vars
+  name: awsTfVars
   inputs:
     secureFile: 'terraform.tfvars'
   displayName: 'Download terraform.tfvars'
@@ -37,7 +37,7 @@ steps:
     provider: 'aws'
     command: 'apply'
     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
-    commandOptions: '-var-file=$(aws-tf-vars.secureFilePath)'
+    commandOptions: '-var-file=$(awsTfVars.secureFilePath)'
     environmentServiceNameAWS: 'AWS-ADO-Pipeline'
 
 # # TERRAFORM DESTORY
