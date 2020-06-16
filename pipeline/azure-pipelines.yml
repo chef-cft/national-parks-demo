@@ -17,13 +17,6 @@ steps:
     terraformVersion: '0.12.24'
   displayName: "Install Terraform"
 
-# - task: CopyFiles@2
-#   inputs:
-#     SourceFolder: '/home/chef/static_files'
-#     Contents: '*.tfvars'
-#     TargetFolder: '$(System.DefaultWorkingDirectory)/terraform/aws'
-#   displayName: "Copy Terraform Vars"
-
 - task: DownloadSecureFile@1
   inputs:
     secureFile: 'terraform.tfvars'
@@ -35,8 +28,8 @@ steps:
     command: 'init'
     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
     backendServiceAWS: 'AWS-ADO-Pipeline'
-    backendAWSBucketName: 'chef-ghenkhaus'
-    backendAWSKey: 'national-parks-pipeline.tfstate'
+    backendAWSBucketName: 'a-s3-tf-backend'
+    backendAWSKey: 'terraform_state'
   displayName: "Terraform Init"
 
 - task: TerraformTaskV1@0
