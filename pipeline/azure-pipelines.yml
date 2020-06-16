@@ -9,12 +9,12 @@ steps:
     terraformVersion: '0.12.24'
   displayName: "Install Terraform"
 
-- task: CopyFiles@2
-  inputs:
-    SourceFolder: '/home/chef/static_files'
-    Contents: '*.tfvars'
-    TargetFolder: '$(System.DefaultWorkingDirectory)/terraform/aws'
-  displayName: "Copy Terraform Vars"
+# - task: CopyFiles@2
+#   inputs:
+#     SourceFolder: '/home/chef/static_files'
+#     Contents: '*.tfvars'
+#     TargetFolder: '$(System.DefaultWorkingDirectory)/terraform/aws'
+#   displayName: "Copy Terraform Vars"
 
 - task: TerraformTaskV1@0
   inputs:
