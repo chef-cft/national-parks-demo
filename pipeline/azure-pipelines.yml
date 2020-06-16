@@ -24,6 +24,12 @@ steps:
 #     TargetFolder: '$(System.DefaultWorkingDirectory)/terraform/aws'
 #   displayName: "Copy Terraform Vars"
 
+- task: DownloadSecureFile@1
+  name: terraform.tfvars
+  inputs:
+    secureFile: 'terraform.tfvars'
+  displayName: 'Download terraform.tfvars'
+
 - task: TerraformTaskV1@0
   inputs:
     provider: 'aws'
