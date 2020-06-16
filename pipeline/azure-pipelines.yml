@@ -1,0 +1,63 @@
+resources:
+  repositories:
+  - repository: national-parks-demo-repo
+    type: github
+    endpoint: ghenkhaus
+    name: chef-cft/national-parks-demo
+
+pool: henkhaus-forest
+
+steps:
+- checkout: national-parks-demo-repo
+  displayName: 'Checkout National Parks Repo'
+
+- task: vsts-habitat-install@3
+  displayName: 'Install Habitat'
+
+- task: TerraformInstaller@0
+  inputs:
+    terraformVersion: '0.12.24'
+  displayName: "Install Terraform"
+
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '/home/chef/static_files'
+    Contents: '*.tfvars'
+    TargetFolder: '$(System.DefaultWorkingDirectory)/terraform/aws'
+  displayName: "Copy Terraform Vars"
+
+- task: TerraformTaskV1@0
+  inputs:
+    provider: 'aws'
+    command: 'init'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
+    backendServiceAWS: 'Chef-SA-ghenkhaus'
+    backendAWSBucketName: 'chef-ghenkhaus'
+    backendAWSKey: 'national-parks-pipeline.tfstate'
+  displayName: "Terraform Init"
+
+- task: TerraformTaskV1@0
+  inputs:
+    provider: 'aws'
+    command: 'validate'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
+  displayName: "Terraform Validate"
+
+- task: TerraformTaskV1@0
+  inputs:
+    provider: 'aws'
+    command: 'plan'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
+    environmentServiceNameAWS: 'Chef-SA-ghenkhaus'
+  displayName: "Terraform Plan"
+
+
+
+# # TERRAFORM DESTORY
+# - task: TerraformTaskV1@0
+#   inputs:
+#     provider: 'aws'
+#     command: 'destroy'
+#     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
+#     environmentServiceNameAWS: 'Chef-SA-ghenkhaus'
+#   displayName: "Terraform Destroy"
