@@ -21,7 +21,7 @@ steps:
     provider: 'aws'
     command: 'init'
     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
-    backendServiceAWS: 'Chef-SA-ghenkhaus'
+    backendServiceAWS: 'AWS-ADO-Pipeline'
     backendAWSBucketName: 'chef-ghenkhaus'
     backendAWSKey: 'national-parks-pipeline.tfstate'
   displayName: "Terraform Init"
@@ -38,7 +38,7 @@ steps:
     provider: 'aws'
     command: 'plan'
     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
-    environmentServiceNameAWS: 'Chef-SA-ghenkhaus'
+    environmentServiceNameAWS: 'AWS-ADO-Pipeline'
   displayName: "Terraform Plan"
 
 
@@ -49,5 +49,5 @@ steps:
 #     provider: 'aws'
 #     command: 'destroy'
 #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
-#     environmentServiceNameAWS: 'Chef-SA-ghenkhaus'
+#     environmentServiceNameAWS: 'AWS-ADO-Pipeline'
 #   displayName: "Terraform Destroy"
