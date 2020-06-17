@@ -2,12 +2,13 @@ pool: henkhaus-forest
 stages:
 
 
+
 ### STAGE 1 Deploy Automate
 - stage: Deploy_Automate
   displayName: Deploy Automate
   jobs:
-  - job: Setup_Agent
-    displayName: Setup Agent
+  - job: Deploy_Automate
+    displayName: Deploy Automate
     steps:
     - task: CmdLine@2
       inputs:
@@ -21,10 +22,6 @@ stages:
       inputs:
         terraformVersion: '0.12.24'
       displayName: "Install Terraform"
-
-  - job: Download_Secure_Files
-    displayName: Download Secure Files
-    steps:
     - task: DownloadSecureFile@1
       name: tfAutomateVarsFile
       inputs:
@@ -37,10 +34,6 @@ stages:
       displayName: 'Download AWS Instance Key'
     - script: |
         cp $(awsInstanceKey.secureFilePath) $(System.DefaultWorkingDirectory)/terraform/chef-automate/aws/ghenkhaus-sa-oregon.pem
-  
-  - job: Apply_Automate_Terraform
-    displayName: Apply Automate Terraform
-    steps:
     - task: TerraformTaskV1@0
       inputs:
         provider: 'aws'
@@ -58,15 +51,15 @@ stages:
     #     commandOptions: '-var-file=$(tfAutomateVarsFile.secureFilePath)'
     #     environmentServiceNameAWS: 'AWS-ADO-Pipeline'
     #   displayName: "Terraform Apply"
-  
+
 
 
 ### STAGE 2 Deploy National Parks
 - stage: Deploy_National_Parks
   displayName: Deploy National Parks
   jobs:
-  - job: Setup_Agent
-    displayName: Setup Agent
+  - job: Deploy_National_Parks
+    displayName: Deploy National Parks
     steps:
     - task: CmdLine@2
       inputs:
@@ -80,10 +73,6 @@ stages:
       inputs:
         terraformVersion: '0.12.24'
       displayName: "Install Terraform"
-
-  - job: Download_Secure_Files
-    displayName: Download Secure Files
-    steps:
     - task: DownloadSecureFile@1
       name: tfNatParksVarsFile
       inputs:
@@ -96,10 +85,6 @@ stages:
       displayName: 'Download AWS Instance Key'
     - script: |
         cp $(awsInstanceKey.secureFilePath) $(System.DefaultWorkingDirectory)/terraform/aws/ghenkhaus-sa-oregon.pem
-
-  - job: Apply_National_Parks_Terraform
-    displayName: Apply National Parks Terraform
-    steps:
     - task: TerraformTaskV1@0
       inputs:
         provider: 'aws'
@@ -124,8 +109,8 @@ stages:
 - stage: Clean_Up 
   displayName: Clean Up
   jobs:
-  - job: Setup_Agent
-    displayName: Setup Agent
+  - job: Clean_Up_Automate
+    displayName: Clean Up Automate
     steps:
     - task: CmdLine@2
       inputs:
@@ -133,22 +118,14 @@ stages:
           sudo yum -y install https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm
           sudo yum install -y git unzip
       displayName: 'Install Package Dependencies'
-    - task: vsts-habitat-install@3
-      displayName: 'Install Habitat'
     - task: TerraformInstaller@0
       inputs:
         terraformVersion: '0.12.24'
       displayName: "Install Terraform"
-
-  - job: Destory_Automate
-    continueOnError: true
-    displayName: Destory Automate
-    steps:
     - task: CmdLine@2
       inputs:
         script: |
           echo "skip"
-      condition: always()
       displayName: 'Skip'
     # - task: TerraformTaskV1@0
     #   inputs:
@@ -158,15 +135,24 @@ stages:
     #     environmentServiceNameAWS: 'AWS-ADO-Pipeline'
     #   displayName: "Terraform Destroy"
 
-  - job: Destory_National_Parks
+  - job: Clean_Up_National_Parks
     continueOnError: true
-    displayName: Destory National Parks
+    displayName: Clean Up National Parks
     steps:
     - task: CmdLine@2
       inputs:
         script: |
+          sudo yum -y install https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm
+          sudo yum install -y git unzip
+      displayName: 'Install Package Dependencies'
+    - task: TerraformInstaller@0
+      inputs:
+        terraformVersion: '0.12.24'
+      displayName: "Install Terraform"
+    - task: CmdLine@2
+      inputs:
+        script: |
           echo "skip"
-      condition: always()
       displayName: 'Skip'
     # - task: TerraformTaskV1@0
     #   inputs:
