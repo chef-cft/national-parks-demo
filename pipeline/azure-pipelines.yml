@@ -1,5 +1,7 @@
 pool: henkhaus-forest
 stages:
+
+
 ### STAGE 1 Deploy Automate
 - stage: Deploy_Automate
   displayName: Deploy Automate
@@ -24,17 +26,17 @@ stages:
     displayName: Download Secure Files
     steps:
     - task: DownloadSecureFile@1
-      name: awsTfVars
+      name: tfAutomateVarsFile
       inputs:
-        secureFile: 'terraform.tfvars'
-      displayName: 'Download terraform.tfvars'
+        secureFile: 'automate-pipeline.tfvars'
+      displayName: 'Download automate-pipeline.tfvars'
     - task: DownloadSecureFile@1
       name: awsInstanceKey
       inputs:
-        secureFile: 'ghenkhaus-sa-oregon.pem'
+        secureFile: 'demo-validator-us-east-1.pem'
       displayName: 'Download AWS Instance Key'
     - script: |
-        cp $(awsInstanceKey.secureFilePath) /home/chef/.ssh/ghenkhaus-sa-oregon.pem
+        cp $(awsInstanceKey.secureFilePath) $(System.DefaultWorkingDirectory)/terraform/automate/aws/ghenkhaus-sa-oregon.pem
   
   - job: Apply_Automate_Terraform
     displayName: Apply Automate Terraform
@@ -53,10 +55,12 @@ stages:
     #     provider: 'aws'
     #     command: 'apply'
     #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/automate/aws'
-    #     commandOptions: '-var-file=$(awsTfVars.secureFilePath)'
+    #     commandOptions: '-var-file=$(tfAutomateVarsFile.secureFilePath)'
     #     environmentServiceNameAWS: 'AWS-ADO-Pipeline'
     #   displayName: "Terraform Apply"
   
+
+
 ### STAGE 2 Deploy National Parks
 - stage: Deploy_National_Parks
   displayName: Deploy National Parks
@@ -81,17 +85,17 @@ stages:
     displayName: Download Secure Files
     steps:
     - task: DownloadSecureFile@1
-      name: awsTfVars
+      name: tfNatParksVarsFile
       inputs:
-        secureFile: 'terraform.tfvars'
-      displayName: 'Download terraform.tfvars'
+        secureFile: 'nat-parks-pipeline.tfvars'
+      displayName: 'Download nat-parks-pipeline.tfvars'
     - task: DownloadSecureFile@1
       name: awsInstanceKey
       inputs:
-        secureFile: 'ghenkhaus-sa-oregon.pem'
+        secureFile: 'demo-validator-us-east-1.pem'
       displayName: 'Download AWS Instance Key'
     - script: |
-        cp $(awsInstanceKey.secureFilePath) /home/chef/.ssh/ghenkhaus-sa-oregon.pem
+        cp $(awsInstanceKey.secureFilePath) $(System.DefaultWorkingDirectory)/terraform/aws/ghenkhaus-sa-oregon.pem
 
   - job: Apply_National_Parks_Terraform
     displayName: Apply National Parks Terraform
@@ -110,9 +114,11 @@ stages:
     #     provider: 'aws'
     #     command: 'apply'
     #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
-    #     commandOptions: '-var-file=$(awsTfVars.secureFilePath)'
+    #     commandOptions: '-var-file=$(tfAutomateVarsFile.secureFilePath)'
     #     environmentServiceNameAWS: 'AWS-ADO-Pipeline'
     #   displayName: "Terraform Apply"
+
+
 
 ### STAGE 3 Clean Up
 - stage: Clean_Up 
@@ -133,22 +139,6 @@ stages:
       inputs:
         terraformVersion: '0.12.24'
       displayName: "Install Terraform"
-
-  - job: Download_Secure_Files
-    displayName: Download Secure Files
-    steps:
-    - task: DownloadSecureFile@1
-      name: awsTfVars
-      inputs:
-        secureFile: 'terraform.tfvars'
-      displayName: 'Download terraform.tfvars'
-    - task: DownloadSecureFile@1
-      name: awsInstanceKey
-      inputs:
-        secureFile: 'ghenkhaus-sa-oregon.pem'
-      displayName: 'Download AWS Instance Key'
-    - script: |
-        cp $(awsInstanceKey.secureFilePath) /home/chef/.ssh/ghenkhaus-sa-oregon.pem
 
   - job: Destory_Automate
     continueOnError: true
