@@ -1,11 +1,9 @@
 pool: henkhaus-forest
 stages:
 
-
-
 ### STAGE 1 Deploy Automate
-- stage: Deploy_Automate
-  displayName: Deploy Automate
+- stage: Deploy_Demo
+  displayName: Deploy Demo
   jobs:
   - job: Deploy_Automate
     displayName: Deploy Automate
@@ -52,12 +50,6 @@ stages:
     #     environmentServiceNameAWS: 'AWS-ADO-Pipeline'
     #   displayName: "Terraform Apply"
 
-
-
-### STAGE 2 Deploy National Parks
-- stage: Deploy_National_Parks
-  displayName: Deploy National Parks
-  jobs:
   - job: Deploy_National_Parks
     displayName: Deploy National Parks
     steps:
@@ -103,9 +95,7 @@ stages:
     #     environmentServiceNameAWS: 'AWS-ADO-Pipeline'
     #   displayName: "Terraform Apply"
 
-
-
-### STAGE 3 Clean Up
+### STAGE 2 Clean Up
 - stage: Clean_Up 
   displayName: Clean Up
   jobs:
