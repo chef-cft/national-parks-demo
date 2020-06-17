@@ -151,6 +151,7 @@ stages:
         cp $(awsInstanceKey.secureFilePath) /home/chef/.ssh/ghenkhaus-sa-oregon.pem
 
   - job: Destory_Automate
+    continueOnError: true
     displayName: Destory Automate
     steps:
     - task: CmdLine@2
@@ -168,6 +169,7 @@ stages:
     #   displayName: "Terraform Destroy"
 
   - job: Destory_National_Parks
+    continueOnError: true
     displayName: Destory National Parks
     steps:
     - task: CmdLine@2
