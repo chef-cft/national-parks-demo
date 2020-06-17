@@ -1,60 +1,78 @@
 pool: henkhaus-forest
+stages:
+- stage: Build
+  jobs:
+  - job: BuildJob
+    steps:
+    - script: echo Building!
+- stage: Test
+  jobs:
+  - job: TestOnWindows
+    steps:
+    - script: echo Testing on Windows!
+  - job: TestOnLinux
+    steps:
+    - script: echo Testing on Linux!
+- stage: Deploy
+  jobs:
+  - job: Deploy
+    steps:
+    - script: echo Deploying the code!
+# steps:
+# - task: CmdLine@2
+#   inputs:
+#     script: |
+#       sudo yum -y install https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm
+#       sudo yum install -y git unzip
+#   displayName: 'Install Dependencies'
 
-steps:
-- task: CmdLine@2
-  inputs:
-    script: |
-      sudo yum -y install https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm
-      sudo yum install -y git unzip
-  displayName: 'Install Dependencies'
+# - task: vsts-habitat-install@3
+#   displayName: 'Install Habitat'
 
-- task: vsts-habitat-install@3
-  displayName: 'Install Habitat'
+# - task: TerraformInstaller@0
+#   inputs:
+#     terraformVersion: '0.12.24'
+#   displayName: "Install Terraform"
 
-- task: TerraformInstaller@0
-  inputs:
-    terraformVersion: '0.12.24'
-  displayName: "Install Terraform"
+# - task: DownloadSecureFile@1
+#   name: awsTfVars
+#   inputs:
+#     secureFile: 'terraform.tfvars'
+#   displayName: 'Download terraform.tfvars'
 
-- task: DownloadSecureFile@1
-  name: awsTfVars
-  inputs:
-    secureFile: 'terraform.tfvars'
-  displayName: 'Download terraform.tfvars'
+# - task: DownloadSecureFile@1
+#   name: awsInstanceKey
+#   inputs:
+#     secureFile: 'ghenkhaus-sa-oregon.pem'
+#   displayName: 'Download AWS Instance Key'
 
-- task: DownloadSecureFile@1
-  name: awsInstanceKey
-  inputs:
-    secureFile: 'ghenkhaus-sa-oregon.pem'
-  displayName: 'Download AWS Instance Key'
+# - script: |
+#     cp $(awsInstanceKey.secureFilePath) /home/chef/.ssh/ghenkhaus-sa-oregon.pem
 
-- script: |
-    cp $(awsInstanceKey.secureFilePath) /home/chef/.ssh/ghenkhaus-sa-oregon.pem
-
-- task: TerraformTaskV1@0
-  inputs:
-    provider: 'aws'
-    command: 'init'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
-    backendServiceAWS: 'AWS-ADO-Pipeline'
-    backendAWSBucketName: 'sa-s3-tf-backend'
-    backendAWSKey: 'terraform_state'
-  displayName: "Terraform Init"
-
-- task: TerraformTaskV1@0
-  inputs:
-    provider: 'aws'
-    command: 'apply'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
-    commandOptions: '-var-file=$(awsTfVars.secureFilePath)'
-    environmentServiceNameAWS: 'AWS-ADO-Pipeline'
-  displayName: "Terraform Apply"
-
-# # TERRAFORM DESTORY
 # - task: TerraformTaskV1@0
 #   inputs:
 #     provider: 'aws'
-#     command: 'destroy'
+#     command: 'init'
 #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
+#     backendServiceAWS: 'AWS-ADO-Pipeline'
+#     backendAWSBucketName: 'sa-s3-tf-backend'
+#     backendAWSKey: 'terraform_state'
+#   displayName: "Terraform Init"
+
+# - task: TerraformTaskV1@0
+#   inputs:
+#     provider: 'aws'
+#     command: 'apply'
+#     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
+#     commandOptions: '-var-file=$(awsTfVars.secureFilePath)'
 #     environmentServiceNameAWS: 'AWS-ADO-Pipeline'
-#   displayName: "Terraform Destroy"
+#   displayName: "Terraform Apply"
+
+# # # TERRAFORM DESTORY
+# # - task: TerraformTaskV1@0
+# #   inputs:
+# #     provider: 'aws'
+# #     command: 'destroy'
+# #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
+# #     environmentServiceNameAWS: 'AWS-ADO-Pipeline'
+# #   displayName: "Terraform Destroy"
