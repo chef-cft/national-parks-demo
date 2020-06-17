@@ -3,3 +3,4 @@ results/
 *tfvars
 *tfstate*
 .kitchen
+.DS_Store
