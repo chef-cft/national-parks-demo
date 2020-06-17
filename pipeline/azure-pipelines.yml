@@ -3,7 +3,7 @@ stages:
 ### STAGE 1 Deploy Automate
 - stage: Deploy_Automate
   jobs:
-  - job: Setup CI/CD Agent
+  - job: Setup_Agent
     steps:
     - task: CmdLine@2
       inputs:
@@ -18,7 +18,7 @@ stages:
         terraformVersion: '0.12.24'
       displayName: "Install Terraform"
 
-  - job: Download Secure Files
+  - job: Download_Secure_Files
     steps:
     - task: DownloadSecureFile@1
       name: awsTfVars
@@ -36,7 +36,7 @@ stages:
 ### STAGE 2 Deploy National Parks
 - stage: Deploy_National_Parks
   jobs:
-  - job: Setup CI/CD Agent
+  - job: Setup_Agent
     steps:
     - task: CmdLine@2
       inputs:
@@ -51,7 +51,7 @@ stages:
         terraformVersion: '0.12.24'
       displayName: "Install Terraform"
 
-  - job: Download Secure Files
+  - job: Download_Secure_Files
     steps:
     - task: DownloadSecureFile@1
       name: awsTfVars
@@ -66,7 +66,7 @@ stages:
     - script: |
         cp $(awsInstanceKey.secureFilePath) /home/chef/.ssh/ghenkhaus-sa-oregon.pem
 
-  - job: Apply Automate Terraform
+  - job: Apply_Automate_Terraform
     steps:
     - task: TerraformTaskV1@0
       inputs:
@@ -89,7 +89,7 @@ stages:
 ### STAGE 3 Clean Up
 - stage: Clean_Up 
   jobs:
-  - job: Destory National Parks
+  - job: Destory_National_Parks
     steps:
     - task: TerraformTaskV1@0
       inputs:
