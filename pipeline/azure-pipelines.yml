@@ -118,6 +118,38 @@ stages:
 - stage: Clean_Up 
   displayName: Clean Up
   jobs:
+  - job: Setup_Agent
+    displayName: Setup Agent
+    steps:
+    - task: CmdLine@2
+      inputs:
+        script: |
+          sudo yum -y install https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm
+          sudo yum install -y git unzip
+      displayName: 'Install Package Dependencies'
+    - task: vsts-habitat-install@3
+      displayName: 'Install Habitat'
+    - task: TerraformInstaller@0
+      inputs:
+        terraformVersion: '0.12.24'
+      displayName: "Install Terraform"
+
+  - job: Download_Secure_Files
+    displayName: Download Secure Files
+    steps:
+    - task: DownloadSecureFile@1
+      name: awsTfVars
+      inputs:
+        secureFile: 'terraform.tfvars'
+      displayName: 'Download terraform.tfvars'
+    - task: DownloadSecureFile@1
+      name: awsInstanceKey
+      inputs:
+        secureFile: 'ghenkhaus-sa-oregon.pem'
+      displayName: 'Download AWS Instance Key'
+    - script: |
+        cp $(awsInstanceKey.secureFilePath) /home/chef/.ssh/ghenkhaus-sa-oregon.pem
+        
   - job: Destory_Automate
     displayName: Destory Automate
     steps:
