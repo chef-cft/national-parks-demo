@@ -5,6 +5,7 @@ stages:
   displayName: Deploy Automate
   jobs:
   - job: Setup_Agent
+    displayName: Setup Agent
     steps:
     - task: CmdLine@2
       inputs:
