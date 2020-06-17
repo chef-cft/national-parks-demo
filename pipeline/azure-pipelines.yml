@@ -41,14 +41,14 @@ stages:
         backendAWSBucketName: 'sa-s3-tf-backend'
         backendAWSKey: 'demo-validator/automate/terraform_state'
       displayName: "Terraform Init"
-    # - task: TerraformTaskV1@0
-    #   inputs:
-    #     provider: 'aws'
-    #     command: 'apply'
-    #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/chef-automate/aws'
-    #     commandOptions: '-var-file=$(tfAutomateVarsFile.secureFilePath)'
-    #     environmentServiceNameAWS: 'AWS-ADO-Pipeline'
-    #   displayName: "Terraform Apply"
+    - task: TerraformTaskV1@0
+      inputs:
+        provider: 'aws'
+        command: 'apply'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/chef-automate/aws'
+        commandOptions: '-var-file=$(tfAutomateVarsFile.secureFilePath)'
+        environmentServiceNameAWS: 'AWS-ADO-Pipeline'
+      displayName: "Terraform Apply"
 
   - job: Deploy_National_Parks
     displayName: Deploy National Parks
