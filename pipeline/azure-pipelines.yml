@@ -149,7 +149,7 @@ stages:
       displayName: 'Download AWS Instance Key'
     - script: |
         cp $(awsInstanceKey.secureFilePath) /home/chef/.ssh/ghenkhaus-sa-oregon.pem
-        
+
   - job: Destory_Automate
     displayName: Destory Automate
     steps:
@@ -157,6 +157,7 @@ stages:
       inputs:
         script: |
           echo "skip"
+      condition: always()
       displayName: 'Skip'
     # - task: TerraformTaskV1@0
     #   inputs:
@@ -173,6 +174,7 @@ stages:
       inputs:
         script: |
           echo "skip"
+      condition: always()
       displayName: 'Skip'
     # - task: TerraformTaskV1@0
     #   inputs:
