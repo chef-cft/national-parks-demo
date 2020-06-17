@@ -51,6 +51,7 @@ stages:
       displayName: "Terraform Apply"
 
   - job: Deploy_National_Parks
+    dependsOn: Deploy_Automate
     displayName: Deploy National Parks
     steps:
     - task: CmdLine@2
@@ -126,7 +127,7 @@ stages:
     #   displayName: "Terraform Destroy"
 
   - job: Clean_Up_National_Parks
-    continueOnError: true
+    dependsOn: Clean_Up_Automate
     displayName: Clean Up National Parks
     steps:
     - task: CmdLine@2
