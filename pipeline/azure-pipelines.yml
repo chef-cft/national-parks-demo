@@ -2,6 +2,7 @@ pool: henkhaus-forest
 stages:
 ### STAGE 1 Deploy Automate
 - stage: Deploy_Automate
+  displayName: Deploy Automate
   jobs:
   - job: Setup_Agent
     steps:
