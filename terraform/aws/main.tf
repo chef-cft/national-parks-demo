@@ -4,7 +4,7 @@ terraform {
     # encrypt = true
     # bucket = "sa-s3-tf-backend"
     # region = "us-east-1"
-    # key = "national-parks/terraform_state"
+    # key = "uniquename/terraform_state"
   }
 }
 

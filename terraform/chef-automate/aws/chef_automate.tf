@@ -1,7 +1,3 @@
-terraform {
-  required_version = ">= 0.12"
-}
-
 resource "aws_security_group" "chef_automate" {
   name        = "chef_automate_${random_id.instance_id.hex}"
   description = "Chef Automate Server"
