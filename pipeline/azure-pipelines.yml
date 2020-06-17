@@ -48,6 +48,7 @@ steps:
     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
     commandOptions: '-var-file=$(awsTfVars.secureFilePath)'
     environmentServiceNameAWS: 'AWS-ADO-Pipeline'
+  displayName: "Terraform Apply"
 
 # # TERRAFORM DESTORY
 # - task: TerraformTaskV1@0
