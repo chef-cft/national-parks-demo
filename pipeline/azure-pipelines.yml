@@ -21,6 +21,7 @@ stages:
       displayName: "Install Terraform"
 
   - job: Download_Secure_Files
+    displayName: Download Secure Files
     steps:
     - task: DownloadSecureFile@1
       name: awsTfVars
@@ -35,10 +36,33 @@ stages:
     - script: |
         cp $(awsInstanceKey.secureFilePath) /home/chef/.ssh/ghenkhaus-sa-oregon.pem
   
+  - job: Apply_Automate_Terraform
+    displayName: Apply Automate Terraform
+    steps:
+    - task: TerraformTaskV1@0
+      inputs:
+        provider: 'aws'
+        command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/automate/aws'
+        backendServiceAWS: 'AWS-ADO-Pipeline'
+        backendAWSBucketName: 'sa-s3-tf-backend'
+        backendAWSKey: 'terraform_state'
+      displayName: "Terraform Init"
+    # - task: TerraformTaskV1@0
+    #   inputs:
+    #     provider: 'aws'
+    #     command: 'apply'
+    #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/automate/aws'
+    #     commandOptions: '-var-file=$(awsTfVars.secureFilePath)'
+    #     environmentServiceNameAWS: 'AWS-ADO-Pipeline'
+    #   displayName: "Terraform Apply"
+  
 ### STAGE 2 Deploy National Parks
 - stage: Deploy_National_Parks
+  displayName: Deploy National Parks
   jobs:
   - job: Setup_Agent
+    displayName: Setup Agent
     steps:
     - task: CmdLine@2
       inputs:
@@ -54,6 +78,7 @@ stages:
       displayName: "Install Terraform"
 
   - job: Download_Secure_Files
+    displayName: Download Secure Files
     steps:
     - task: DownloadSecureFile@1
       name: awsTfVars
@@ -68,7 +93,8 @@ stages:
     - script: |
         cp $(awsInstanceKey.secureFilePath) /home/chef/.ssh/ghenkhaus-sa-oregon.pem
 
-  - job: Apply_Automate_Terraform
+  - job: Apply_National_Parks_Terraform
+    displayName: Apply National Parks Terraform
     steps:
     - task: TerraformTaskV1@0
       inputs:
@@ -79,24 +105,47 @@ stages:
         backendAWSBucketName: 'sa-s3-tf-backend'
         backendAWSKey: 'terraform_state'
       displayName: "Terraform Init"
-    - task: TerraformTaskV1@0
-      inputs:
-        provider: 'aws'
-        command: 'apply'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
-        commandOptions: '-var-file=$(awsTfVars.secureFilePath)'
-        environmentServiceNameAWS: 'AWS-ADO-Pipeline'
-      displayName: "Terraform Apply"
+    # - task: TerraformTaskV1@0
+    #   inputs:
+    #     provider: 'aws'
+    #     command: 'apply'
+    #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
+    #     commandOptions: '-var-file=$(awsTfVars.secureFilePath)'
+    #     environmentServiceNameAWS: 'AWS-ADO-Pipeline'
+    #   displayName: "Terraform Apply"
 
 ### STAGE 3 Clean Up
 - stage: Clean_Up 
+  displayName: Clean Up
   jobs:
-  - job: Destory_National_Parks
+  - job: Destory_Automate
+    displayName: Destory Automate
     steps:
-    - task: TerraformTaskV1@0
+    - task: CmdLine@2
       inputs:
-        provider: 'aws'
-        command: 'destroy'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
-        environmentServiceNameAWS: 'AWS-ADO-Pipeline'
-      displayName: "Terraform Destroy"
+        script: |
+          echo "skip"
+      displayName: 'Skip'
+    # - task: TerraformTaskV1@0
+    #   inputs:
+    #     provider: 'aws'
+    #     command: 'destroy'
+    #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/automate'
+    #     environmentServiceNameAWS: 'AWS-ADO-Pipeline'
+    #   displayName: "Terraform Destroy"
+
+  - job: Destory_National_Parks
+    displayName: Destory National Parks
+    steps:
+    - task: CmdLine@2
+      inputs:
+        script: |
+          echo "skip"
+      displayName: 'Skip'
+    # - task: TerraformTaskV1@0
+    #   inputs:
+    #     provider: 'aws'
+    #     command: 'destroy'
+    #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
+    #     environmentServiceNameAWS: 'AWS-ADO-Pipeline'
+    #   displayName: "Terraform Destroy"
