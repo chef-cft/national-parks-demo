@@ -1,7 +1,7 @@
 pool: henkhaus-forest
 stages:
 ### STAGE 1 Deploy Automate
-- stage: Deploy Automate
+- stage: Deploy_Automate
   jobs:
   - job: Setup CI/CD Agent
     steps:
@@ -34,7 +34,7 @@ stages:
         cp $(awsInstanceKey.secureFilePath) /home/chef/.ssh/ghenkhaus-sa-oregon.pem
   
 ### STAGE 2 Deploy National Parks
-- stage: Deploy National Parks
+- stage: Deploy_National_Parks
   jobs:
   - job: Setup CI/CD Agent
     steps:
@@ -87,7 +87,7 @@ stages:
       displayName: "Terraform Apply"
 
 ### STAGE 3 Clean Up
-- stage: Clean Up 
+- stage: Clean_Up 
   jobs:
   - job: Destory National Parks
     steps:
