@@ -36,7 +36,7 @@ stages:
         secureFile: 'demo-validator-us-east-1.pem'
       displayName: 'Download AWS Instance Key'
     - script: |
-        cp $(awsInstanceKey.secureFilePath) $(System.DefaultWorkingDirectory)/terraform/automate/aws/ghenkhaus-sa-oregon.pem
+        cp $(awsInstanceKey.secureFilePath) $(System.DefaultWorkingDirectory)/terraform/chef-automate/aws/ghenkhaus-sa-oregon.pem
   
   - job: Apply_Automate_Terraform
     displayName: Apply Automate Terraform
@@ -45,7 +45,7 @@ stages:
       inputs:
         provider: 'aws'
         command: 'init'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/automate/aws'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/chef-automate/aws'
         backendServiceAWS: 'AWS-ADO-Pipeline'
         backendAWSBucketName: 'sa-s3-tf-backend'
         backendAWSKey: 'terraform_state'
@@ -54,7 +54,7 @@ stages:
     #   inputs:
     #     provider: 'aws'
     #     command: 'apply'
-    #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/automate/aws'
+    #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/chef-automate/aws'
     #     commandOptions: '-var-file=$(tfAutomateVarsFile.secureFilePath)'
     #     environmentServiceNameAWS: 'AWS-ADO-Pipeline'
     #   displayName: "Terraform Apply"
@@ -154,7 +154,7 @@ stages:
     #   inputs:
     #     provider: 'aws'
     #     command: 'destroy'
-    #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/automate'
+    #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/chef-automate/aws'
     #     environmentServiceNameAWS: 'AWS-ADO-Pipeline'
     #   displayName: "Terraform Destroy"
 
