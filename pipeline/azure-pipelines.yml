@@ -32,10 +32,10 @@ stages:
         secureFile: 'demo-validator-us-east-1.pem'
       displayName: 'Download AWS Instance Key'
     
-    - script: |
-        cp $(awsInstanceKey.secureFilePath) /tmp/demo-validator-us-east-1.pem
-        cp $(tfAutomateVarsFile.secureFilePath) $(System.DefaultWorkingDirectory)/terraform/chef-automate/aws/automate-pipeline.tfvars
-      displayName: Copy Secure Files
+    # - script: |
+    #     cp $(awsInstanceKey.secureFilePath) /tmp/demo-validator-us-east-1.pem
+    #     cp $(tfAutomateVarsFile.secureFilePath) $(System.DefaultWorkingDirectory)/terraform/chef-automate/aws/automate-pipeline.tfvars
+    #   displayName: Copy Secure Files
     
     - task: TerraformTaskV1@0
       displayName: "Terraform Init"
@@ -53,7 +53,7 @@ stages:
         provider: 'aws'
         command: 'apply'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/chef-automate/aws'
-        commandOptions: '-var-file=$(tfAutomateVarsFile.secureFilePath)'
+        commandOptions: '-var-file=$(tfAutomateVarsFile.secureFilePath) -var "aws_key_pair_file=$(awsInstanceKey.secureFilePath)"'
         environmentServiceNameAWS: 'AWS-ADO-Pipeline'
       
 
@@ -83,8 +83,8 @@ stages:
       inputs:
         secureFile: 'demo-validator-us-east-1.pem'
       displayName: 'Download AWS Instance Key'
-    - script: |
-        cp $(awsInstanceKey.secureFilePath) $(System.DefaultWorkingDirectory)/terraform/aws/ghenkhaus-sa-oregon.pem
+    # - script: |
+    #     cp $(awsInstanceKey.secureFilePath) $(System.DefaultWorkingDirectory)/terraform/aws/ghenkhaus-sa-oregon.pem
     - task: TerraformTaskV1@0
       inputs:
         provider: 'aws'
@@ -99,7 +99,7 @@ stages:
     #     provider: 'aws'
     #     command: 'apply'
     #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
-    #     commandOptions: '-var-file=$(tfAutomateVarsFile.secureFilePath)'
+    #     commandOptions: '-var-file=$(tfAutomateVarsFile.secureFilePath) -var "aws_key_pair_file=$(awsInstanceKey.secureFilePath)"'
     #     environmentServiceNameAWS: 'AWS-ADO-Pipeline'
     #   displayName: "Terraform Apply"
 
