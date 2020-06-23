@@ -33,7 +33,7 @@ stages:
       displayName: 'Download AWS Instance Key'
     
     - script: |
-        cp $(awsInstanceKey.secureFilePath) $(System.DefaultWorkingDirectory)/terraform/chef-automate/aws/demo-validator-us-east-1.pem
+        cp $(awsInstanceKey.secureFilePath) /tmp/demo-validator-us-east-1.pem
         cp $(tfAutomateVarsFile.secureFilePath) $(System.DefaultWorkingDirectory)/terraform/chef-automate/aws/automate-pipeline.tfvars
       displayName: Copy Secure Files
     
