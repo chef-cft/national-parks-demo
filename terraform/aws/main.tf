@@ -1,16 +1,18 @@
 terraform {
   required_version = ">= 0.12"
   backend "s3" {
+    # Comment below 4 lines
     # encrypt = true
     # bucket = "sa-s3-tf-backend"
     # region = "us-east-1"
-    # key = "uniquename/terraform_state"
+    # key = "demo-validator/national-parks/terraform_state"
   }
 }
 
 provider "aws" {
   version = "~> 2.54"
   region                  = var.aws_region
+  # Comment below 2 lines
   # profile                 = var.aws_profile
   # shared_credentials_file = "~/.aws/credentials"
 }

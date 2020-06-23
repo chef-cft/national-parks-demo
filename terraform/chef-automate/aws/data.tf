@@ -1,20 +1,3 @@
-terraform {
-  required_version = ">= 0.12"
-  backend "s3" {
-    # encrypt = true
-    # bucket = "sa-s3-tf-backend"
-    # region = "us-east-1"
-    # key = "uniquename/terraform_state"
-  }
-}
-
-provider "aws" {
-  version = "~> 2.54"
-  region                  = var.aws_region
-  # profile                 = var.aws_profile
-  # shared_credentials_file = "~/.aws/credentials"
-}
-
 resource "random_id" "instance_id" {
   byte_length = 4
 }
