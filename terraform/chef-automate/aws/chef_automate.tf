@@ -263,10 +263,11 @@ resource "aws_instance" "chef_automate" {
     ]
   }
 
-  provisioner "local-exec" {
-    // Clean up local known_hosts in case we get a re-used public IP
-    command = "ssh-keygen -R ${aws_instance.chef_automate.public_ip}"
-  }
+# COMMENTING OUT this block due to an incompatability on pipeline agent.  (ghenkhaus)
+  # provisioner "local-exec" {
+  #   // Clean up local known_hosts in case we get a re-used public IP
+  #   command = "ssh-keygen -R ${aws_instance.chef_automate.public_ip}"
+  # }
 
   provisioner "local-exec" {
     // Write ssh key for Automate server to local known_hosts so we can scp automate-credentials.toml in data.external.a2_secrets
