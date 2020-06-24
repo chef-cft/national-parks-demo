@@ -17,6 +17,16 @@ provider "aws" {
   # shared_credentials_file = "~/.aws/credentials"
 }
 
+# TODO: ghenkhaus, make sure this works
+data "terraform_remote_state" "automate" {
+  backend = "s3"
+  config = {
+    bucket = var.automate_backend_bucket
+    key    = var.automate_backend_key
+    region = var.automate_backend_region
+  }
+}
+
 resource "random_id" "instance_id" {
   byte_length = 4
 }
