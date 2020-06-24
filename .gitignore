@@ -4,7 +4,4 @@ results/
 *tfstate*
 .kitchen
 .DS_Store
-<<<<<<< HEAD
-=======
 terraform/chef-automate/azure/UpdateDisk.ps1
->>>>>>> master
