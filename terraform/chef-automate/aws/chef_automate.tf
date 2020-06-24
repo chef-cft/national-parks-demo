@@ -284,4 +284,3 @@ data "external" "a2_secrets" {
     a2_ip    = aws_instance.chef_automate.public_ip
   }
 }
-
