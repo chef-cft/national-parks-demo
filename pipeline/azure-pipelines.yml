@@ -9,59 +9,59 @@ stages:
 - stage: Deploy_Demo
   displayName: Deploy Demo
   jobs:
-  - job: Deploy_Automate
-    displayName: Deploy Automate
-    steps:
-    - task: CmdLine@2
-      inputs:
-        script: |
-          sudo yum -y install https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm
-          sudo yum install -y git unzip
-          sudo yum install epel-release -y
-          sudo yum install jq -y
-      displayName: 'Install Package Dependencies'
-    - task: vsts-habitat-install@3
-      displayName: 'Install Habitat'
-    - task: TerraformInstaller@0
-      inputs:
-        terraformVersion: '0.12.24'
-      displayName: "Install Terraform"
-    - task: DownloadSecureFile@1
-      name: tfAutomateVarsFile
-      inputs:
-        secureFile: 'automate-pipeline.tfvars'
-      displayName: 'Download automate-pipeline.tfvars'
+  # - job: Deploy_Automate
+  #   displayName: Deploy Automate
+  #   steps:
+  #   - task: CmdLine@2
+  #     inputs:
+  #       script: |
+  #         sudo yum -y install https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm
+  #         sudo yum install -y git unzip
+  #         sudo yum install epel-release -y
+  #         sudo yum install jq -y
+  #     displayName: 'Install Package Dependencies'
+  #   - task: vsts-habitat-install@3
+  #     displayName: 'Install Habitat'
+  #   - task: TerraformInstaller@0
+  #     inputs:
+  #       terraformVersion: '0.12.24'
+  #     displayName: "Install Terraform"
+  #   - task: DownloadSecureFile@1
+  #     name: tfAutomateVarsFile
+  #     inputs:
+  #       secureFile: 'automate-pipeline.tfvars'
+  #     displayName: 'Download automate-pipeline.tfvars'
     
-    - task: DownloadSecureFile@1
-      name: awsInstanceKey
-      inputs:
-        secureFile: 'demo-validator-us-east-1.pem'
-      displayName: 'Download AWS Instance Key'
+  #   - task: DownloadSecureFile@1
+  #     name: awsInstanceKey
+  #     inputs:
+  #       secureFile: 'demo-validator-us-east-1.pem'
+  #     displayName: 'Download AWS Instance Key'
     
-    - task: CmdLine@2
-      inputs:
-        script: |
-          sudo chmod 600 $(awsInstanceKey.secureFilePath)
-      displayName: 'Update AWS Instance Key Permissions'
+  #   - task: CmdLine@2
+  #     inputs:
+  #       script: |
+  #         sudo chmod 600 $(awsInstanceKey.secureFilePath)
+  #     displayName: 'Update AWS Instance Key Permissions'
     
-    - task: TerraformTaskV1@0
-      displayName: "Terraform Init"
-      inputs:
-        provider: 'aws'
-        command: 'init'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/chef-automate/aws'
-        backendServiceAWS: 'AWS-ADO-Pipeline'
-        backendAWSBucketName: 'sa-s3-tf-backend'
-        backendAWSKey: 'demo-validator/automate/terraform_state'
+  #   - task: TerraformTaskV1@0
+  #     displayName: "Terraform Init"
+  #     inputs:
+  #       provider: 'aws'
+  #       command: 'init'
+  #       workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/chef-automate/aws'
+  #       backendServiceAWS: 'AWS-ADO-Pipeline'
+  #       backendAWSBucketName: 'sa-s3-tf-backend'
+  #       backendAWSKey: 'demo-validator/automate/terraform_state'
       
-    - task: TerraformTaskV1@0
-      displayName: "Terraform Apply"
-      inputs:
-        provider: 'aws'
-        command: 'apply'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/chef-automate/aws'
-        commandOptions: '-var-file=$(tfAutomateVarsFile.secureFilePath) -var "aws_key_pair_file=$(awsInstanceKey.secureFilePath)"'
-        environmentServiceNameAWS: 'AWS-ADO-Pipeline'
+  #   - task: TerraformTaskV1@0
+  #     displayName: "Terraform Apply"
+  #     inputs:
+  #       provider: 'aws'
+  #       command: 'apply'
+  #       workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/chef-automate/aws'
+  #       commandOptions: '-var-file=$(tfAutomateVarsFile.secureFilePath) -var "aws_key_pair_file=$(awsInstanceKey.secureFilePath)"'
+  #       environmentServiceNameAWS: 'AWS-ADO-Pipeline'
       
 
   - job: Deploy_National_Parks
@@ -114,7 +114,7 @@ stages:
         provider: 'aws'
         command: 'apply'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
-        commandOptions: '-var-file=$(tfAutomateVarsFile.secureFilePath) -var "aws_key_pair_file=$(awsInstanceKey.secureFilePath)"'
+        commandOptions: '-var-file=$(tfNatParksVarsFile.secureFilePath) -var "aws_key_pair_file=$(awsInstanceKey.secureFilePath)"'
         environmentServiceNameAWS: 'AWS-ADO-Pipeline'
       displayName: "Terraform Apply"
 
