@@ -6,7 +6,7 @@ variables:
 stages:
 
 ### STAGE 1 Deploy Automate
-- stage: Deploy_Demo
+- stage: Deploy
   displayName: Deploy Demo
   jobs:
   - job: Deploy_Automate
