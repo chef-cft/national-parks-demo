@@ -9,17 +9,17 @@ stages:
 - stage: Deploy_Demo
   displayName: Deploy Demo
   jobs:
-  # - job: Deploy_Automate
-  #   displayName: Deploy Automate
-  #   steps:
-  #   - task: CmdLine@2
-  #     inputs:
-  #       script: |
-  #         sudo yum -y install https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm
-  #         sudo yum install -y git unzip
-  #         sudo yum install epel-release -y
-  #         sudo yum install jq -y
-  #     displayName: 'Install Package Dependencies'
+  - job: Deploy_Automate
+    displayName: Deploy Automate
+    steps:
+    - task: CmdLine@2
+      inputs:
+        script: |
+          sudo yum -y install https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm
+          sudo yum install -y git unzip
+          sudo yum install epel-release -y
+          sudo yum install jq -y
+      displayName: 'Install Package Dependencies'
   #   - task: vsts-habitat-install@3
   #     displayName: 'Install Habitat'
   #   - task: TerraformInstaller@0
