@@ -32,6 +32,12 @@ stages:
         secureFile: 'demo-validator-us-east-1.pem'
       displayName: 'Download AWS Instance Key'
     
+    - task: CmdLine@2
+      inputs:
+        script: |
+          sudo chmod 600 $(awsInstanceKey.secureFilePath)
+      displayName: 'Update AWS Instance Key Permissions'
+    
     - task: TerraformTaskV1@0
       displayName: "Terraform Init"
       inputs:
