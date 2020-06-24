@@ -138,4 +138,3 @@ resource "aws_security_group_rule" "ingress_allow_8080_8085_tcp" {
   security_group_id        = aws_security_group.habitat_supervisor.id
   source_security_group_id = aws_security_group.habitat_supervisor.id
 }
-

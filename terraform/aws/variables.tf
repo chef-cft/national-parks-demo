@@ -123,17 +123,17 @@ variable "automate_backend_bucket"{}
 variable "automate_backend_key" {}
 variable "automate_backend_region" {}
 
-variable "automate_url" {
-}
+# variable "automate_url" {
+# }
 
-variable "automate_token" {
-}
+# variable "automate_token" {
+# }
+
+# variable "automate_ip" {
+# }
 
 variable "automate_user" {
   default = "admin"
-}
-
-variable "automate_ip" {
 }
 
 ////////////////////////////////
