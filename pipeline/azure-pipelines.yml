@@ -1,4 +1,8 @@
 pool: henkhaus-forest
+
+variables:
+  - name: one
+    value: "git unzip jq" 
 stages:
 
 ### STAGE 1 Deploy Automate
@@ -12,7 +16,9 @@ stages:
       inputs:
         script: |
           sudo yum -y install https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm
-          sudo yum install -y git unzip jq
+          sudo yum install -y git unzip
+          yum install epel-release -y
+          sudo yum install jq -y
       displayName: 'Install Package Dependencies'
     - task: vsts-habitat-install@3
       displayName: 'Install Habitat'
@@ -66,7 +72,9 @@ stages:
       inputs:
         script: |
           sudo yum -y install https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm
-          sudo yum install -y git unzip jq
+          sudo yum install -y git unzip
+          yum install epel-release -y
+          sudo yum install jq -y
       displayName: 'Install Package Dependencies'
     - task: vsts-habitat-install@3
       displayName: 'Install Habitat'
@@ -115,7 +123,9 @@ stages:
       inputs:
         script: |
           sudo yum -y install https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm
-          sudo yum install -y git unzip jq
+          sudo yum install -y git unzip
+          yum install epel-release -y
+          sudo yum install jq -y
       displayName: 'Install Package Dependencies'
     - task: TerraformInstaller@0
       inputs:
@@ -142,7 +152,9 @@ stages:
       inputs:
         script: |
           sudo yum -y install https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm
-          sudo yum install -y git unzip jq
+          sudo yum install -y git unzip
+          yum install epel-release -y
+          sudo yum install jq -y
       displayName: 'Install Package Dependencies'
     - task: TerraformInstaller@0
       inputs:
