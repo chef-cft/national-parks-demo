@@ -49,14 +49,14 @@ resource "azurerm_subnet" "frontend" {
   name                 = "chef-automate-${random_id.instance_id.hex}-frontend-subnet"
   resource_group_name  = azurerm_resource_group.rg.name
   virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefix       = "10.0.10.0/24"
+  address_prefixes       = ["10.0.10.0/24"]
 }
 
 resource "azurerm_subnet" "backend" {
   name                 = "chef-automate-${random_id.instance_id.hex}-backend-subnet"
   resource_group_name  = azurerm_resource_group.rg.name
   virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefix       = "10.0.20.0/24"
+  address_prefixes       = ["10.0.20.0/24"]
 }
 
 # Generate random text for a unique storage account name
@@ -90,7 +90,6 @@ resource "azurerm_storage_account" "stor" {
 
 resource "azurerm_storage_container" "storcont" {
   name                  = "vhds"
-  resource_group_name   = azurerm_resource_group.rg.name
   storage_account_name  = azurerm_storage_account.stor.name
   container_access_type = "private"
 }

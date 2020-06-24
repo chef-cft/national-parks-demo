@@ -8,7 +8,11 @@ curl -X POST \
   https://localhost/apis/iam/v2/tokens \
   --insecure \
   -H "api-token: $TOKEN" \
+<<<<<<< HEAD
   -d '{"name":"national-parks","value": "${automate_token}","active": true, "id": "national-parks"}'
+=======
+  -d '{"name":"national-parks", "value": "${automate_token}", "active": true, "id": "national-parks"}'
+>>>>>>> master
 
 echo setting API policies
 
