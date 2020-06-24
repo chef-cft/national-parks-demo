@@ -266,7 +266,7 @@ resource "aws_instance" "chef_automate" {
   provisioner "local-exec" {
     // Clean up local known_hosts in case we get a re-used public IP, continue on failure for pipeline agent compatability
     command = "ssh-keygen -R ${aws_instance.chef_automate.public_ip}"
-    on_failure = "continue"
+    on_failure = continue
   }
 
   provisioner "local-exec" {
