@@ -92,8 +92,13 @@ stages:
       inputs:
         secureFile: 'demo-validator-us-east-1.pem'
       displayName: 'Download AWS Instance Key'
-    # - script: |
-    #     cp $(awsInstanceKey.secureFilePath) $(System.DefaultWorkingDirectory)/terraform/aws/ghenkhaus-sa-oregon.pem
+    
+    - task: CmdLine@2
+      inputs:
+        script: |
+          sudo chmod 600 $(awsInstanceKey.secureFilePath)
+      displayName: 'Update AWS Instance Key Permissions'
+    
     - task: TerraformTaskV1@0
       inputs:
         provider: 'aws'
@@ -103,14 +108,15 @@ stages:
         backendAWSBucketName: 'sa-s3-tf-backend'
         backendAWSKey: 'demo-validator/national-parks/terraform_state'
       displayName: "Terraform Init"
-    # - task: TerraformTaskV1@0
-    #   inputs:
-    #     provider: 'aws'
-    #     command: 'apply'
-    #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
-    #     commandOptions: '-var-file=$(tfAutomateVarsFile.secureFilePath) -var "aws_key_pair_file=$(awsInstanceKey.secureFilePath)"'
-    #     environmentServiceNameAWS: 'AWS-ADO-Pipeline'
-    #   displayName: "Terraform Apply"
+    
+    - task: TerraformTaskV1@0
+      inputs:
+        provider: 'aws'
+        command: 'apply'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
+        commandOptions: '-var-file=$(tfAutomateVarsFile.secureFilePath) -var "aws_key_pair_file=$(awsInstanceKey.secureFilePath)"'
+        environmentServiceNameAWS: 'AWS-ADO-Pipeline'
+      displayName: "Terraform Apply"
 
 ### STAGE 2 Clean Up
 - stage: Clean_Up 
