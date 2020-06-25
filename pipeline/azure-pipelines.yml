@@ -155,6 +155,12 @@ stages:
       inputs:
         secureFile: 'automate-pipeline.tfvars'
       displayName: 'Download automate-pipeline.tfvars'
+    
+    - task: DownloadSecureFile@1
+      name: awsInstanceKey
+      inputs:
+        secureFile: 'demo-validator-us-east-1.pem'
+      displayName: 'Download AWS Instance Key'
 
     - task: TerraformInstaller@0
       inputs:
@@ -176,7 +182,7 @@ stages:
         provider: 'aws'
         command: 'destroy'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/chef-automate/aws'
-        commandOptions: '-var-file=$(tfAutomateVarsFile.secureFilePath)'
+        commandOptions: '-var-file=$(tfNatParksVarsFile.secureFilePath) -var "aws_key_pair_file=$(awsInstanceKey.secureFilePath)"'
         environmentServiceNameAWS: 'AWS-ADO-Pipeline'
       displayName: "Terraform Destroy"
 
@@ -202,6 +208,12 @@ stages:
       inputs:
         secureFile: 'nat-parks-pipeline.tfvars'
       displayName: 'Download nat-parks-pipeline.tfvars'
+    
+    - task: DownloadSecureFile@1
+      name: awsInstanceKey
+      inputs:
+        secureFile: 'demo-validator-us-east-1.pem'
+      displayName: 'Download AWS Instance Key'
 
     - task: TerraformInstaller@0
       inputs:
@@ -223,6 +235,6 @@ stages:
         provider: 'aws'
         command: 'destroy'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
-        commandOptions: '-var-file=$(tfNatParksVarsFile.secureFilePath)'
+        commandOptions: '-var-file=$(tfNatParksVarsFile.secureFilePath) -var "aws_key_pair_file=$(awsInstanceKey.secureFilePath)"'
         environmentServiceNameAWS: 'AWS-ADO-Pipeline'
       displayName: "Terraform Destroy"
