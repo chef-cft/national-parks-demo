@@ -146,9 +146,6 @@ stages:
           sudo yum install epel-release -y
           sudo yum install jq -y
       displayName: 'Install Package Dependencies'
-
-    - task: vsts-habitat-install@3
-      displayName: 'Install Habitat'
     
     - task: DownloadSecureFile@1
       name: tfAutomateVarsFile
@@ -182,7 +179,7 @@ stages:
         provider: 'aws'
         command: 'destroy'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/chef-automate/aws'
-        commandOptions: '-var-file=$(tfNatParksVarsFile.secureFilePath) -var "aws_key_pair_file=$(awsInstanceKey.secureFilePath)"'
+        commandOptions: '-var-file=$(tfAutomateVarsFile.secureFilePath) -var "aws_key_pair_file=$(awsInstanceKey.secureFilePath)"'
         environmentServiceNameAWS: 'AWS-ADO-Pipeline'
       displayName: "Terraform Destroy"
 
@@ -199,9 +196,6 @@ stages:
           sudo yum install epel-release -y
           sudo yum install jq -y
       displayName: 'Install Package Dependencies'
-
-    - task: vsts-habitat-install@3
-      displayName: 'Install Habitat'
     
     - task: DownloadSecureFile@1
       name: tfNatParksVarsFile
