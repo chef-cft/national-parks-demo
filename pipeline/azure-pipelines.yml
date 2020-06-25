@@ -225,4 +225,4 @@ stages:
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
         commandOptions: '-var-file=$(tfNatParksVarsFile.secureFilePath)'
         environmentServiceNameAWS: 'AWS-ADO-Pipeline'
-      displayName: "Terraform Apply"
+      displayName: "Terraform Destroy"
