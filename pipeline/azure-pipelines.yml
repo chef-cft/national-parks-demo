@@ -142,13 +142,13 @@ stages:
         script: |
           echo "skip"
       displayName: 'Skip'
-    # - task: TerraformTaskV1@0
-    #   inputs:
-    #     provider: 'aws'
-    #     command: 'destroy'
-    #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/chef-automate/aws'
-    #     environmentServiceNameAWS: 'AWS-ADO-Pipeline'
-    #   displayName: "Terraform Destroy"
+    - task: TerraformTaskV1@0
+      inputs:
+        provider: 'aws'
+        command: 'destroy'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/chef-automate/aws'
+        environmentServiceNameAWS: 'AWS-ADO-Pipeline'
+      displayName: "Terraform Destroy"
 
   - job: Clean_Up_National_Parks
     dependsOn: Clean_Up_Automate
@@ -171,10 +171,10 @@ stages:
         script: |
           echo "skip"
       displayName: 'Skip'
-    # - task: TerraformTaskV1@0
-    #   inputs:
-    #     provider: 'aws'
-    #     command: 'destroy'
-    #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
-    #     environmentServiceNameAWS: 'AWS-ADO-Pipeline'
-    #   displayName: "Terraform Destroy"
+    - task: TerraformTaskV1@0
+      inputs:
+        provider: 'aws'
+        command: 'destroy'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
+        environmentServiceNameAWS: 'AWS-ADO-Pipeline'
+      displayName: "Terraform Destroy"
