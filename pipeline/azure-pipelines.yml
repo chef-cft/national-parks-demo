@@ -137,11 +137,6 @@ stages:
       inputs:
         terraformVersion: '0.12.24'
       displayName: "Install Terraform"
-    - task: CmdLine@2
-      inputs:
-        script: |
-          echo "skip"
-      displayName: 'Skip'
     - task: TerraformTaskV1@0
       inputs:
         provider: 'aws'
@@ -166,11 +161,6 @@ stages:
       inputs:
         terraformVersion: '0.12.24'
       displayName: "Install Terraform"
-    - task: CmdLine@2
-      inputs:
-        script: |
-          echo "skip"
-      displayName: 'Skip'
     - task: TerraformTaskV1@0
       inputs:
         provider: 'aws'
