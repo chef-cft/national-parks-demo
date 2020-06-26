@@ -120,6 +120,7 @@ stages:
       displayName: "Terraform Init"
     
     - task: TerraformTaskV1@0
+      name: nationalParksApply
       inputs:
         provider: 'aws'
         command: 'apply'
@@ -127,6 +128,12 @@ stages:
         commandOptions: '-var-file=$(tfNatParksVarsFile.secureFilePath) -var "aws_key_pair_file=$(awsInstanceKey.secureFilePath)"'
         environmentServiceNameAWS: 'AWS-ADO-Pipeline'
       displayName: "Terraform Apply"
+
+    - task: CmdLine@2
+      inputs:
+        script: |
+          cat $(nationalParksApply.jsonOutputVariablesPath) | jq
+      displayName: 'Echo Skip'
 
 
 ### STAGE 2 Test
@@ -143,6 +150,7 @@ stages:
       inputs:
         script: |
           echo skip
+          cat $(nationalParksApply.jsonOutputVariablesPath) | jq
       displayName: 'Echo Skip'
 
 
