@@ -1,4 +1,4 @@
-pool: henkhaus-forest
+# pool: henkhaus-forest
 
 variables:
   - group: tf-backend-sa-pipeline
@@ -7,6 +7,7 @@ stages:
 
 ### STAGE 1 Deploy Automate
 - stage: Deploy
+  pool: henkhaus-forest
   displayName: Deploy Demo
   jobs:
   - job: Deploy_Automate
@@ -130,11 +131,11 @@ stages:
 
 ### STAGE 2 Test
 - stage: Test 
+  pool: server
   displayName: Test
   jobs:
   - job: manual_approval
     displayName: Manual Approval
-    pool: server
     timeoutInMinutes: 60
     
     steps:
@@ -145,7 +146,8 @@ stages:
 
 
 ### STAGE 3 Clean Up
-- stage: Clean_Up 
+- stage: Clean_Up
+  pool: henkhaus-forest
   displayName: Clean Up
   jobs:
   - job: Clean_Up_Automate
