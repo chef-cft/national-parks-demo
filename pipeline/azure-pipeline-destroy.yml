@@ -4,13 +4,12 @@ variables:
   - group: tf-backend-sa-pipeline
 
 stages:
-
-### STAGE 1 Deploy Automate
-- stage: Deploy
-  displayName: Deploy Demo
+- stage: Clean_Up
+  displayName: Clean Up
   jobs:
-  - job: Deploy_Automate
-    displayName: Deploy Automate
+  - job: Clean_Up_Automate
+    dependsOn: Clean_Up_National_Parks
+    displayName: Clean Up Automate
     
     steps:
     - task: CmdLine@2
@@ -21,15 +20,7 @@ stages:
           sudo yum install epel-release -y
           sudo yum install jq -y
       displayName: 'Install Package Dependencies'
-
-    - task: vsts-habitat-install@3
-      displayName: 'Install Habitat'
-
-    - task: TerraformInstaller@0
-      inputs:
-        terraformVersion: '0.12.24'
-      displayName: "Install Terraform"
-
+    
     - task: DownloadSecureFile@1
       name: tfAutomateVarsFile
       inputs:
@@ -41,13 +32,12 @@ stages:
       inputs:
         secureFile: 'demo-validator-us-east-1.pem'
       displayName: 'Download AWS Instance Key'
-    
-    - task: CmdLine@2
+
+    - task: TerraformInstaller@0
       inputs:
-        script: |
-          sudo chmod 600 $(awsInstanceKey.secureFilePath)
-      displayName: 'Update AWS Instance Key Permissions'
-    
+        terraformVersion: '0.12.24'
+      displayName: "Install Terraform"
+
     - task: TerraformTaskV1@0
       displayName: "Terraform Init"
       inputs:
@@ -57,22 +47,21 @@ stages:
         backendServiceAWS: 'AWS-ADO-Pipeline'
         backendAWSBucketName: '$(bucketName)'
         backendAWSKey: '$(keyAutomate)'
-      
+
     - task: TerraformTaskV1@0
-      displayName: "Terraform Apply"
       inputs:
         provider: 'aws'
-        command: 'apply'
+        command: 'destroy'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/chef-automate/aws'
         commandOptions: '-var-file=$(tfAutomateVarsFile.secureFilePath) -var "aws_key_pair_file=$(awsInstanceKey.secureFilePath)"'
         environmentServiceNameAWS: 'AWS-ADO-Pipeline'
-      
+      displayName: "Terraform Destroy"
 
-  - job: Deploy_National_Parks
-    dependsOn: Deploy_Automate
-    displayName: Deploy National Parks
+  - job: Clean_Up_National_Parks
+    displayName: Clean Up National Parks
     
     steps:
+    
     - task: CmdLine@2
       inputs:
         script: |
@@ -81,33 +70,26 @@ stages:
           sudo yum install epel-release -y
           sudo yum install jq -y
       displayName: 'Install Package Dependencies'
-
-    - task: vsts-habitat-install@3
-      displayName: 'Install Habitat'
-
-    - task: TerraformInstaller@0
-      inputs:
-        terraformVersion: '0.12.24'
-      displayName: "Install Terraform"
+    
     - task: DownloadSecureFile@1
       name: tfNatParksVarsFile
       inputs:
         secureFile: 'nat-parks-pipeline.tfvars'
       displayName: 'Download nat-parks-pipeline.tfvars'
-
+    
     - task: DownloadSecureFile@1
       name: awsInstanceKey
       inputs:
         secureFile: 'demo-validator-us-east-1.pem'
       displayName: 'Download AWS Instance Key'
-    
-    - task: CmdLine@2
+
+    - task: TerraformInstaller@0
       inputs:
-        script: |
-          sudo chmod 600 $(awsInstanceKey.secureFilePath)
-      displayName: 'Update AWS Instance Key Permissions'
-    
+        terraformVersion: '0.12.24'
+      displayName: "Install Terraform"
+
     - task: TerraformTaskV1@0
+      displayName: "Terraform Init"
       inputs:
         provider: 'aws'
         command: 'init'
@@ -115,29 +97,12 @@ stages:
         backendServiceAWS: 'AWS-ADO-Pipeline'
         backendAWSBucketName: '$(bucketName)'
         backendAWSKey: '$(keyNationalParks)'
-      displayName: "Terraform Init"
-    
+
     - task: TerraformTaskV1@0
       inputs:
         provider: 'aws'
-        command: 'apply'
+        command: 'destroy'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
         commandOptions: '-var-file=$(tfNatParksVarsFile.secureFilePath) -var "aws_key_pair_file=$(awsInstanceKey.secureFilePath)"'
         environmentServiceNameAWS: 'AWS-ADO-Pipeline'
-      displayName: "Terraform Apply"
-
-### STAGE 2 Test
-- stage: Test 
-  displayName: Test
-  jobs:
-  - job: inspec_testing
-    pool: server
-    displayName: InSpec Testing
-    
-    steps:
-    - task: CmdLine@2
-      inputs:
-        script: |
-          echo skip
-      displayName: 'Echo Skip'
-    
+      displayName: "Terraform Destroy"
