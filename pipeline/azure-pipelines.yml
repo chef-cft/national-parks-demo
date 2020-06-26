@@ -1,5 +1,8 @@
 pool: henkhaus-forest
 
+variables:
+  - group: tf-backend-sa-pipeline
+
 stages:
 
 ### STAGE 1 Deploy Automate
@@ -53,8 +56,8 @@ stages:
         command: 'init'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/chef-automate/aws'
         backendServiceAWS: 'AWS-ADO-Pipeline'
-        backendAWSBucketName: 'sa-s3-tf-backend'
-        backendAWSKey: 'demo-validator/automate/terraform_state'
+        backendAWSBucketName: '$(bucketName)'
+        backendAWSKey: '$(keyAutomate)'
       
     - task: TerraformTaskV1@0
       displayName: "Terraform Apply"
@@ -112,8 +115,8 @@ stages:
         command: 'init'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
         backendServiceAWS: 'AWS-ADO-Pipeline'
-        backendAWSBucketName: 'sa-s3-tf-backend'
-        backendAWSKey: 'demo-validator/national-parks/terraform_state'
+        backendAWSBucketName: '$(bucketName)'
+        backendAWSKey: '$(keyNationalParks)'
       displayName: "Terraform Init"
     
     - task: TerraformTaskV1@0
@@ -168,8 +171,8 @@ stages:
         command: 'init'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/chef-automate/aws'
         backendServiceAWS: 'AWS-ADO-Pipeline'
-        backendAWSBucketName: 'sa-s3-tf-backend'
-        backendAWSKey: 'demo-validator/automate/terraform_state'
+        backendAWSBucketName: '$(bucketName)'
+        backendAWSKey: '$(keyAutomate)'
 
     - task: TerraformTaskV1@0
       inputs:
@@ -218,8 +221,8 @@ stages:
         command: 'init'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
         backendServiceAWS: 'AWS-ADO-Pipeline'
-        backendAWSBucketName: 'sa-s3-tf-backend'
-        backendAWSKey: 'demo-validator/national-parks/terraform_state'
+        backendAWSBucketName: '$(bucketName)'
+        backendAWSKey: '$(keyNationalParks)'
 
     - task: TerraformTaskV1@0
       inputs:
