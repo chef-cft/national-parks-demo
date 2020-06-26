@@ -132,6 +132,7 @@ stages:
 ### STAGE 2 Test
 - stage: Test 
   displayName: Test
+  dependsOn: Deploy
   condition: eq(variables.runTest, true)
   jobs:
   - job: inspec_testing
