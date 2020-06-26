@@ -8,7 +8,8 @@ stages:
 
 ### STAGE 1 Deploy Automate
 - stage: Deploy
-  displayName: Deploy
+  displayName: Deploy 
+  condition: and(succeeded(), eq($(runDeploy), true))
   jobs:
   - job: Deploy_Automate
     displayName: Deploy Automate
@@ -131,7 +132,7 @@ stages:
 ### STAGE 2 Test
 - stage: Test 
   displayName: Test
-  condition: and(succeeded(), eq('$(runTest)', true))
+  condition: and(succeeded(), eq($(runTest), true))
   jobs:
   - job: inspec_testing
     displayName: InSpec Testing
@@ -148,7 +149,7 @@ stages:
 ### STAGE 3 Clean Up
 - stage: Clean_Up
   displayName: Clean Up
-  condition: and(succeeded(), eq('$(runDestroy)', true))
+  condition: and(succeeded(), eq($(runCleanUp), true))
   jobs:
   - job: Clean_Up_Automate
     dependsOn: Clean_Up_National_Parks
