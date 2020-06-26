@@ -132,7 +132,7 @@ stages:
 ### STAGE 2 Test
 - stage: Test 
   displayName: Test
-  condition: and(succeeded(), eq(variables.runTest, true))
+  condition: and(or(in(dependencies.A.result, 'Succeeded', 'SucceededWithIssues', 'Skipped'), succeeded()), eq(variables.runTest, true))
   jobs:
   - job: inspec_testing
     displayName: InSpec Testing
