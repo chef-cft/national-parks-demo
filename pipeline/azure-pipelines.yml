@@ -135,13 +135,13 @@ stages:
   displayName: Test
   jobs:
   - job: manual_approval
+    pool: server
     displayName: Manual Approval
-    timeoutInMinutes: 60
-    
     steps:
     - task: ManualIntervention@8
+      displayName: Approve Terraform Destroy
       inputs:
-        emailRecipients: 'ghenkhaus@chef.io'
+        instructions: 'Approve Terraform Destroy'
         onTimeout: 'resume'
 
 
