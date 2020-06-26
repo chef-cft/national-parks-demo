@@ -128,7 +128,23 @@ stages:
         environmentServiceNameAWS: 'AWS-ADO-Pipeline'
       displayName: "Terraform Apply"
 
-### STAGE 2 Clean Up
+### STAGE 2 Test
+- stage: Test 
+  displayName: Test
+  jobs:
+  - job: manual_approval
+    displayName: Manual Approval
+    pool: server
+    timeoutInMinutes: 60
+    
+    steps:
+    - task: ManualIntervention@8
+      inputs:
+        emailRecipients: 'ghenkhaus@chef.io'
+        onTimeout: 'resume'
+
+
+### STAGE 3 Clean Up
 - stage: Clean_Up 
   displayName: Clean Up
   jobs:
