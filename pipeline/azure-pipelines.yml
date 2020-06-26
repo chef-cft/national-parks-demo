@@ -131,9 +131,8 @@ stages:
   displayName: Test
   jobs:
   - job: inspec_testing
-    pool: server
     displayName: InSpec Testing
-    
+
     steps:
     - task: CmdLine@2
       inputs:
