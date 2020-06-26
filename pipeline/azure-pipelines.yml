@@ -9,7 +9,7 @@ stages:
 ### STAGE 1 Deploy Automate
 - stage: Deploy
   displayName: Deploy 
-  condition: and(succeeded(), eq(variables.runDeploy, true))
+  condition: eq(variables.runDeploy, true)
   jobs:
   - job: Deploy_Automate
     displayName: Deploy Automate
@@ -132,7 +132,7 @@ stages:
 ### STAGE 2 Test
 - stage: Test 
   displayName: Test
-  condition: and(or(in(dependencies.A.result, 'Succeeded', 'SucceededWithIssues', 'Skipped'), succeeded()), eq(variables.runTest, true))
+  condition: eq(variables.runTest, true)
   jobs:
   - job: inspec_testing
     displayName: InSpec Testing
@@ -149,7 +149,7 @@ stages:
 ### STAGE 3 Clean Up
 - stage: Clean_Up
   displayName: Clean Up
-  condition: and(succeeded(), eq(variables.runCleanUp, true))
+  condition: eq(variables.runCleanUp, true)
   jobs:
   - job: Clean_Up_Automate
     dependsOn: Clean_Up_National_Parks
