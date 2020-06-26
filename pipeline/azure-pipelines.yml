@@ -1,8 +1,5 @@
 pool: henkhaus-forest
 
-variables:
-  - name: one
-    value: "git unzip jq" 
 stages:
 
 ### STAGE 1 Deploy Automate
