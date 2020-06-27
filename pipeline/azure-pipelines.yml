@@ -132,7 +132,7 @@ stages:
     - task: CmdLine@2
       inputs:
         script: |
-          cat $(nationalParksApply.jsonOutputVariablesPath) | jq
+          echo $(cat $(nationalParksApply.jsonOutputVariablesPath) | jq)
       displayName: 'Echo Skip'
 
 
