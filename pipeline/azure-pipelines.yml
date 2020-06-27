@@ -61,6 +61,7 @@ stages:
         backendAWSKey: '$(keyAutomate)'
       
     - task: TerraformTaskV1@0
+      condition: eq(variables.runAutomateApply, true)
       displayName: "Terraform Apply"
       name: automateApply
       inputs:
@@ -127,6 +128,7 @@ stages:
     
     - task: TerraformTaskV1@0
       name: nationalParksApply
+      condition: eq(variables.runNationalParksApply, true)
       inputs:
         provider: 'aws'
         command: 'apply'
