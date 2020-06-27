@@ -158,14 +158,14 @@ stages:
     - task: CmdLine@2
       inputs:
         script: |
-          echo $(cat $(automateApply.jsonOutputVariablesPath) | jq)
+          echo $(cat $(stageDependencies.Deploy.Deploy_Automate.outputs['nationalParksApply.jsonOutputVariablesPath']) | jq)
       displayName: 'Terraform Outputs' 
       
-    - task: CmdLine@2
-      inputs:
-        script: |
-          echo $(cat $(nationalParksApply.jsonOutputVariablesPath) | jq)
-      displayName: 'Terraform Outputs' 
+    # - task: CmdLine@2
+    #   inputs:
+    #     script: |
+    #       echo $(cat $(nationalParksApply.jsonOutputVariablesPath) | jq)
+    #   displayName: 'Terraform Outputs' 
 
 
 
