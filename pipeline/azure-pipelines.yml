@@ -188,8 +188,8 @@ stages:
       displayName: 'Retrieve Terraform Outputs'
     
     - bash: |
-              echo "$(TF_OUTPUT_NATIONAL_PARKS)" | jq
-              echo "$(TF_OUTPUT_AUTOMATE)" | jq
+              echo $(cat $(TF_OUTPUT_NATIONAL_PARKS) | jq )
+              echo $(cat $(TF_OUTPUT_AUTOMATE) | jq )
       displayName: 'Read Terraform Outputs'
 
 
