@@ -23,7 +23,7 @@ stages:
         bucketName: '$(bucketName)'
         sourceFolder: '/'
         globExpressions: '$(keyNationalParks)'
-        targetFolder: '$(System.DefaultWorkingDirectory)/pipeline'
+        targetFolder: '$(System.DefaultWorkingDirectory)/pipeline/'
         flattenFolders: true
         logRequest: true
         logResponse: true
@@ -36,7 +36,7 @@ stages:
         bucketName: '$(bucketName)'
         sourceFolder: '/'
         globExpressions: 'demo-validator/national-parks/Screen Shot*'
-        targetFolder: '$(System.DefaultWorkingDirectory)/pipeline'
+        targetFolder: '$(System.DefaultWorkingDirectory)/pipeline/'
         flattenFolders: true
         logRequest: true
         logResponse: true
