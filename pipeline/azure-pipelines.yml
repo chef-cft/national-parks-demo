@@ -92,7 +92,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-                  echo $(cat $(automateApply.jsonOutputVariablesPath)) > $(Pipeline.Workspace)/variables/TF_OUTPUT_AUTOMATE
+                  cat $(automateApply.jsonOutputVariablesPath) > $(Pipeline.Workspace)/variables/TF_OUTPUT_AUTOMATE
       displayName: 'Store Terraform Outputs'
 
 
