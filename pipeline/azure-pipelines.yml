@@ -114,17 +114,17 @@ stages:
         script: |
           sudo chmod 600 $(awsInstanceKey.secureFilePath)
       displayName: 'Update AWS Instance Key Permissions'
-    
+
     - task: TerraformTaskV1@0
       inputs:
         provider: 'aws'
         command: 'init'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
+        workingDirectory: 'terraform/aws'
         backendServiceAWS: 'AWS-ADO-Pipeline'
         backendAWSBucketName: '$(bucketName)'
         backendAWSKey: '$(keyNationalParks)'
       displayName: "Terraform Init"
-    
+
     - task: TerraformTaskV1@0
       name: nationalParksApply
       inputs:
@@ -140,6 +140,23 @@ stages:
         script: |
           echo $(cat $(nationalParksApply.jsonOutputVariablesPath) | jq)
       displayName: 'Terraform Outputs'
+
+    - task: S3Download@1
+      inputs:
+        awsCredentials: 'Chef-SA-ADO-Pipeline'
+        regionName: 'us-east-1'
+        bucketName: '$(bucketName)'
+        sourceFolder: '/'
+        globExpressions: '$(keyNationalParks)'
+        targetFolder: '$(System.DefaultWorkingDirectory)'
+      displayName: 'Fetch Nat Parks Output via S3'
+    
+    - task: CmdLine@2
+      inputs:
+        script: |
+          echo $(ls $(System.DefaultWorkingDirectory))
+      displayName: 'Terraform Outputs'
+
 
 
 ### STAGE 2 Test
