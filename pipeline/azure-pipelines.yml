@@ -189,7 +189,7 @@ stages:
     
     - bash: |
               # echo $(cat $(TF_OUTPUT_NATIONAL_PARKS) | jq )
-              echo $(cat $(TF_OUTPUT_AUTOMATE) | jq .haproxy_public_ip.value -r)
+              echo $(cat TF_OUTPUT_AUTOMATE | jq .haproxy_public_ip.value -r)
       displayName: 'Read Terraform Outputs'
 
 
