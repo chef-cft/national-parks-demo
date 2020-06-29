@@ -93,6 +93,7 @@ stages:
         targetType: 'inline'
         script: |
                   echo $(cat $(automateApply.jsonOutputVariablesPath)) > $(Pipeline.Workspace)/variables/TF_OUTPUT_AUTOMATE
+      displayName: 'Store Terraform Outputs'
 
 
   - job: Deploy_National_Parks
@@ -159,6 +160,7 @@ stages:
         targetType: 'inline'
         script: |
                   echo $(cat $(nationalParksApply.jsonOutputVariablesPath)) > $(Pipeline.Workspace)/variables/TF_OUTPUT_NATIONAL_PARKS
+      displayName: 'Store Terraform Outputs'
 
 
 
@@ -177,16 +179,18 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          TF_OUTPUT_NATIONAL_PARKS=$(cat $(Pipeline.Workspace)/variables/TF_OUTPUT_NATIONAL_PARKS)
-          echo "##vso[task.setvariable variable=TF_OUTPUT_NATIONAL_PARKS]$TF_OUTPUT_NATIONAL_PARKS"
+          # Load Automate Outputs
           TF_OUTPUT_AUTOMATE=$(cat $(Pipeline.Workspace)/variables/TF_OUTPUT_AUTOMATE)
           echo "##vso[task.setvariable variable=TF_OUTPUT_AUTOMATE]$TF_OUTPUT_AUTOMATE"
-      displayName: 'Get Outputs'
+          # Load National Parks Outputs
+          TF_OUTPUT_NATIONAL_PARKS=$(cat $(Pipeline.Workspace)/variables/TF_OUTPUT_NATIONAL_PARKS)
+          echo "##vso[task.setvariable variable=TF_OUTPUT_NATIONAL_PARKS]$TF_OUTPUT_NATIONAL_PARKS"
+      displayName: 'Retrieve Terraform Outputs'
     
     - bash: |
-              echo "$(TF_OUTPUT_NATIONAL_PARKS)"
-              echo "$(TF_OUTPUT_AUTOMATE)"
-      displayName: 'Read Outputs'
+              echo "$(TF_OUTPUT_NATIONAL_PARKS)" | jq
+              echo "$(TF_OUTPUT_AUTOMATE)" | jq
+      displayName: 'Read Terraform Outputs'
 
 
 
