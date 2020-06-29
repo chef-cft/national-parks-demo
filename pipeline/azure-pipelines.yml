@@ -23,7 +23,7 @@ stages:
         bucketName: '$(bucketName)'
         sourceFolder: '/'
         globExpressions: '$(keyNationalParks)'
-        targetFolder: '$(System.DefaultWorkingDirectory)/pipeline/'
+        targetFolder: '$(System.DefaultWorkingDirectory)/_chef-cft_national-parks-demo/outputNationalParks.json'
         flattenFolders: true
         logRequest: true
         logResponse: true
