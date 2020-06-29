@@ -15,6 +15,34 @@ stages:
     displayName: Deploy Automate
     
     steps:
+
+    - task: S3Download@1
+      inputs:
+        awsCredentials: 'Chef-SA-ADO-Pipeline'
+        regionName: 'us-east-1'
+        bucketName: '$(bucketName)'
+        sourceFolder: '/'
+        globExpressions: '$(keyNationalParks)'
+        targetFolder: '$(System.DefaultWorkingDirectory)/pipeline'
+        flattenFolders: true
+        logRequest: true
+        logResponse: true
+      displayName: 'Fetch Nat Parks Output via S3'
+    
+    - task: S3Download@1
+      inputs:
+        awsCredentials: 'Chef-SA-ADO-Pipeline'
+        regionName: 'us-east-1'
+        bucketName: '$(bucketName)'
+        sourceFolder: '/'
+        globExpressions: 'demo-validator/national-parks/Screen Shot*'
+        targetFolder: '$(System.DefaultWorkingDirectory)/pipeline'
+        flattenFolders: true
+        logRequest: true
+        logResponse: true
+      displayName: 'Fetch Nat Parks Output via S3'
+
+
     - task: CmdLine@2
       inputs:
         script: |
