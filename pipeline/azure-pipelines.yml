@@ -61,14 +61,21 @@ stages:
         backendAWSKey: '$(keyAutomate)'
       
     - task: TerraformTaskV1@0
+      condition: eq(variables.runAutomateApply, true)
       displayName: "Terraform Apply"
+      name: automateApply
       inputs:
         provider: 'aws'
         command: 'apply'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/chef-automate/aws'
         commandOptions: '-var-file=$(tfAutomateVarsFile.secureFilePath) -var "aws_key_pair_file=$(awsInstanceKey.secureFilePath)"'
         environmentServiceNameAWS: 'AWS-ADO-Pipeline'
-      
+    
+    - task: CmdLine@2
+      inputs:
+        script: |
+          echo $(cat $(automateApply.jsonOutputVariablesPath) | jq)
+      displayName: 'Terraform Outputs' 
 
   - job: Deploy_National_Parks
     dependsOn: Deploy_Automate
@@ -121,6 +128,7 @@ stages:
     
     - task: TerraformTaskV1@0
       name: nationalParksApply
+      condition: eq(variables.runNationalParksApply, true)
       inputs:
         provider: 'aws'
         command: 'apply'
@@ -132,8 +140,8 @@ stages:
     - task: CmdLine@2
       inputs:
         script: |
-          cat $(nationalParksApply.jsonOutputVariablesPath) | jq
-      displayName: 'Echo Skip'
+          echo $(cat $(nationalParksApply.jsonOutputVariablesPath) | jq)
+      displayName: 'Terraform Outputs'
 
 
 ### STAGE 2 Test
@@ -146,11 +154,11 @@ stages:
     displayName: InSpec Testing
 
     steps:
+
     - task: CmdLine@2
       inputs:
         script: |
           echo skip
-
       displayName: 'Echo Skip'
 
 
