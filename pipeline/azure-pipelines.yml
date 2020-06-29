@@ -22,29 +22,29 @@ stages:
 
    
 
-### STAGE 1 Deploy Automate
-- stage: Deploy
-  displayName: Deploy 
-  dependsOn: Setup
-  condition: eq(variables.runDeploy, true)
-  jobs:
-  - job: Deploy_Automate
-    displayName: Deploy Automate
+# ### STAGE 1 Deploy Automate
+# - stage: Deploy
+#   displayName: Deploy 
+#   dependsOn: Setup
+#   condition: eq(variables.runDeploy, true)
+#   jobs:
+#   - job: Deploy_Automate
+#     displayName: Deploy Automate
     
-    steps:
+#     steps:
 
-    - task: S3Download@1
-      inputs:
-        awsCredentials: 'Chef-SA-ADO-Pipeline'
-        regionName: 'us-east-1'
-        bucketName: '$(bucketName)'
-        sourceFolder: '/'
-        globExpressions: '$(keyNationalParks)'
-        targetFolder: '$(System.DefaultWorkingDirectory)/pipeline/'
-        flattenFolders: true
-        logRequest: true
-        logResponse: true
-      displayName: 'Fetch Nat Parks Output via S3'
+#     - task: S3Download@1
+#       inputs:
+#         awsCredentials: 'Chef-SA-ADO-Pipeline'
+#         regionName: 'us-east-1'
+#         bucketName: '$(bucketName)'
+#         sourceFolder: '/'
+#         globExpressions: '$(keyNationalParks)'
+#         targetFolder: '$(System.DefaultWorkingDirectory)/pipeline/'
+#         flattenFolders: true
+#         logRequest: true
+#         logResponse: true
+#       displayName: 'Fetch Nat Parks Output via S3'
     
 #     - task: S3Download@1
 #       inputs:
@@ -218,12 +218,13 @@ stages:
 
     steps:
 
-    - task: CmdLine@2
+    - task: Bash@3
       inputs:
+        targetType: 'inline'
         script: |
           FOO=$(cat $(Pipeline.Workspace)/variables/FOO)
           echo "##vso[task.setvariable variable=FOO]$FOO"
-
+          echo "$(FOO)"
       displayName: 'Echo Skip'
 
 
