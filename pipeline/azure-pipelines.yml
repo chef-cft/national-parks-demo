@@ -195,7 +195,7 @@ stages:
     #   displayName: 'Read Terraform Outputs'
 
     - bash: |
-              echo "The automate json is here: $(automateOutputJson)"
+              echo "The automate a2 url: $(cat $(automateOutputJson) | jq .a2_url.value -r)"
       displayName: 'Read Terraform Outputs'
 
 
