@@ -150,7 +150,7 @@ stages:
       inputs:
         script: |
           echo skip
-          cat $(nationalParksApply.jsonOutputVariablesPath) | jq
+
       displayName: 'Echo Skip'
 
 
