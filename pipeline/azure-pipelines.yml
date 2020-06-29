@@ -149,6 +149,9 @@ stages:
         sourceFolder: '/'
         globExpressions: '$(keyNationalParks)'
         targetFolder: '$(System.DefaultWorkingDirectory)'
+        flattenFolders: true
+        logRequest: true
+        logResponse: true
       displayName: 'Fetch Nat Parks Output via S3'
     
     - task: CmdLine@2
