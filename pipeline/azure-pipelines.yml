@@ -167,7 +167,9 @@ stages:
 ### STAGE 2 Test
 - stage: Test 
   displayName: Test
-  # dependsOn: Deploy
+  dependsOn: Deploy
+  variables:
+    automateOutputJson: $[ stageDependencies.Deploy.Deploy_Automate.outputs['automateApply.jsonOutputVariablesPath'] ]
   condition: eq(variables.runTest, true)
   jobs:
   - job: inspec_testing
@@ -193,7 +195,7 @@ stages:
     #   displayName: 'Read Terraform Outputs'
 
     - bash: |
-              echo "$(stageDependencies.Deploy.Deploy_Automate.outputs['automateApply.jsonOutputVariablesPath'])"
+              echo "The automate json is here: $(automateOutputJson)"
       displayName: 'Read Terraform Outputs'
 
 
