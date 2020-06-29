@@ -193,7 +193,7 @@ stages:
     #   displayName: 'Read Terraform Outputs'
 
     - bash: |
-              echo stageDependencies.Deploy.Deploy_Automate.outputs['automateApply.jsonOutputVariablesPath']
+              echo "$(stageDependencies.Deploy.Deploy_Automate.outputs['automateApply.jsonOutputVariablesPath'])"
       displayName: 'Read Terraform Outputs'
 
 
