@@ -26,25 +26,23 @@ control "hab-1.0" do                        # A unique ID for this control
   end
 end
 
+# control "audit-baseline-1.0" do                        # A unique ID for this control
+#   impact 1.0                               # The criticality, if this control fails.
+#   title "audit baseline exists"             # A human-readable title
+#   desc "audit baseline exists"
+#   describe habitat_service(origin: 'effortless', name: 'audit-baseline') do
+#     it             { should exist }
+#   end
+# end
 
-control "audit-baseline-1.0" do                        # A unique ID for this control
-  impact 1.0                               # The criticality, if this control fails.
-  title "audit baseline exists"             # A human-readable title
-  desc "audit baseline exists"
-  describe habitat_service(origin: 'effortless', name: 'audit-baseline') do
-    it             { should exist }
-  end
-end
-
-control "config-baseline-1.0" do                        # A unique ID for this control
-  impact 1.0                               # The criticality, if this control fails.
-  title "config baseline exists"             # A human-readable title
-  desc "config baseline exists"
-  describe habitat_service(origin: 'effortless', name: 'config-baseline') do
-    it             { should exist }
-  end
-end
-
+# control "config-baseline-1.0" do                        # A unique ID for this control
+#   impact 1.0                               # The criticality, if this control fails.
+#   title "config baseline exists"             # A human-readable title
+#   desc "config baseline exists"
+#   describe habitat_service(origin: 'effortless', name: 'config-baseline') do
+#     it             { should exist }
+#   end
+# end
 
 control "webpage-1.0" do                        # A unique ID for this control
   impact 1.0                               # The criticality, if this control fails.
@@ -53,4 +51,10 @@ control "webpage-1.0" do                        # A unique ID for this control
   describe command('curl http://localhost:8080/national-parks/') do
     its('stdout') { should match (/redicon.png/) }
   end
+end
+
+describe habitat_services do
+  its('names') { should include 'config-baseline' }
+  its('names') { should include 'audit-baseline' }
+  its('names') { should include 'national-parks' }
 end
