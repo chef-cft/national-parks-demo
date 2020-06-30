@@ -33,6 +33,7 @@ stages:
 ### STAGE 1 Build Package(s)
 - stage: Build
   displayName: Build 
+  condition: eq(variables.runBuild, true)
   dependsOn: Setup
   jobs:
   - job: Build_National_Parks
