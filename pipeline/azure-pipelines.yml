@@ -73,7 +73,8 @@ stages:
         habitatLastBuildEnvPath: '$(Build.SourcesDirectory)/results'
         habitatSetBuildNumber: true
         habitatImageNamesFilename: '$(System.DefaultWorkingDirectory)/image.names'
-    
+      displayName: 'Expose Habitat Build Variables'
+
     - publish: $(System.DefaultWorkingDirectory)/results
       artifact: hart
       displayName: 'Publish Artifact'
