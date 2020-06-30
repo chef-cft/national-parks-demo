@@ -21,8 +21,8 @@ control "hab-1.0" do                        # A unique ID for this control
   impact 1.0                               # The criticality, if this control fails.
   title "Habitat Installed"             # A human-readable title
   desc "habitat installed"
-  describe package('habitat') do                  # The actual test
-    it { should be_installed }
+  describe command('/bin/hab').exist? do
+    it { should eq true }
   end
 end
 
