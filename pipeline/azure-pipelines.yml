@@ -80,7 +80,7 @@ stages:
       displayName: 'Publish Artifact'
     
     - script: |
-              source $(Pipeline.Workspace)/hart/last_build.env
+              source $(System.DefaultWorkingDirectory)/results/last_build.env
               echo "##vso[task.setvariable variable=pkg_artifact]$pkg_artifact"
       displayName: 'Publish Artifact Name'
 
@@ -88,7 +88,7 @@ stages:
       displayName: 'Package Upload'
       inputs:
         habitatOrigin: 'Habitat-Chef-SA-Pipeline'
-        habitatPackagePath: '$(Pipeline.Workspace)/hart/$(pkg_artifact)'
+        habitatPackagePath: '$(System.DefaultWorkingDirectory)/results/$(pkg_artifact)'
         habitatPackageChannel: 'testing'
       env:
         HAB_LICENSE: accept-no-persist
