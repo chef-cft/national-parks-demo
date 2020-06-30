@@ -18,9 +18,15 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          FOO="some value"
-          mkdir -p $(Pipeline.Workspace)/variables
+          mkdir -p $(Pipeline.Workspace)/variables/national-parks-validator
       displayName: Create Variable Store
+
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          rm -rf $(Pipeline.Workspace)/variables/national-parks-validator/*
+      displayName: Clean Variables
 
    
 
@@ -44,9 +50,6 @@ stages:
                   sudo yum install epel-release -y
                   sudo yum install jq -y
       displayName: 'Install Package Dependencies'
-
-    - task: vsts-habitat-install@3
-      displayName: 'Install Habitat'
 
     - task: TerraformInstaller@0
       inputs:
@@ -96,7 +99,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-                  cat $(automateApply.jsonOutputVariablesPath) > $(Pipeline.Workspace)/variables/TF_OUTPUT_AUTOMATE
+                  cat $(automateApply.jsonOutputVariablesPath) > $(Pipeline.Workspace)/variables/national-parks-validator/TF_OUTPUT_AUTOMATE
       displayName: 'Store Terraform Outputs'
 
 
@@ -114,9 +117,6 @@ stages:
                   sudo yum install epel-release -y
                   sudo yum install jq -y
       displayName: 'Install Package Dependencies'
-
-    - task: vsts-habitat-install@3
-      displayName: 'Install Habitat'
 
     - task: TerraformInstaller@0
       inputs:
@@ -165,7 +165,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-                  cat $(nationalParksApply.jsonOutputVariablesPath) > $(Pipeline.Workspace)/variables/TF_OUTPUT_NATIONAL_PARKS
+                  cat $(nationalParksApply.jsonOutputVariablesPath) > $(Pipeline.Workspace)/variables/national-parks-validator/TF_OUTPUT_NATIONAL_PARKS
       displayName: 'Store Terraform Outputs'
 
 
@@ -192,41 +192,46 @@ stages:
     displayName: InSpec Testing
 
     steps:
+    
+    - task: vsts-chef-task-install-inspec@1
+      inputs:
+        downloadsFolderLinux: '/tmp'
+      displayName: Install InSpec on Agent
 
     - task: Bash@3
       inputs:
         targetType: 'inline'
         script: |
                   # Load Automate Outputs
-                  a2_admin=$(cat $(Pipeline.Workspace)/variables/TF_OUTPUT_AUTOMATE | jq .a2_admin.value -r )
+                  a2_admin=$(cat $(Pipeline.Workspace)/variables/national-parks-validator/TF_OUTPUT_AUTOMATE | jq .a2_admin.value -r )
                   echo "##vso[task.setvariable variable=a2AdminUser]$a2_admin"
 
-                  a2_admin_password=$(cat $(Pipeline.Workspace)/variables/TF_OUTPUT_AUTOMATE | jq .a2_admin_password.value -r )
+                  a2_admin_password=$(cat $(Pipeline.Workspace)/variables/national-parks-validator/TF_OUTPUT_AUTOMATE | jq .a2_admin_password.value -r )
                   echo "##vso[task.setvariable variable=a2AdminPassword]$a2_admin_password"
 
-                  a2_token=$(cat $(Pipeline.Workspace)/variables/TF_OUTPUT_AUTOMATE | jq .a2_token.value -r )
+                  a2_token=$(cat $(Pipeline.Workspace)/variables/national-parks-validator/TF_OUTPUT_AUTOMATE | jq .a2_token.value -r )
                   echo "##vso[task.setvariable variable=a2Token]$a2_token"
 
-                  a2_url=$(cat $(Pipeline.Workspace)/variables/TF_OUTPUT_AUTOMATE | jq .a2_url.value -r )
+                  a2_url=$(cat $(Pipeline.Workspace)/variables/national-parks-validator/TF_OUTPUT_AUTOMATE | jq .a2_url.value -r )
                   echo "##vso[task.setvariable variable=a2Url]$a2_url"
                   
-                  chef_automate_public_ip=$(cat $(Pipeline.Workspace)/variables/TF_OUTPUT_AUTOMATE | jq .chef_automate_public_ip.value -r )
+                  chef_automate_public_ip=$(cat $(Pipeline.Workspace)/variables/national-parks-validator/TF_OUTPUT_AUTOMATE | jq .chef_automate_public_ip.value -r )
                   echo "##vso[task.setvariable variable=chefAutomatePublicIp]$chef_automate_public_ip"
                   
-                  chef_automate_server_public_r53_dns=$(cat $(Pipeline.Workspace)/variables/TF_OUTPUT_AUTOMATE | jq .chef_automate_server_public_r53_dns.value -r )
+                  chef_automate_server_public_r53_dns=$(cat $(Pipeline.Workspace)/variables/national-parks-validator/TF_OUTPUT_AUTOMATE | jq .chef_automate_server_public_r53_dns.value -r )
                   echo "##vso[task.setvariable variable=chefAutomateServerPublicR53Dns]$chef_automate_server_public_r53_dns"
                   
                   # Load National Parks Outputs
-                  haproxy_public_ip=$(cat $(Pipeline.Workspace)/variables/TF_OUTPUT_NATIONAL_PARKS | jq .haproxy_public_ip.value -r)
+                  haproxy_public_ip=$(cat $(Pipeline.Workspace)/variables/national-parks-validator/TF_OUTPUT_NATIONAL_PARKS | jq .haproxy_public_ip.value -r)
                   echo "##vso[task.setvariable variable=haproxyPublicIp]$haproxy_public_ip"
 
-                  mongodb_public_ip=$(cat $(Pipeline.Workspace)/variables/TF_OUTPUT_NATIONAL_PARKS | jq .mongodb_public_ip.value -r)
+                  mongodb_public_ip=$(cat $(Pipeline.Workspace)/variables/national-parks-validator/TF_OUTPUT_NATIONAL_PARKS | jq .mongodb_public_ip.value -r)
                   echo "##vso[task.setvariable variable=mongodbPublicIp]$mongodb_public_ip"
 
-                  national_parks_public_ip=$(cat $(Pipeline.Workspace)/variables/TF_OUTPUT_NATIONAL_PARKS | jq .national_parks_public_ip.value -r)
+                  national_parks_public_ip=$(cat $(Pipeline.Workspace)/variables/national-parks-validator/TF_OUTPUT_NATIONAL_PARKS | jq .national_parks_public_ip.value -r)
                   echo "##vso[task.setvariable variable=nationalParksPublicIp]$national_parks_public_ip"
 
-                  permanent_peer_public_ip=$(cat $(Pipeline.Workspace)/variables/TF_OUTPUT_NATIONAL_PARKS | jq .permanent_peer_public_ip.value -r)
+                  permanent_peer_public_ip=$(cat $(Pipeline.Workspace)/variables/national-parks-validator/TF_OUTPUT_NATIONAL_PARKS | jq .permanent_peer_public_ip.value -r)
                   echo "##vso[task.setvariable variable=permanentPeerPublicIp]$permanent_peer_public_ip"
       displayName: 'Parse Terraform Outputs'
 
