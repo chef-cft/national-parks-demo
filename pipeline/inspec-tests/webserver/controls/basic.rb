@@ -53,8 +53,8 @@ control "webpage-1.0" do                        # A unique ID for this control
   end
 end
 
-describe habitat_services do
-  its('names') { should include 'config-baseline' }
-  its('names') { should include 'audit-baseline' }
-  its('names') { should include 'national-parks' }
-end
+# describe habitat_services do
+#   its('names') { should include 'config-baseline' }
+#   its('names') { should include 'audit-baseline' }
+#   its('names') { should include 'national-parks' }
+# end
