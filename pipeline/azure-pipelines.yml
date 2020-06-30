@@ -21,12 +21,12 @@ stages:
           mkdir -p $(Pipeline.Workspace)/variables/national-parks-validator
       displayName: Create Variable Store
 
-    - task: Bash@3
-      inputs:
-        targetType: 'inline'
-        script: |
-          rm -rf $(Pipeline.Workspace)/variables/national-parks-validator/*
-      displayName: Clean Variables
+    # - task: Bash@3
+    #   inputs:
+    #     targetType: 'inline'
+    #     script: |
+    #       rm -rf $(Pipeline.Workspace)/variables/national-parks-validator/*
+    #   displayName: Clean Variables
 
    
 
@@ -324,7 +324,7 @@ stages:
     - task: vsts-chef-task-exec-inspec@1
       inputs:
         inspecProfilePath: '$(System.DefaultWorkingDirectory)/pipeline/inspec-tests'
-        inspecArguments: "webserver --key-files $(awsInstanceKey.secureFilePath) --target ssh://centos@\"$(nationalParksPublicIp)\" --chef-license=accept"
+        inspecArguments: "webserver --key-files $(awsInstanceKey.secureFilePath) --target ssh://centos@$(nationalParksPublicIp) --chef-license=accept"
       displayName: Exec Webserver Tests
     
 
