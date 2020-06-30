@@ -54,6 +54,12 @@ control "config-baseline-1.0" do                        # A unique ID for this c
   end
 end
 
-describe command('curl http://localhost:8080/national-parks/') do
-  its(‘stdout’) { should match (/redicon.png/) }
+
+control "webpage-1.0" do                        # A unique ID for this control
+  impact 1.0                               # The criticality, if this control fails.
+  title "Web page contains content"             # A human-readable title
+  desc "Web page contains content"
+  describe command('curl http://localhost:8080/national-parks/') do
+    its('stdout') { should match (/redicon.png/) }
+  end
 end
