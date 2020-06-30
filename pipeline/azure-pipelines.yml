@@ -317,8 +317,8 @@ stages:
     
     - task: vsts-chef-task-exec-inspec@1
       inputs:
-        inspecProfilePath: '$(System.DefaultWorkingDirectory)/pipeline/inspec-tests/webserver'
-        inspecArguments: "--chef-license=accept"
+        inspecProfilePath: '$(System.DefaultWorkingDirectory)/pipeline/inspec-tests'
+        inspecArguments: "webserver --chef-license=accept"
     
 
 ### STAGE 4 Clean Up
