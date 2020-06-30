@@ -26,15 +26,6 @@ control "hab-1.0" do                        # A unique ID for this control
   end
 end
 
-control "html-1.0" do                        # A unique ID for this control
-  impact 1.0                               # The criticality, if this control fails.
-  title "HTML Red Pins"             # A human-readable title
-  desc "Web page contains red pins"
-  describe package('habitat') do                  # The actual test
-    it { should be_installed }
-  end
-end
-
 
 control "audit-baseline-1.0" do                        # A unique ID for this control
   impact 1.0                               # The criticality, if this control fails.
