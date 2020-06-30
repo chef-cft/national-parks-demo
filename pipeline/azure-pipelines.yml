@@ -51,6 +51,25 @@ stages:
       displayName: 'Install Package Dependencies'
     
     - task: vsts-habitat-install@3
+      displayName: 'Install Habitat'
+    - task: vsts-habitat-build@3
+      inputs:
+        habitatOrigin: 'Habitat-Chef-SA-Pipeline'
+        habitatSrcPath: '$(Build.SourcesDirectory)'
+        habitatPlanContext: 'habitat'
+      displayName: 'Build Habitat Package'
+    - task: vsts-habitat-expose-habitat-build-vars@3
+      inputs:
+        habitatLastBuildEnvPath: '$(Build.SourcesDirectory)/results'
+        habitatImageNamesFilename: '$(System.DefaultWorkingDirectory)/image.names'
+      displayName: 'Expose Habitat Build Variables'
+    
+    - task: vsts-habitat-pkg-upload@3
+      inputs:
+        habitatOrigin: 'Habitat-Chef-SA-Pipeline'
+        habitatPackagePath: '$(Build.SourcesDirectory)/results/$(pkg_artifact)'
+        habitatPackageChannel: 'testing'
+      displayName: 'Upload Habitat Package'
 
 
 ### STAGE 2 Deploy Automate
