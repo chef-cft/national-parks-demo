@@ -4,6 +4,8 @@ variables:
   - group: tf-backend-sa-pipeline
 stages:
 
+
+
 # STAGE 0 Setup
 - stage: Setup
   displayName: Setup 
@@ -33,13 +35,14 @@ stages:
     
     steps:
 
-    - task: CmdLine@2
+    - task: Bash@3
       inputs:
+        targetType: 'inline'
         script: |
-          sudo yum -y install https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm
-          sudo yum install -y git unzip
-          sudo yum install epel-release -y
-          sudo yum install jq -y
+                  sudo yum -y install https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm
+                  sudo yum install -y git unzip
+                  sudo yum install epel-release -y
+                  sudo yum install jq -y
       displayName: 'Install Package Dependencies'
 
     - task: vsts-habitat-install@3
@@ -62,10 +65,11 @@ stages:
         secureFile: 'demo-validator-us-east-1.pem'
       displayName: 'Download AWS Instance Key'
     
-    - task: CmdLine@2
+    - task: Bash@3  
       inputs:
+        targetType: 'inline'
         script: |
-          sudo chmod 600 $(awsInstanceKey.secureFilePath)
+                  sudo chmod 600 $(awsInstanceKey.secureFilePath)
       displayName: 'Update AWS Instance Key Permissions'
     
     - task: TerraformTaskV1@0
@@ -78,89 +82,91 @@ stages:
         backendAWSBucketName: '$(bucketName)'
         backendAWSKey: '$(keyAutomate)'
       
-    # - task: TerraformTaskV1@0
-    #   displayName: "Terraform Apply"
-    #   name: automateApply
-    #   inputs:
-    #     provider: 'aws'
-    #     command: 'apply'
-    #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/chef-automate/aws'
-    #     commandOptions: '-var-file=$(tfAutomateVarsFile.secureFilePath) -var "aws_key_pair_file=$(awsInstanceKey.secureFilePath)"'
-    #     environmentServiceNameAWS: 'AWS-ADO-Pipeline'
+    - task: TerraformTaskV1@0
+      displayName: "Terraform Apply"
+      name: automateApply
+      inputs:
+        provider: 'aws'
+        command: 'apply'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/chef-automate/aws'
+        commandOptions: '-var-file=$(tfAutomateVarsFile.secureFilePath) -var "aws_key_pair_file=$(awsInstanceKey.secureFilePath)"'
+        environmentServiceNameAWS: 'AWS-ADO-Pipeline'
     
-    # - task: Bash@3
-    #   inputs:
-    #     targetType: 'inline'
-    #     script: |
-    #               cat $(automateApply.jsonOutputVariablesPath) > $(Pipeline.Workspace)/variables/TF_OUTPUT_AUTOMATE
-    #   displayName: 'Store Terraform Outputs'
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+                  cat $(automateApply.jsonOutputVariablesPath) > $(Pipeline.Workspace)/variables/TF_OUTPUT_AUTOMATE
+      displayName: 'Store Terraform Outputs'
 
 
-  # - job: Deploy_National_Parks
-  #   dependsOn: Deploy_Automate
-  #   displayName: Deploy National Parks
+  - job: Deploy_National_Parks
+    dependsOn: Deploy_Automate
+    displayName: Deploy National Parks
     
-  #   steps:
-  #   - task: CmdLine@2
-  #     inputs:
-  #       script: |
-  #         sudo yum -y install https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm
-  #         sudo yum install -y git unzip
-  #         sudo yum install epel-release -y
-  #         sudo yum install jq -y
-  #     displayName: 'Install Package Dependencies'
+    steps:
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+                  sudo yum -y install https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm
+                  sudo yum install -y git unzip
+                  sudo yum install epel-release -y
+                  sudo yum install jq -y
+      displayName: 'Install Package Dependencies'
 
-  #   - task: vsts-habitat-install@3
-  #     displayName: 'Install Habitat'
+    - task: vsts-habitat-install@3
+      displayName: 'Install Habitat'
 
-  #   - task: TerraformInstaller@0
-  #     inputs:
-  #       terraformVersion: '0.12.24'
-  #     displayName: "Install Terraform"
-  #   - task: DownloadSecureFile@1
-  #     name: tfNatParksVarsFile
-  #     inputs:
-  #       secureFile: 'nat-parks-pipeline.tfvars'
-  #     displayName: 'Download nat-parks-pipeline.tfvars'
+    - task: TerraformInstaller@0
+      inputs:
+        terraformVersion: '0.12.24'
+      displayName: "Install Terraform"
+    - task: DownloadSecureFile@1
+      name: tfNatParksVarsFile
+      inputs:
+        secureFile: 'nat-parks-pipeline.tfvars'
+      displayName: 'Download nat-parks-pipeline.tfvars'
 
-  #   - task: DownloadSecureFile@1
-  #     name: awsInstanceKey
-  #     inputs:
-  #       secureFile: 'demo-validator-us-east-1.pem'
-  #     displayName: 'Download AWS Instance Key'
+    - task: DownloadSecureFile@1
+      name: awsInstanceKey
+      inputs:
+        secureFile: 'demo-validator-us-east-1.pem'
+      displayName: 'Download AWS Instance Key'
     
-  #   - task: CmdLine@2
-  #     inputs:
-  #       script: |
-  #         sudo chmod 600 $(awsInstanceKey.secureFilePath)
-  #     displayName: 'Update AWS Instance Key Permissions'
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+                  sudo chmod 600 $(awsInstanceKey.secureFilePath)
+      displayName: 'Update AWS Instance Key Permissions'
 
-  #   - task: TerraformTaskV1@0
-  #     inputs:
-  #       provider: 'aws'
-  #       command: 'init'
-  #       workingDirectory: 'terraform/aws'
-  #       backendServiceAWS: 'AWS-ADO-Pipeline'
-  #       backendAWSBucketName: '$(bucketName)'
-  #       backendAWSKey: '$(keyNationalParks)'
-  #     displayName: "Terraform Init"
+    - task: TerraformTaskV1@0
+      inputs:
+        provider: 'aws'
+        command: 'init'
+        workingDirectory: 'terraform/aws'
+        backendServiceAWS: 'AWS-ADO-Pipeline'
+        backendAWSBucketName: '$(bucketName)'
+        backendAWSKey: '$(keyNationalParks)'
+      displayName: "Terraform Init"
 
-  #   - task: TerraformTaskV1@0
-  #     name: nationalParksApply
-  #     inputs:
-  #       provider: 'aws'
-  #       command: 'apply'
-  #       workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
-  #       commandOptions: '-var-file=$(tfNatParksVarsFile.secureFilePath) -var "aws_key_pair_file=$(awsInstanceKey.secureFilePath)"'
-  #       environmentServiceNameAWS: 'AWS-ADO-Pipeline'
-  #     displayName: "Terraform Apply"
+    - task: TerraformTaskV1@0
+      name: nationalParksApply
+      inputs:
+        provider: 'aws'
+        command: 'apply'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
+        commandOptions: '-var-file=$(tfNatParksVarsFile.secureFilePath) -var "aws_key_pair_file=$(awsInstanceKey.secureFilePath)"'
+        environmentServiceNameAWS: 'AWS-ADO-Pipeline'
+      displayName: "Terraform Apply"
     
-  #   - task: Bash@3
-  #     inputs:
-  #       targetType: 'inline'
-  #       script: |
-  #                 cat $(nationalParksApply.jsonOutputVariablesPath) > $(Pipeline.Workspace)/variables/TF_OUTPUT_NATIONAL_PARKS
-  #     displayName: 'Store Terraform Outputs'
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+                  cat $(nationalParksApply.jsonOutputVariablesPath) > $(Pipeline.Workspace)/variables/TF_OUTPUT_NATIONAL_PARKS
+      displayName: 'Store Terraform Outputs'
 
 
 
@@ -175,7 +181,6 @@ stages:
     a2Url: ""
     chefAutomatePublicIp: ""
     chefAutomateServerPublicR53Dns: ""
-
     haproxyPublicIp: ""
     mongodbPublicIp: ""
     nationalParksPublicIp: ""
@@ -192,47 +197,38 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          # Load Automate Outputs
-          a2_admin=$(cat $(Pipeline.Workspace)/variables/TF_OUTPUT_AUTOMATE | jq .a2_admin.value -r )
-          echo "##vso[task.setvariable variable=a2AdminUser]$a2_admin"
+                  # Load Automate Outputs
+                  a2_admin=$(cat $(Pipeline.Workspace)/variables/TF_OUTPUT_AUTOMATE | jq .a2_admin.value -r )
+                  echo "##vso[task.setvariable variable=a2AdminUser]$a2_admin"
 
-          a2_admin_password=$(cat $(Pipeline.Workspace)/variables/TF_OUTPUT_AUTOMATE | jq .a2_admin_password.value -r )
-          echo "##vso[task.setvariable variable=a2AdminPassword]$a2_admin_password"
+                  a2_admin_password=$(cat $(Pipeline.Workspace)/variables/TF_OUTPUT_AUTOMATE | jq .a2_admin_password.value -r )
+                  echo "##vso[task.setvariable variable=a2AdminPassword]$a2_admin_password"
 
-          a2_token=$(cat $(Pipeline.Workspace)/variables/TF_OUTPUT_AUTOMATE | jq .a2_token.value -r )
-          echo "##vso[task.setvariable variable=a2Token]$a2_token"
+                  a2_token=$(cat $(Pipeline.Workspace)/variables/TF_OUTPUT_AUTOMATE | jq .a2_token.value -r )
+                  echo "##vso[task.setvariable variable=a2Token]$a2_token"
 
-          a2_url=$(cat $(Pipeline.Workspace)/variables/TF_OUTPUT_AUTOMATE | jq .a2_url.value -r )
-          echo "##vso[task.setvariable variable=a2Url]$a2_url"
-          
-          chef_automate_public_ip=$(cat $(Pipeline.Workspace)/variables/TF_OUTPUT_AUTOMATE | jq .chef_automate_public_ip.value -r )
-          echo "##vso[task.setvariable variable=chefAutomatePublicIp]$chef_automate_public_ip"
-          
-          chef_automate_server_public_r53_dns=$(cat $(Pipeline.Workspace)/variables/TF_OUTPUT_AUTOMATE | jq .chef_automate_server_public_r53_dns.value -r )
-          echo "##vso[task.setvariable variable=chefAutomateServerPublicR53Dns]$chef_automate_server_public_r53_dns"
-          
-          # Load National Parks Outputs
-          haproxy_public_ip=$(cat $(Pipeline.Workspace)/variables/TF_OUTPUT_NATIONAL_PARKS | jq .haproxy_public_ip.value -r)
-          echo "##vso[task.setvariable variable=haproxyPublicIp]$haproxy_public_ip"
+                  a2_url=$(cat $(Pipeline.Workspace)/variables/TF_OUTPUT_AUTOMATE | jq .a2_url.value -r )
+                  echo "##vso[task.setvariable variable=a2Url]$a2_url"
+                  
+                  chef_automate_public_ip=$(cat $(Pipeline.Workspace)/variables/TF_OUTPUT_AUTOMATE | jq .chef_automate_public_ip.value -r )
+                  echo "##vso[task.setvariable variable=chefAutomatePublicIp]$chef_automate_public_ip"
+                  
+                  chef_automate_server_public_r53_dns=$(cat $(Pipeline.Workspace)/variables/TF_OUTPUT_AUTOMATE | jq .chef_automate_server_public_r53_dns.value -r )
+                  echo "##vso[task.setvariable variable=chefAutomateServerPublicR53Dns]$chef_automate_server_public_r53_dns"
+                  
+                  # Load National Parks Outputs
+                  haproxy_public_ip=$(cat $(Pipeline.Workspace)/variables/TF_OUTPUT_NATIONAL_PARKS | jq .haproxy_public_ip.value -r)
+                  echo "##vso[task.setvariable variable=haproxyPublicIp]$haproxy_public_ip"
 
-          mongodb_public_ip=$(cat $(Pipeline.Workspace)/variables/TF_OUTPUT_NATIONAL_PARKS | jq .mongodb_public_ip.value -r)
-          echo "##vso[task.setvariable variable=mongodbPublicIp]$mongodb_public_ip"
+                  mongodb_public_ip=$(cat $(Pipeline.Workspace)/variables/TF_OUTPUT_NATIONAL_PARKS | jq .mongodb_public_ip.value -r)
+                  echo "##vso[task.setvariable variable=mongodbPublicIp]$mongodb_public_ip"
 
-          national_parks_public_ip=$(cat $(Pipeline.Workspace)/variables/TF_OUTPUT_NATIONAL_PARKS | jq .national_parks_public_ip.value -r)
-          echo "##vso[task.setvariable variable=nationalParksPublicIp]$national_parks_public_ip"
+                  national_parks_public_ip=$(cat $(Pipeline.Workspace)/variables/TF_OUTPUT_NATIONAL_PARKS | jq .national_parks_public_ip.value -r)
+                  echo "##vso[task.setvariable variable=nationalParksPublicIp]$national_parks_public_ip"
 
-          permanent_peer_public_ip=$(cat $(Pipeline.Workspace)/variables/TF_OUTPUT_NATIONAL_PARKS | jq .permanent_peer_public_ip.value -r)
-          echo "##vso[task.setvariable variable=permanentPeerPublicIp]$permanent_peer_public_ip"
-
+                  permanent_peer_public_ip=$(cat $(Pipeline.Workspace)/variables/TF_OUTPUT_NATIONAL_PARKS | jq .permanent_peer_public_ip.value -r)
+                  echo "##vso[task.setvariable variable=permanentPeerPublicIp]$permanent_peer_public_ip"
       displayName: 'Parse Terraform Outputs'
-    
-    # - task: Bash@3
-    #   inputs:
-    #     targetType: 'inline'
-    #     script: |
-    #           echo $(cat $(TF_OUTPUT_NATIONAL_PARKS) | jq )
-    #           echo $(cat TF_OUTPUT_AUTOMATE | jq .haproxy_public_ip.value -r)
-    #   displayName: 'Read Terraform Outputs'
 
     - task: Bash@3
       inputs:
@@ -244,7 +240,6 @@ stages:
                   echo "a2Url: $(a2Url)"
                   echo "chefAutomatePublicIp: $(chefAutomatePublicIp)"
                   echo "chefAutomateServerPublicR53Dns: $(chefAutomateServerPublicR53Dns)"
-
                   echo "haproxyPublicIp: $(haproxyPublicIp)"
                   echo "mongodbPublicIp: $(mongodbPublicIp)"
                   echo "nationalParksPublicIp: $(nationalParksPublicIp)"
@@ -263,13 +258,14 @@ stages:
     displayName: Clean Up Automate
     
     steps:
-    - task: CmdLine@2
+    - task: Bash@3
       inputs:
+        targetType: 'inline'
         script: |
-          sudo yum -y install https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm
-          sudo yum install -y git unzip
-          sudo yum install epel-release -y
-          sudo yum install jq -y
+                  sudo yum -y install https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm
+                  sudo yum install -y git unzip
+                  sudo yum install epel-release -y
+                  sudo yum install jq -y
       displayName: 'Install Package Dependencies'
     
     - task: DownloadSecureFile@1
@@ -313,13 +309,14 @@ stages:
     
     steps:
     
-    - task: CmdLine@2
+    - task: Bash@3
       inputs:
+        targetType: 'inline'
         script: |
-          sudo yum -y install https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm
-          sudo yum install -y git unzip
-          sudo yum install epel-release -y
-          sudo yum install jq -y
+                  sudo yum -y install https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm
+                  sudo yum install -y git unzip
+                  sudo yum install epel-release -y
+                  sudo yum install jq -y
       displayName: 'Install Package Dependencies'
     
     - task: DownloadSecureFile@1
