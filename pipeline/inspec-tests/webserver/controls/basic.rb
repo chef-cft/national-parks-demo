@@ -40,7 +40,7 @@ control "audit-baseline-1.0" do                        # A unique ID for this co
   impact 1.0                               # The criticality, if this control fails.
   title "audit baseline exists"             # A human-readable title
   desc "audit baseline exists"
-  describe habitat_package(origin: 'effortless', name: 'audit-baseline') do
+  describe habitat_service(origin: 'effortless', name: 'audit-baseline') do
     it             { should exist }
   end
 end
@@ -49,7 +49,7 @@ control "config-baseline-1.0" do                        # A unique ID for this c
   impact 1.0                               # The criticality, if this control fails.
   title "config baseline exists"             # A human-readable title
   desc "config baseline exists"
-  describe habitat_package(origin: 'effortless', name: 'config-baseline') do
+  describe habitat_service(origin: 'effortless', name: 'config-baseline') do
     it             { should exist }
   end
 end
