@@ -324,7 +324,7 @@ stages:
     - task: vsts-chef-task-exec-inspec@1
       inputs:
         inspecProfilePath: '$(System.DefaultWorkingDirectory)/pipeline/inspec-tests'
-        inspecArguments: "webserver --key-files $(awsInstanceKey.secureFilePath) --target ssh://centos@$(nationalParksPublicIp) --chef-license=accept    "
+        inspecArguments: "webserver --key-files $(awsInstanceKey.secureFilePath) --target ssh://centos@\"$(nationalParksPublicIp)\" --chef-license=accept"
       displayName: Exec Webserver Tests
     
 
