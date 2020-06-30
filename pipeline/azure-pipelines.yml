@@ -311,8 +311,15 @@ stages:
                   echo "nationalParksPublicIp: $(nationalParksPublicIp)"
                   echo "permanentPeerPublicIp: $(permanentPeerPublicIp)"
       displayName: 'Read Terraform Outputs'
-
-
+    
+    - task: vsts-chef-task-install-inspec@1
+      displayName: Install Inspec
+    
+    - task: vsts-chef-task-exec-inspec@1
+      inputs:
+        inspecProfilePath: '$(System.DefaultWorkingDirectory)/pipeline/inspec-tests/webserver'
+        # inspecArguments: 
+        
 
 ### STAGE 4 Clean Up
 - stage: Clean_Up

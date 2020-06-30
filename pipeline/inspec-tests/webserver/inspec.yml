@@ -1,0 +1,10 @@
+name: webserver
+title: InSpec Profile
+maintainer: Gregory Henkhaus
+copyright: CHef Software
+copyright_email: ghenkhaus@chef.io
+license: Apache-2.0
+summary: An InSpec Compliance Profile
+version: 0.1.0
+supports:
+  platform: os
