@@ -30,10 +30,33 @@ stages:
 
    
 
-### STAGE 1 Deploy Automate
+### STAGE 1 Build Package(s)
+- stage: Build
+  displayName: Build 
+  dependsOn: Setup
+  jobs:
+  - job: Build_National_Parks
+    displayName: Build National Parks
+    
+    steps:
+
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+                  sudo yum -y install https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm
+                  sudo yum install -y git unzip
+                  sudo yum install epel-release -y
+                  sudo yum install jq -y
+      displayName: 'Install Package Dependencies'
+    
+    - task: vsts-habitat-install@3
+
+
+### STAGE 2 Deploy Automate
 - stage: Deploy
   displayName: Deploy 
-  dependsOn: Setup
+  dependsOn: Build
   condition: eq(variables.runDeploy, true)
   jobs:
   - job: Deploy_Automate
@@ -170,7 +193,7 @@ stages:
 
 
 
-### STAGE 2 Test
+### STAGE 3 Test
 - stage: Test 
   displayName: Test
   dependsOn: Deploy
@@ -192,11 +215,6 @@ stages:
     displayName: InSpec Testing
 
     steps:
-    
-    - task: vsts-chef-task-install-inspec@1
-      inputs:
-        downloadsFolderLinux: '/tmp'
-      displayName: Install InSpec on Agent
 
     - task: Bash@3
       inputs:
@@ -253,7 +271,7 @@ stages:
 
 
 
-### STAGE 3 Clean Up
+### STAGE 4 Clean Up
 - stage: Clean_Up
   displayName: Clean Up
   condition: eq(variables.runCleanUp, true)
