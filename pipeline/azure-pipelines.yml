@@ -86,9 +86,9 @@ stages:
     - task: vsts-habitat-pkg-upload@3
       displayName: 'Package Upload'
       inputs:
-        habitatOrigin: bldr
+        habitatOrigin: 'Habitat-Chef-SA-Pipeline'
         habitatPackagePath: '$(Pipeline.Workspace)/hart/$(pkg_artifact)'
-        habitatPackageChannel: testing
+        habitatPackageChannel: 'testing'
       env:
         HAB_LICENSE: accept-no-persist
    
