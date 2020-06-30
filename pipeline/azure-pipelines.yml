@@ -78,22 +78,22 @@ stages:
         backendAWSBucketName: '$(bucketName)'
         backendAWSKey: '$(keyAutomate)'
       
-    - task: TerraformTaskV1@0
-      displayName: "Terraform Apply"
-      name: automateApply
-      inputs:
-        provider: 'aws'
-        command: 'apply'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/chef-automate/aws'
-        commandOptions: '-var-file=$(tfAutomateVarsFile.secureFilePath) -var "aws_key_pair_file=$(awsInstanceKey.secureFilePath)"'
-        environmentServiceNameAWS: 'AWS-ADO-Pipeline'
+    # - task: TerraformTaskV1@0
+    #   displayName: "Terraform Apply"
+    #   name: automateApply
+    #   inputs:
+    #     provider: 'aws'
+    #     command: 'apply'
+    #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/chef-automate/aws'
+    #     commandOptions: '-var-file=$(tfAutomateVarsFile.secureFilePath) -var "aws_key_pair_file=$(awsInstanceKey.secureFilePath)"'
+    #     environmentServiceNameAWS: 'AWS-ADO-Pipeline'
     
-    - task: Bash@3
-      inputs:
-        targetType: 'inline'
-        script: |
-                  cat $(automateApply.jsonOutputVariablesPath) > $(Pipeline.Workspace)/variables/TF_OUTPUT_AUTOMATE
-      displayName: 'Store Terraform Outputs'
+    # - task: Bash@3
+    #   inputs:
+    #     targetType: 'inline'
+    #     script: |
+    #               cat $(automateApply.jsonOutputVariablesPath) > $(Pipeline.Workspace)/variables/TF_OUTPUT_AUTOMATE
+    #   displayName: 'Store Terraform Outputs'
 
 
   # - job: Deploy_National_Parks
@@ -169,7 +169,8 @@ stages:
   displayName: Test
   dependsOn: Deploy
   variables:
-    automateOutputJson: ""
+    a2AdminUser: ""
+    a2AdminPassword: ""
   condition: eq(variables.runTest, true)
   jobs:
   - job: inspec_testing
@@ -182,8 +183,12 @@ stages:
         targetType: 'inline'
         script: |
           # Load Automate Outputs
-          TF_OUTPUT_AUTOMATE=$(cat $(Pipeline.Workspace)/variables/TF_OUTPUT_AUTOMATE)
-          echo "##vso[task.setvariable variable=automateOutputJson]$TF_OUTPUT_AUTOMATE"
+          a2_admin=$(cat $(Pipeline.Workspace)/variables/TF_OUTPUT_AUTOMATE | jq .a2_admin.value -r )
+          echo "##vso[task.setvariable variable=a2AdminUser]$a2_admin"
+          a2_admin_password=$(cat $(Pipeline.Workspace)/variables/TF_OUTPUT_AUTOMATE | jq .a2_admin_password.value -r )
+          echo "##vso[task.setvariable variable=a2AdminPassword]$a2_admin_password"
+          
+          
           # Load National Parks Outputs
           TF_OUTPUT_NATIONAL_PARKS=$(cat $(Pipeline.Workspace)/variables/TF_OUTPUT_NATIONAL_PARKS)
           echo "##vso[task.setvariable variable=TF_OUTPUT_NATIONAL_PARKS]$TF_OUTPUT_NATIONAL_PARKS"
@@ -201,7 +206,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-              echo "The automate a2 url: $( cat $(Pipeline.Workspace)/variables/TF_OUTPUT_AUTOMATE | jq .a2_url.value -r))"
+              echo "The automate a2 url: $(a2AdminPassword)"
       displayName: 'Read Terraform Outputs'
 
 
