@@ -189,8 +189,11 @@ stages:
           echo "##vso[task.setvariable variable=TF_OUTPUT_NATIONAL_PARKS]$TF_OUTPUT_NATIONAL_PARKS"
       displayName: 'Retrieve Terraform Outputs'
     
-    # - bash: |
-    #           # echo $(cat $(TF_OUTPUT_NATIONAL_PARKS) | jq )
+    # - task: Bash@3
+    #   inputs:
+    #     targetType: 'inline'
+    #     script: |
+    #           echo $(cat $(TF_OUTPUT_NATIONAL_PARKS) | jq )
     #           echo $(cat TF_OUTPUT_AUTOMATE | jq .haproxy_public_ip.value -r)
     #   displayName: 'Read Terraform Outputs'
 
@@ -198,112 +201,112 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-              echo "The automate a2 url: $($(automateOutputJson) | jq .a2_url.value -r))"
+              echo "The automate a2 url: $( cat $(Pipeline.Workspace)/variables/TF_OUTPUT_AUTOMATE | jq .a2_url.value -r))"
       displayName: 'Read Terraform Outputs'
 
 
 
-# ### STAGE 3 Clean Up
-# - stage: Clean_Up
-#   displayName: Clean Up
-#   condition: eq(variables.runCleanUp, true)
-#   jobs:
-#   - job: Clean_Up_Automate
-#     dependsOn: Clean_Up_National_Parks
-#     displayName: Clean Up Automate
+### STAGE 3 Clean Up
+- stage: Clean_Up
+  displayName: Clean Up
+  condition: eq(variables.runCleanUp, true)
+  jobs:
+  - job: Clean_Up_Automate
+    dependsOn: Clean_Up_National_Parks
+    displayName: Clean Up Automate
     
-#     steps:
-#     - task: CmdLine@2
-#       inputs:
-#         script: |
-#           sudo yum -y install https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm
-#           sudo yum install -y git unzip
-#           sudo yum install epel-release -y
-#           sudo yum install jq -y
-#       displayName: 'Install Package Dependencies'
+    steps:
+    - task: CmdLine@2
+      inputs:
+        script: |
+          sudo yum -y install https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm
+          sudo yum install -y git unzip
+          sudo yum install epel-release -y
+          sudo yum install jq -y
+      displayName: 'Install Package Dependencies'
     
-#     - task: DownloadSecureFile@1
-#       name: tfAutomateVarsFile
-#       inputs:
-#         secureFile: 'automate-pipeline.tfvars'
-#       displayName: 'Download automate-pipeline.tfvars'
+    - task: DownloadSecureFile@1
+      name: tfAutomateVarsFile
+      inputs:
+        secureFile: 'automate-pipeline.tfvars'
+      displayName: 'Download automate-pipeline.tfvars'
     
-#     - task: DownloadSecureFile@1
-#       name: awsInstanceKey
-#       inputs:
-#         secureFile: 'demo-validator-us-east-1.pem'
-#       displayName: 'Download AWS Instance Key'
+    - task: DownloadSecureFile@1
+      name: awsInstanceKey
+      inputs:
+        secureFile: 'demo-validator-us-east-1.pem'
+      displayName: 'Download AWS Instance Key'
 
-#     - task: TerraformInstaller@0
-#       inputs:
-#         terraformVersion: '0.12.24'
-#       displayName: "Install Terraform"
+    - task: TerraformInstaller@0
+      inputs:
+        terraformVersion: '0.12.24'
+      displayName: "Install Terraform"
 
-#     - task: TerraformTaskV1@0
-#       displayName: "Terraform Init"
-#       inputs:
-#         provider: 'aws'
-#         command: 'init'
-#         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/chef-automate/aws'
-#         backendServiceAWS: 'AWS-ADO-Pipeline'
-#         backendAWSBucketName: '$(bucketName)'
-#         backendAWSKey: '$(keyAutomate)'
+    - task: TerraformTaskV1@0
+      displayName: "Terraform Init"
+      inputs:
+        provider: 'aws'
+        command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/chef-automate/aws'
+        backendServiceAWS: 'AWS-ADO-Pipeline'
+        backendAWSBucketName: '$(bucketName)'
+        backendAWSKey: '$(keyAutomate)'
 
-#     - task: TerraformTaskV1@0
-#       inputs:
-#         provider: 'aws'
-#         command: 'destroy'
-#         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/chef-automate/aws'
-#         commandOptions: '-var-file=$(tfAutomateVarsFile.secureFilePath) -var "aws_key_pair_file=$(awsInstanceKey.secureFilePath)"'
-#         environmentServiceNameAWS: 'AWS-ADO-Pipeline'
-#       displayName: "Terraform Destroy"
+    - task: TerraformTaskV1@0
+      inputs:
+        provider: 'aws'
+        command: 'destroy'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/chef-automate/aws'
+        commandOptions: '-var-file=$(tfAutomateVarsFile.secureFilePath) -var "aws_key_pair_file=$(awsInstanceKey.secureFilePath)"'
+        environmentServiceNameAWS: 'AWS-ADO-Pipeline'
+      displayName: "Terraform Destroy"
 
-#   - job: Clean_Up_National_Parks
-#     displayName: Clean Up National Parks
+  - job: Clean_Up_National_Parks
+    displayName: Clean Up National Parks
     
-#     steps:
+    steps:
     
-#     - task: CmdLine@2
-#       inputs:
-#         script: |
-#           sudo yum -y install https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm
-#           sudo yum install -y git unzip
-#           sudo yum install epel-release -y
-#           sudo yum install jq -y
-#       displayName: 'Install Package Dependencies'
+    - task: CmdLine@2
+      inputs:
+        script: |
+          sudo yum -y install https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm
+          sudo yum install -y git unzip
+          sudo yum install epel-release -y
+          sudo yum install jq -y
+      displayName: 'Install Package Dependencies'
     
-#     - task: DownloadSecureFile@1
-#       name: tfNatParksVarsFile
-#       inputs:
-#         secureFile: 'nat-parks-pipeline.tfvars'
-#       displayName: 'Download nat-parks-pipeline.tfvars'
+    - task: DownloadSecureFile@1
+      name: tfNatParksVarsFile
+      inputs:
+        secureFile: 'nat-parks-pipeline.tfvars'
+      displayName: 'Download nat-parks-pipeline.tfvars'
     
-#     - task: DownloadSecureFile@1
-#       name: awsInstanceKey
-#       inputs:
-#         secureFile: 'demo-validator-us-east-1.pem'
-#       displayName: 'Download AWS Instance Key'
+    - task: DownloadSecureFile@1
+      name: awsInstanceKey
+      inputs:
+        secureFile: 'demo-validator-us-east-1.pem'
+      displayName: 'Download AWS Instance Key'
 
-#     - task: TerraformInstaller@0
-#       inputs:
-#         terraformVersion: '0.12.24'
-#       displayName: "Install Terraform"
+    - task: TerraformInstaller@0
+      inputs:
+        terraformVersion: '0.12.24'
+      displayName: "Install Terraform"
 
-#     - task: TerraformTaskV1@0
-#       displayName: "Terraform Init"
-#       inputs:
-#         provider: 'aws'
-#         command: 'init'
-#         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
-#         backendServiceAWS: 'AWS-ADO-Pipeline'
-#         backendAWSBucketName: '$(bucketName)'
-#         backendAWSKey: '$(keyNationalParks)'
+    - task: TerraformTaskV1@0
+      displayName: "Terraform Init"
+      inputs:
+        provider: 'aws'
+        command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
+        backendServiceAWS: 'AWS-ADO-Pipeline'
+        backendAWSBucketName: '$(bucketName)'
+        backendAWSKey: '$(keyNationalParks)'
 
-#     - task: TerraformTaskV1@0
-#       inputs:
-#         provider: 'aws'
-#         command: 'destroy'
-#         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
-#         commandOptions: '-var-file=$(tfNatParksVarsFile.secureFilePath) -var "aws_key_pair_file=$(awsInstanceKey.secureFilePath)"'
-#         environmentServiceNameAWS: 'AWS-ADO-Pipeline'
-#       displayName: "Terraform Destroy"
+    - task: TerraformTaskV1@0
+      inputs:
+        provider: 'aws'
+        command: 'destroy'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
+        commandOptions: '-var-file=$(tfNatParksVarsFile.secureFilePath) -var "aws_key_pair_file=$(awsInstanceKey.secureFilePath)"'
+        environmentServiceNameAWS: 'AWS-ADO-Pipeline'
+      displayName: "Terraform Destroy"
