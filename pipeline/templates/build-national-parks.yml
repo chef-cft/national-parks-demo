@@ -26,12 +26,12 @@ steps:
     displayName: 'Copy Red Pins'
 
 - ${{ if eq(parameters.copyRedIndexFile, true) }}:
-    - task: Bash@3
-      inputs:
-        targetType: 'inline'
-        script: |
-                  sudo cp $(System.DefaultWorkingDirectory)/blue-index.html $(System.DefaultWorkingDirectory)/src/main/webapp/index.html
-      displayName: 'Copy Blue Pins'
+  - task: Bash@3
+    inputs:
+      targetType: 'inline'
+      script: |
+                sudo cp $(System.DefaultWorkingDirectory)/blue-index.html $(System.DefaultWorkingDirectory)/src/main/webapp/index.html
+    displayName: 'Copy Blue Pins'
 
 - task: vsts-habitat-install@3
   displayName: 'Install Habitat'
