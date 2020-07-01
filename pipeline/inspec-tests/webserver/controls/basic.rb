@@ -50,8 +50,8 @@ control "webpage-1.0" do
   desc "Web page contains content"
   describe http('http://localhost:8080/national-parks/') do
     its('status') { should cmp 200 }
-    its('body') { should match /Map of National Parks/ }
-    its('body') { should_not match /redicon/ }
+    its('body') { should include 'redicon' }
+    its('body') { should include 'Map of National Parks' }
   end
 end
 
