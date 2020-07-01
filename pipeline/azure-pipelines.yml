@@ -323,6 +323,7 @@ stages:
       displayName: Install Inspec
     
     - task: vsts-chef-task-exec-inspec@1
+      continueOnError: true
       inputs:
         inspecProfilePath: '$(System.DefaultWorkingDirectory)/pipeline/inspec-tests'
         inspecArguments: 'webserver --key-files $(awsInstanceKey.secureFilePath) --target ssh://centos@$(nationalParksPublicIp) --chef-license=accept'
@@ -337,6 +338,7 @@ stages:
       displayName: Publish Webserver Test Results
 
     - task: vsts-chef-task-exec-inspec@1
+      continueOnError: true
       inputs:
         inspecProfilePath: '$(System.DefaultWorkingDirectory)/pipeline/inspec-tests'
         inspecArguments: 'haproxy --key-files $(awsInstanceKey.secureFilePath) --target ssh://centos@$(haproxyPublicIp) --chef-license=accept'
