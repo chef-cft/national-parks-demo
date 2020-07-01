@@ -52,6 +52,12 @@ stages:
                   sudo yum install jq -y
       displayName: 'Install Package Dependencies'
     
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+                  sudo cp $(System.DefaultWorkingDirectory)/red-index.html $(System.DefaultWorkingDirectory)/src/main/webapp/index.html
+      displayName: 'Copy Red Pins'
     - task: vsts-habitat-install@3
       displayName: 'Install Habitat'
 
@@ -91,7 +97,7 @@ stages:
       inputs:
         habitatOrigin: 'Habitat-Chef-SA-Pipeline'
         habitatPackagePath: '$(System.DefaultWorkingDirectory)/results/$(pkg_artifact)'
-        habitatPackageChannel: 'testing'
+        habitatPackageChannel: 'stable'
       env:
         HAB_LICENSE: accept-no-persist
    
