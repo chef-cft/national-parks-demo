@@ -44,13 +44,14 @@ end
 #   end
 # end
 
-control "webpage-1.0" do                        # A unique ID for this control
-  impact 1.0                               # The criticality, if this control fails.
-  title "Web page contains content"             # A human-readable title
+control "webpage-1.0" do           
+  impact 1.0                       
+  title "Web page contains content"
   desc "Web page contains content"
-  describe command('curl http://localhost:8080/national-parks/') do
-    its('stdout') { should match (/Map of National Parks/) }
-    its('stdout') { should_not match (/redicon.png/) }
+  describe http('http://localhost:8080/national-parks/') do
+    its('status') { should cmp 200 }
+    its('body') { should match (/Map of National Parks/) }
+    its('body') { should_not match (/redicon.png/) }
   end
 end
 
