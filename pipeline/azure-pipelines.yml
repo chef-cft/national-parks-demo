@@ -10,6 +10,7 @@ stages:
 # STAGE 0 Setup
 - stage: Setup
   displayName: Setup
+  condition: eq(variables.runSetup, true)
   jobs:
   - job: SetupVariables
     displayName: Setup Variables
