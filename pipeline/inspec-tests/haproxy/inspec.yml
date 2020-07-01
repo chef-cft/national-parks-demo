@@ -1,5 +1,5 @@
-name: National-Parks-Webserver
-title: National Parks Webserver Profile
+name: National-Parks-HAProxy
+title: National Parks HAProxy Profile
 maintainer: Gregory Henkhaus
 copyright: Chef Software
 copyright_email: ghenkhaus@chef.io

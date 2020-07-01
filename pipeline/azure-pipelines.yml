@@ -332,9 +332,23 @@ stages:
     - task: PublishTestResults@2
       inputs:
         testResultsFormat: 'JUnit'
-        testResultsFiles: '**/TEST-*.xml'
+        testResultsFiles: '**/TEST-webserver.xml'
         testRunTitle: 'Web Server'
       displayName: Publish Webserver Test Results
+
+    - task: vsts-chef-task-exec-inspec@1
+      inputs:
+        inspecProfilePath: '$(System.DefaultWorkingDirectory)/pipeline/inspec-tests'
+        inspecArguments: 'haproxy --key-files $(awsInstanceKey.secureFilePath) --target ssh://centos@$(haproxyPublicIp) --chef-license=accept'
+        inspecResultsFile: '$(System.DefaultWorkingDirectory)/TEST-haproxy.xml'
+      displayName: Exec HAProxy Tests
+    
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: '**/TEST-haproxy.xml'
+        testRunTitle: 'Web Server'
+      displayName: Publish HAProxy Test Results
     
 
 ### STAGE 4 Clean Up
