@@ -296,7 +296,7 @@ stages:
                   echo "mongodbPublicIp: $(mongodbPublicIp)"
                   echo "nationalParksPublicIp: $(nationalParksPublicIp)"
                   echo "permanentPeerPublicIp: $(permanentPeerPublicIp)"
-      displayName: "Terraform Read Outputs"
+      displayName: "Terraform: Read Outputs"
     
     - task: vsts-chef-task-exec-inspec@1
       continueOnError: true

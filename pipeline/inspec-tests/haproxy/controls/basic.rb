@@ -34,7 +34,7 @@ control "webpage-1.0" do
   describe http('http://localhost:8085/national-parks/') do
     its('status') { should cmp 200 }
     its('body') { should include 'Map of National Parks' }
-    its('body') { should include 'redicon' }
+    its('body') { should include 'BLUE ICON' }
   end
 end
 
