@@ -333,7 +333,8 @@ stages:
       inputs:
         testResultsFormat: 'JUnit'
         testResultsFiles: '**/TEST-*.xml'
-        testRunTitle: 'InSpec'
+        testRunTitle: 'Web Server'
+      displayName: Publish Webserver Test Results
     
 
 ### STAGE 4 Clean Up
