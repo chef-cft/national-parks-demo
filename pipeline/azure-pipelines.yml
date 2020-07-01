@@ -325,8 +325,15 @@ stages:
     - task: vsts-chef-task-exec-inspec@1
       inputs:
         inspecProfilePath: '$(System.DefaultWorkingDirectory)/pipeline/inspec-tests'
-        inspecArguments: "webserver --key-files $(awsInstanceKey.secureFilePath) --target ssh://centos@$(nationalParksPublicIp) --chef-license=accept"
+        inspecArguments: 'webserver --key-files $(awsInstanceKey.secureFilePath) --target ssh://centos@$(nationalParksPublicIp) --chef-license=accept'
+        inspecResultsFile: '$(System.DefaultWorkingDirectory)/TEST-webserver.xml'
       displayName: Exec Webserver Tests
+    
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: '**/TEST-*.xml'
+        testRunTitle: 'InSpec'
     
 
 ### STAGE 4 Clean Up
