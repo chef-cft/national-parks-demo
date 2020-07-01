@@ -27,6 +27,5 @@ control "webpage-1.0" do
   describe http('http://localhost:8080/national-parks/') do
     its('status') { should cmp 200 }
     its('body') { should include 'BLUE ICON' }
-    its('body') { should include 'Map of National Parks' }
   end
 end
