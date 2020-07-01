@@ -1,0 +1,21 @@
+steps:
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: |
+              sudo yum -y install https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm
+              sudo yum install -y git unzip
+              sudo yum install epel-release -y
+              sudo yum install jq -y
+  displayName: 'Install Package Dependencies'
+
+- task: TerraformInstaller@0
+  inputs:
+    terraformVersion: '0.12.24'
+  displayName: "Install Terraform"
+
+- task: vsts-chef-task-install-inspec@1
+  displayName: Install Inspec
+
+- task: vsts-habitat-install@3
+  displayName: 'Install Habitat'

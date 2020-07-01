@@ -1,40 +1,25 @@
-parameters:
-- name: copyRedIndexFile # name of the parameter; required
-  type: boolean # data type of the parameter; required
-  default: false
-- name: copyBlueIndexFile # name of the parameter; required
-  type: boolean # data type of the parameter; required
-  default: false
+# parameters:
+# - name: copyRedIndexFile # name of the parameter; required
+#   type: boolean # data type of the parameter; required
+#   default: false
+# - name: copyBlueIndexFile # name of the parameter; required
+#   type: boolean # data type of the parameter; required
+#   default: false
 
 steps:
-- task: Bash@3
-  inputs:
-    targetType: 'inline'
-    script: |
-              sudo yum -y install https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm
-              sudo yum install -y git unzip
-              sudo yum install epel-release -y
-              sudo yum install jq -y
-  displayName: 'Install Package Dependencies'
+# - task: Bash@3
+#   inputs:
+#     targetType: 'inline'
+#     script: |
+#               sudo cp $(System.DefaultWorkingDirectory)/red-index.html $(System.DefaultWorkingDirectory)/src/main/webapp/index.html
+#   displayName: 'Copy Red Pins'
 
-- ${{ if eq(parameters.copyRedIndexFile, true) }}:
-  - task: Bash@3
-    inputs:
-      targetType: 'inline'
-      script: |
-                sudo cp $(System.DefaultWorkingDirectory)/red-index.html $(System.DefaultWorkingDirectory)/src/main/webapp/index.html
-    displayName: 'Copy Red Pins'
-
-- ${{ if eq(parameters.copyRedIndexFile, true) }}:
-  - task: Bash@3
-    inputs:
-      targetType: 'inline'
-      script: |
-                sudo cp $(System.DefaultWorkingDirectory)/blue-index.html $(System.DefaultWorkingDirectory)/src/main/webapp/index.html
-    displayName: 'Copy Blue Pins'
-
-- task: vsts-habitat-install@3
-  displayName: 'Install Habitat'
+# - task: Bash@3
+#   inputs:
+#     targetType: 'inline'
+#     script: |
+#               sudo cp $(System.DefaultWorkingDirectory)/blue-index.html $(System.DefaultWorkingDirectory)/src/main/webapp/index.html
+#   displayName: 'Copy Blue Pins'
 
 - task: vsts-habitat-signing-key@3
   inputs:
