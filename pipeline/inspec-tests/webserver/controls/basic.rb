@@ -51,7 +51,7 @@ control "webpage-1.0" do
   describe http('http://localhost:8080/national-parks/') do
     its('status') { should cmp 200 }
     its('body') { should match (/Map of National Parks/) }
-    its('body') { should_not match (/redicon.png/) }
+    its('body') { should_not match (/redicon/) }
   end
 end
 
