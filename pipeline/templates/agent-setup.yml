@@ -12,10 +12,10 @@ steps:
 - task: TerraformInstaller@0
   inputs:
     terraformVersion: '0.12.24'
-  displayName: "Install Terraform"
+  displayName: "Terraform: Install"
 
 - task: vsts-chef-task-install-inspec@1
-  displayName: Install Inspec
+  displayName: "InSpec: Install"
 
 - task: vsts-habitat-install@3
-  displayName: 'Install Habitat'
+  displayName: "Habitat: Install"
