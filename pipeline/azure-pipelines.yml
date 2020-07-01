@@ -241,16 +241,16 @@ stages:
   displayName: Test
   dependsOn: Deploy
   variables:
-    a2AdminUser: ""
-    a2AdminPassword: ""
-    a2Token: ""
-    a2Url: ""
-    chefAutomatePublicIp: ""
-    chefAutomateServerPublicR53Dns: ""
-    haproxyPublicIp: ""
-    mongodbPublicIp: ""
-    nationalParksPublicIp: ""
-    permanentPeerPublicIp: ""
+    a2AdminUser: null
+    a2AdminPassword: null
+    a2Token: null
+    a2Url: null
+    chefAutomatePublicIp: null
+    chefAutomateServerPublicR53Dns: null
+    haproxyPublicIp: null
+    mongodbPublicIp: null
+    nationalParksPublicIp: null
+    permanentPeerPublicIp: null
 
   condition: eq(variables.runTest, true)
   jobs:
@@ -331,6 +331,7 @@ stages:
 ### STAGE 4 Clean Up
 - stage: Clean_Up
   displayName: Clean Up
+  dependsOn: Test
   condition: eq(variables.runCleanUp, true)
   jobs:
   - job: Clean_Up_Automate
