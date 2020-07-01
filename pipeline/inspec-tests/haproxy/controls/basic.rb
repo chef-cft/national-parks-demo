@@ -1,25 +1,19 @@
-# copyright: 2018, The Authors
+# copyright: 2020, Chef Software
 
 title "National Parks HAProxy"
 
-# you can also use plain tests
-# describe file("/tmp") do
-#   it { should be_directory }
-# end
-
-# you add controls here
-control "port-1.0" do                        # A unique ID for this control
-  impact 1.0                               # The criticality, if this control fails.
-  title "HAProxy Ports Open"             # A human-readable title
+control "port-1.0" do               
+  impact 1.0                        
+  title "HAProxy Ports Open"        
   desc "ports exposed for webserver"
-  describe port(8085) do                  # The actual test
+  describe port(8085) do            
     it { should be_listening }
   end
 end
 
-control "hab-1.0" do                        # A unique ID for this control
-  impact 1.0                               # The criticality, if this control fails.
-  title "Habitat Installed"             # A human-readable title
+control "hab-1.0" do       
+  impact 1.0               
+  title "Habitat Installed"
   desc "habitat installed"
   describe command('/bin/hab').exist? do
     it { should eq true }
@@ -37,18 +31,3 @@ control "webpage-1.0" do
     its('body') { should include 'BLUE ICON' }
   end
 end
-
-# describe habitat_services do
-#   its('names') { should include 'config-baseline' }
-#   its('names') { should include 'audit-baseline' }
-#   its('names') { should include 'national-parks' }
-# end
-
-# control "national-parks-service-1.0" do                       
-#   impact 1.0                               
-#   title "National Parks is running"   
-#   desc "config baseline exists"
-#   describe habitat_service(origin: 'chef-sa-pipeline', name: 'national-parks') do
-#     it { should exist }
-#   end
-# end

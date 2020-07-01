@@ -1,48 +1,24 @@
-# copyright: 2018, The Authors
+# copyright: 2020, Chef Software
 
 title "National Parks Web Server"
 
-# you can also use plain tests
-# describe file("/tmp") do
-#   it { should be_directory }
-# end
-
-# you add controls here
-control "port-1.0" do                        # A unique ID for this control
-  impact 1.0                               # The criticality, if this control fails.
-  title "Webserver Ports Open"             # A human-readable title
+control "port-1.0" do         
+  impact 1.0                  
+  title "Webserver Ports Open"
   desc "ports exposed for webserver"
-  describe port(8080) do                  # The actual test
+  describe port(8080) do      
     it { should be_listening }
   end
 end
 
-control "hab-1.0" do                        # A unique ID for this control
-  impact 1.0                               # The criticality, if this control fails.
-  title "Habitat Installed"             # A human-readable title
+control "hab-1.0" do                   
+  impact 1.0                           
+  title "Habitat Installed"            
   desc "habitat installed"
   describe command('/bin/hab').exist? do
     it { should eq true }
   end
 end
-
-# control "audit-baseline-1.0" do                        # A unique ID for this control
-#   impact 1.0                               # The criticality, if this control fails.
-#   title "audit baseline exists"             # A human-readable title
-#   desc "audit baseline exists"
-#   describe habitat_service(origin: 'effortless', name: 'audit-baseline') do
-#     it             { should exist }
-#   end
-# end
-
-# control "config-baseline-1.0" do                        # A unique ID for this control
-#   impact 1.0                               # The criticality, if this control fails.
-#   title "config baseline exists"             # A human-readable title
-#   desc "config baseline exists"
-#   describe habitat_service(origin: 'effortless', name: 'config-baseline') do
-#     it             { should exist }
-#   end
-# end
 
 control "webpage-1.0" do           
   impact 1.0                       
@@ -54,28 +30,3 @@ control "webpage-1.0" do
     its('body') { should include 'Map of National Parks' }
   end
 end
-
-
-# control "webpage-2.0" do                        # A unique ID for this control
-#   impact 1.0                               # The criticality, if this control fails.
-#   title "Web page contains content"             # A human-readable title
-#   desc "Web page contains content"
-#   describe command('curl http://localhost:8080/national-parks/') do
-#     its('stdout') { should match (/redicon.png/) }
-#   end
-# end
-
-# describe habitat_services do
-#   its('names') { should include 'config-baseline' }
-#   its('names') { should include 'audit-baseline' }
-#   its('names') { should include 'national-parks' }
-# end
-
-# control "national-parks-service-1.0" do                       
-#   impact 1.0                               
-#   title "National Parks is running"   
-#   desc "config baseline exists"
-#   describe habitat_service(origin: 'chef-sa-pipeline', name: 'national-parks') do
-#     it { should exist }
-#   end
-# end
