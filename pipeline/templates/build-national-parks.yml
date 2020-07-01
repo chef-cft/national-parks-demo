@@ -17,21 +17,21 @@ steps:
               sudo yum install jq -y
   displayName: 'Install Package Dependencies'
 
-- task: Bash@3
-  condition: eq(parameters.copyRedIndexFile, true)
-  inputs:
-    targetType: 'inline'
-    script: |
-              sudo cp $(System.DefaultWorkingDirectory)/red-index.html $(System.DefaultWorkingDirectory)/src/main/webapp/index.html
-  displayName: 'Copy Red Pins'
+- ${{ if eq(parameters.copyRedIndexFile, true) }}:
+  - task: Bash@3
+    inputs:
+      targetType: 'inline'
+      script: |
+                sudo cp $(System.DefaultWorkingDirectory)/red-index.html $(System.DefaultWorkingDirectory)/src/main/webapp/index.html
+    displayName: 'Copy Red Pins'
 
-- task: Bash@3
-  condition: eq(parameters.copyBlueIndexFile, true)
-  inputs:
-    targetType: 'inline'
-    script: |
-              sudo cp $(System.DefaultWorkingDirectory)/blue-index.html $(System.DefaultWorkingDirectory)/src/main/webapp/index.html
-  displayName: 'Copy Blue Pins'
+- ${{ if eq(parameters.copyRedIndexFile, true) }}:
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+                  sudo cp $(System.DefaultWorkingDirectory)/blue-index.html $(System.DefaultWorkingDirectory)/src/main/webapp/index.html
+      displayName: 'Copy Blue Pins'
 
 - task: vsts-habitat-install@3
   displayName: 'Install Habitat'
