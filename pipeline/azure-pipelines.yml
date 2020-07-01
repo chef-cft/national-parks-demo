@@ -347,7 +347,7 @@ stages:
       inputs:
         testResultsFormat: 'JUnit'
         testResultsFiles: '**/TEST-haproxy.xml'
-        testRunTitle: 'Web Server'
+        testRunTitle: 'HAProxy'
       displayName: Publish HAProxy Test Results
     
 
