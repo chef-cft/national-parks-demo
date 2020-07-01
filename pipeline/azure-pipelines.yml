@@ -1,6 +1,5 @@
 pool: henkhaus-forest
-# pool:
-#       vmImage: 'ubuntu-latest'
+
 
 variables:
   - group: tf-backend-sa-pipeline
@@ -10,7 +9,7 @@ stages:
 
 # STAGE 0 Setup
 - stage: Setup
-  displayName: Setup 
+  displayName: Setup
   jobs:
   - job: SetupVariables
     displayName: Setup Variables

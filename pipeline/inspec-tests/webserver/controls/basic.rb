@@ -49,12 +49,32 @@ control "webpage-1.0" do                        # A unique ID for this control
   title "Web page contains content"             # A human-readable title
   desc "Web page contains content"
   describe command('curl http://localhost:8080/national-parks/') do
-    its('stdout') { should match (/redicon.png/) }
+    its('stdout') { should match (/Map of National Parks/) }
+    its('stdout') { should_not match (/redicon.png/) }
   end
 end
+
+
+# control "webpage-1.0" do                        # A unique ID for this control
+#   impact 1.0                               # The criticality, if this control fails.
+#   title "Web page contains content"             # A human-readable title
+#   desc "Web page contains content"
+#   describe command('curl http://localhost:8080/national-parks/') do
+#     its('stdout') { should match (/redicon.png/) }
+#   end
+# end
 
 # describe habitat_services do
 #   its('names') { should include 'config-baseline' }
 #   its('names') { should include 'audit-baseline' }
 #   its('names') { should include 'national-parks' }
+# end
+
+# control "national-parks-service-1.0" do                       
+#   impact 1.0                               
+#   title "National Parks is running"   
+#   desc "config baseline exists"
+#   describe habitat_service(origin: 'chef-sa-pipeline', name: 'national-parks') do
+#     it { should exist }
+#   end
 # end

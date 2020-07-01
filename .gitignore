@@ -5,3 +5,5 @@ results/
 .kitchen
 .DS_Store
 terraform/chef-automate/azure/UpdateDisk.ps1
+pipeline/inspec-tests/webserver/inspec.lock
+pipeline/inspec-tests/inspec.out
