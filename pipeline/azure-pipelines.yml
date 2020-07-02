@@ -281,22 +281,22 @@ stages:
                   echo "##vso[task.setvariable variable=permanentPeerPublicIp]$permanent_peer_public_ip"
       displayName: "Terraform: Parse Outputs"
 
-   
-    - task: Bash@3
-      inputs:
-        targetType: 'inline'
-        script: |
-                  echo "a2AdminUser: $(a2AdminUser)"
-                  echo "a2AdminPassword: $(a2AdminPassword)"
-                  echo "a2Token: $(a2Token)"
-                  echo "a2Url: $(a2Url)"
-                  echo "chefAutomatePublicIp: $(chefAutomatePublicIp)"
-                  echo "chefAutomateServerPublicR53Dns: $(chefAutomateServerPublicR53Dns)"
-                  echo "haproxyPublicIp: $(haproxyPublicIp)"
-                  echo "mongodbPublicIp: $(mongodbPublicIp)"
-                  echo "nationalParksPublicIp: $(nationalParksPublicIp)"
-                  echo "permanentPeerPublicIp: $(permanentPeerPublicIp)"
-      displayName: "Terraform: Read Outputs"
+    #  TODO: REMOVE THIS BLOCK
+    # - task: Bash@3
+    #   inputs:
+    #     targetType: 'inline'
+    #     script: |
+    #               echo "a2AdminUser: $(a2AdminUser)"
+    #               echo "a2AdminPassword: $(a2AdminPassword)"
+    #               echo "a2Token: $(a2Token)"
+    #               echo "a2Url: $(a2Url)"
+    #               echo "chefAutomatePublicIp: $(chefAutomatePublicIp)"
+    #               echo "chefAutomateServerPublicR53Dns: $(chefAutomateServerPublicR53Dns)"
+    #               echo "haproxyPublicIp: $(haproxyPublicIp)"
+    #               echo "mongodbPublicIp: $(mongodbPublicIp)"
+    #               echo "nationalParksPublicIp: $(nationalParksPublicIp)"
+    #               echo "permanentPeerPublicIp: $(permanentPeerPublicIp)"
+    #   displayName: "Terraform: Read Outputs"
     
     - task: vsts-chef-task-exec-inspec@1
       continueOnError: true
