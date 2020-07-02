@@ -9,6 +9,9 @@ control "port-1.0" do
   describe port(8080) do      
     it { should be_listening }
   end
+  describe port(22) do            
+    it { should be_listening }
+  end
 end
 
 control "hab-1.0" do                   

@@ -321,6 +321,14 @@ stages:
         inspecResultsFile: '$(System.DefaultWorkingDirectory)/TEST-haproxy.xml'
       displayName: "InSpec: Exec HAProxy Tests"
     
+    - task: vsts-chef-task-exec-inspec@1
+      continueOnError: true
+      inputs:
+        inspecProfilePath: '$(System.DefaultWorkingDirectory)/pipeline/inspec-tests'
+        inspecArguments: 'automate --key-files $(awsInstanceKey.secureFilePath) --target ssh://ubuntu@$(chefAutomatePublicIp) --chef-license=accept'
+        inspecResultsFile: '$(System.DefaultWorkingDirectory)/TEST-automate.xml'
+      displayName: "InSpec: Exec Automate Tests"
+    
     - task: PublishTestResults@2
       inputs:
         testResultsFormat: 'JUnit'
