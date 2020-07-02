@@ -37,7 +37,7 @@ end
 
 a2_token = input('a2_token')
 a2_url = input('a2_url')
-describe http(a2_url, 
+describe http("#{a2_url}/api/v0/applications/service-groups", 
 # TODO: FIX THE '=' appended to the a2_token. The '=' is getting dropped when passed from the command line
   headers: { 'api-token' => "#{a2_token}=" }, 
   open_timeout: 60, 
