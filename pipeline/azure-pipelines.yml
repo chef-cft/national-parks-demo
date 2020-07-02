@@ -280,23 +280,30 @@ stages:
                   permanent_peer_public_ip=$(cat $(Pipeline.Workspace)/variables/national-parks-validator/TF_OUTPUT_NATIONAL_PARKS | jq .permanent_peer_public_ip.value -r)
                   echo "##vso[task.setvariable variable=permanentPeerPublicIp]$permanent_peer_public_ip"
       displayName: "Terraform: Parse Outputs"
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+                  echo "a2_token: $(a2Token)" > $(Pipeline.Workspace)/variables/national-parks-validator/a2_input_variables.yml
+                  echo "a2_url: $(a2Url)" >> $(Pipeline.Workspace)/variables/national-parks-validator/a2_input_variables.yml
+      displayName: "Terraform: Store Outputs"
 
     #  TODO: REMOVE THIS BLOCK
-    # - task: Bash@3
-    #   inputs:
-    #     targetType: 'inline'
-    #     script: |
-    #               echo "a2AdminUser: $(a2AdminUser)"
-    #               echo "a2AdminPassword: $(a2AdminPassword)"
-    #               echo "a2Token: $(a2Token)"
-    #               echo "a2Url: $(a2Url)"
-    #               echo "chefAutomatePublicIp: $(chefAutomatePublicIp)"
-    #               echo "chefAutomateServerPublicR53Dns: $(chefAutomateServerPublicR53Dns)"
-    #               echo "haproxyPublicIp: $(haproxyPublicIp)"
-    #               echo "mongodbPublicIp: $(mongodbPublicIp)"
-    #               echo "nationalParksPublicIp: $(nationalParksPublicIp)"
-    #               echo "permanentPeerPublicIp: $(permanentPeerPublicIp)"
-    #   displayName: "Terraform: Read Outputs"
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+                  echo "a2AdminUser: $(a2AdminUser)"
+                  echo "a2AdminPassword: $(a2AdminPassword)"
+                  echo "a2Token: $(a2Token)"
+                  echo "a2Url: $(a2Url)"
+                  echo "chefAutomatePublicIp: $(chefAutomatePublicIp)"
+                  echo "chefAutomateServerPublicR53Dns: $(chefAutomateServerPublicR53Dns)"
+                  echo "haproxyPublicIp: $(haproxyPublicIp)"
+                  echo "mongodbPublicIp: $(mongodbPublicIp)"
+                  echo "nationalParksPublicIp: $(nationalParksPublicIp)"
+                  echo "permanentPeerPublicIp: $(permanentPeerPublicIp)"
+      displayName: "Terraform: Read Outputs"
     
     - task: vsts-chef-task-exec-inspec@1
       continueOnError: true
@@ -332,7 +339,7 @@ stages:
       continueOnError: true
       inputs:
         inspecProfilePath: '$(System.DefaultWorkingDirectory)/pipeline/inspec-tests'
-        inspecArguments: 'automate --key-files $(awsInstanceKey.secureFilePath) --target ssh://ubuntu@$(chefAutomatePublicIp) --input a2_token="$(a2Token)" a2_url="$(a2Url)" --chef-license=accept'
+        inspecArguments: 'automate --key-files $(awsInstanceKey.secureFilePath) --target ssh://ubuntu@$(chefAutomatePublicIp) --input-file $(Pipeline.Workspace)/variables/national-parks-validator/a2_input_variables.yml --chef-license=accept'
         inspecResultsFile: '$(System.DefaultWorkingDirectory)/TEST-automate.xml'
       displayName: "InSpec: Exec Automate Tests"
     
