@@ -340,7 +340,7 @@ stages:
       inputs:
         testResultsFormat: 'JUnit'
         testResultsFiles: '**/TEST-automate.xml'
-        testRunTitle: 'HAProxy'
+        testRunTitle: 'Automate'
       displayName: "InSpec: Publish Automate Test Results"
     
 
