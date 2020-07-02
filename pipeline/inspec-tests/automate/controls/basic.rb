@@ -37,6 +37,7 @@ end
 
 a2_token = input('a2_token')
 describe http('https://demo-validator-a2.chef-demo.com/api/v0/applications/service-groups', 
+# TODO: FIX THE '=' appended to the a2_token. The '=' is getting dropped when passed from the command line
   headers: { 'api-token' => "#{a2_token}=" }, 
   open_timeout: 60, 
   read_timeout: 60, 
