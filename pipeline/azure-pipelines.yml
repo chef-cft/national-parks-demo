@@ -332,7 +332,7 @@ stages:
       continueOnError: true
       inputs:
         inspecProfilePath: '$(System.DefaultWorkingDirectory)/pipeline/inspec-tests'
-        inspecArguments: 'automate --key-files $(awsInstanceKey.secureFilePath) --target ssh://ubuntu@$(chefAutomatePublicIp) --input a2_token="$(a2Token)" --chef-license=accept'
+        inspecArguments: 'automate --key-files $(awsInstanceKey.secureFilePath) --target ssh://ubuntu@$(chefAutomatePublicIp) --input a2_token="$(a2Token)" a2_url="$(a2Url)" --chef-license=accept'
         inspecResultsFile: '$(System.DefaultWorkingDirectory)/TEST-automate.xml'
       displayName: "InSpec: Exec Automate Tests"
     

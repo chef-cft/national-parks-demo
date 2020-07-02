@@ -10,6 +10,9 @@ supports:
   platform: os
 
 inputs:
+- name: a2_url
+  description: a2_url from terraform
+  type: string
 - name: a2_token
   description: a2_token generated from terraform
   type: string
