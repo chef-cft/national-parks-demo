@@ -8,7 +8,7 @@ stages:
 # STAGE 0 Setup
 - stage: Setup
   displayName: "Setup"
-  condition: eq(variables.runSetup, true)
+  condition: eq(variables.run00Setup, true)
   jobs:
   - job: SetupVariables
     displayName: "Setup Variables"
@@ -33,7 +33,7 @@ stages:
 ### STAGE 1 Build Package(s)
 - stage: Build
   displayName: "Build" 
-  condition: eq(variables.runBuild, true)
+  condition: eq(variables.run10Build, true)
   dependsOn: Setup
   jobs:
   - job: Build_National_Parks
@@ -103,7 +103,7 @@ stages:
 - stage: Deploy
   displayName: "Deploy" 
   dependsOn: Build
-  condition: eq(variables.runDeploy, true)
+  condition: eq(variables.run20Deploy, true)
   jobs:
   - job: Deploy_Automate
     displayName: "Deploy Automate"
@@ -216,7 +216,7 @@ stages:
 ### STAGE 3 Test
 - stage: Test 
   displayName: Test
-  condition: eq(variables.runTest, true)
+  condition: eq(variables.run30Test, true)
   dependsOn: Deploy
   variables:
     a2AdminUser: null
@@ -355,7 +355,7 @@ stages:
 - stage: Clean_Up
   displayName: "Clean Up"
   dependsOn: Test
-  condition: eq(variables.runCleanUp, true)
+  condition: eq(variables.run40CleanUp, true)
   jobs:
   - job: Clean_Up_Automate
     dependsOn: Clean_Up_National_Parks
