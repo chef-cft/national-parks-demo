@@ -31,8 +31,8 @@ stages:
    
 
 ### STAGE 1 Build RED Package(s)
-- stage: Build
-  displayName: "Build" 
+- stage: Build_Red
+  displayName: "Build Red" 
   condition: eq(variables.run10Build, true)
   dependsOn: Setup
   jobs:
@@ -95,7 +95,7 @@ stages:
 ### STAGE 2 Deploy Automate
 - stage: Deploy
   displayName: "Deploy" 
-  dependsOn: Build
+  dependsOn: Build_Red
   condition: eq(variables.run20Deploy, true)
   jobs:
   - job: Deploy_Automate
@@ -207,8 +207,8 @@ stages:
 
 
 ### STAGE 3 Test
-- stage: Test 
-  displayName: Test
+- stage: Test_Red
+  displayName: Test Red
   condition: eq(variables.run30Test, true)
   dependsOn: Deploy
   variables:
@@ -281,7 +281,7 @@ stages:
                   echo "a2_url: $(a2Url)" >> $(Pipeline.Workspace)/variables/national-parks-validator/a2_input_variables.yml
       displayName: "Terraform: Store Outputs"
 
-    #  TODO: REMOVE THIS BLOCK
+    #  TODO: REMOVE THIS BLOCK, contains secrets that get logged
     - task: Bash@3
       inputs:
         targetType: 'inline'
@@ -344,10 +344,10 @@ stages:
       displayName: "InSpec: Publish Automate Test Results"
     
 ### STAGE 3.5 Build BLUE Package(s)
-- stage: Build
-  displayName: "Build" 
+- stage: Build_Blue
+  displayName: "Build Blue"
   condition: eq(variables.run35Build, true)
-  dependsOn: Setup
+  dependsOn: Test_Red
   jobs:
   - job: Build_National_Parks
     displayName: "Build National Parks"
@@ -414,10 +414,10 @@ stages:
       
 
 ### STAGE 3 Test
-- stage: Test 
-  displayName: Test
+- stage: Test_Blue
+  displayName: "Test Blue"
   condition: eq(variables.run30Test, true)
-  dependsOn: Deploy
+  dependsOn: Build_Blue
   variables:
     a2AdminUser: null
     a2AdminPassword: null
@@ -555,7 +555,7 @@ stages:
 ### STAGE 4 Clean Up
 - stage: Clean_Up
   displayName: "Clean Up"
-  dependsOn: Test
+  dependsOn: Test_Blue
   condition: eq(variables.run40CleanUp, true)
   jobs:
   - job: Clean_Up_Automate
