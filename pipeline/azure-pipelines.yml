@@ -27,8 +27,8 @@ stages:
 
     steps:
     - template: templates/agent-setup.yml
-    - template: templates/test.yml
-      parameters:
-        color: "red" # set to a non-boolean value to have the build fail
+    # # - template: templates/test.yml
+    #   parameters:
+    #     color: "red" # set to a non-boolean value to have the build fail
     
    
