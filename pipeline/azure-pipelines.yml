@@ -3,9 +3,219 @@ variables:
   - group: tf-backend-sa-pipeline
 stages:
 
+
+
+# STAGE 0 Setup
+- stage: Setup
+  displayName: "Setup"
+  condition: eq(variables.run00Setup, true)
+  jobs:
+  - job: SetupVariables
+    displayName: "Setup Variables"
+    
+    steps:
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          mkdir -p $(Pipeline.Workspace)/variables/national-parks-validator
+      displayName: "Create Variable Store"
+
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          rm -rf $(Pipeline.Workspace)/variables/national-parks-validator/*
+      displayName: Clean Variables
+
+   
+
+### STAGE 1 Build Package(s)
+- stage: Build
+  displayName: "Build" 
+  condition: eq(variables.run10Build, true)
+  dependsOn: Setup
+  jobs:
+  - job: Build_National_Parks
+    displayName: "Build National Parks"
+    
+    steps:
+    - template: templates/agent-setup.yml
+
+    # - task: Bash@3
+    #   inputs:
+    #     targetType: 'inline'
+    #     script: |
+    #               sudo cp $(System.DefaultWorkingDirectory)/red-index.html $(System.DefaultWorkingDirectory)/src/main/webapp/index.html
+    #   displayName: "Copy Red Pins"
+
+    # - task: Bash@3
+    #   inputs:
+    #     targetType: 'inline'
+    #     script: |
+    #               sudo cp $(System.DefaultWorkingDirectory)/blue-index.html $(System.DefaultWorkingDirectory)/src/main/webapp/index.html
+    #   displayName: "Copy Blue Pins"
+    
+    - task: vsts-habitat-signing-key@3
+      inputs:
+        habitatOrigin: 'Habitat-Chef-SA-Pipeline'
+        taskAction: 'install'
+      displayName: "Habitat: Install Signing Origin Key"
+
+    - task: vsts-habitat-build@3
+      inputs:
+        habitatOrigin: 'Habitat-Chef-SA-Pipeline'
+        habitatSrcPath: '$(Build.SourcesDirectory)'
+        habitatPlanContext: 'habitat'
+      env:
+        HAB_LICENSE: accept-no-persist
+      displayName: "Habitat: Build Package"
+
+    - task: vsts-habitat-expose-habitat-build-vars@3
+      inputs:
+        habitatLastBuildEnvPath: '$(Build.SourcesDirectory)/results'
+        habitatSetBuildNumber: true
+        habitatImageNamesFilename: '$(System.DefaultWorkingDirectory)/image.names'
+      displayName: "Habitat: Expose Build Variables"
+
+    - publish: $(System.DefaultWorkingDirectory)/results
+      artifact: hart
+      displayName: "Publish Artifact"
+
+    - script: |
+              source $(System.DefaultWorkingDirectory)/results/last_build.env
+              echo "##vso[task.setvariable variable=pkg_artifact]$pkg_artifact"
+      displayName: 'Publish Artifact Name'
+
+    - task: vsts-habitat-pkg-upload@3
+      inputs:
+        habitatOrigin: 'Habitat-Chef-SA-Pipeline'
+        habitatPackagePath: '$(System.DefaultWorkingDirectory)/results/$(pkg_artifact)'
+        habitatPackageChannel: 'stable'
+      env:
+        HAB_LICENSE: accept-no-persist
+      displayName: "Habitat: Package Upload"
+      
+   
+
+
+### STAGE 2 Deploy Automate
+- stage: Deploy
+  displayName: "Deploy" 
+  dependsOn: Build
+  condition: eq(variables.run20Deploy, true)
+  jobs:
+  - job: Deploy_Automate
+    displayName: "Deploy Automate"
+    
+    steps:
+    - template: templates/agent-setup.yml
+
+    - task: DownloadSecureFile@1
+      name: tfAutomateVarsFile
+      inputs:
+        secureFile: 'automate-pipeline.tfvars'
+      displayName: "Download: automate-pipeline.tfvars"
+    
+    - task: DownloadSecureFile@1
+      name: awsInstanceKey
+      inputs:
+        secureFile: 'demo-validator-us-east-1.pem'
+      displayName: "Download: AWS Instance Key"
+    
+    - task: Bash@3  
+      inputs:
+        targetType: 'inline'
+        script: |
+                  sudo chmod 600 $(awsInstanceKey.secureFilePath)
+      displayName: "Update AWS Instance Key Permissions"
+    
+    - task: TerraformTaskV1@0
+      inputs:
+        provider: 'aws'
+        command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/chef-automate/aws'
+        backendServiceAWS: 'AWS-ADO-Pipeline'
+        backendAWSBucketName: '$(bucketName)'
+        backendAWSKey: '$(keyAutomate)'
+      displayName: "Terraform: Init"
+      
+    - task: TerraformTaskV1@0
+      name: automateApply
+      inputs:
+        provider: 'aws'
+        command: 'apply'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/chef-automate/aws'
+        commandOptions: '-var-file=$(tfAutomateVarsFile.secureFilePath) -var "aws_key_pair_file=$(awsInstanceKey.secureFilePath)"'
+        environmentServiceNameAWS: 'AWS-ADO-Pipeline'
+      displayName: "Terraform: Apply"
+    
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+                  cat $(automateApply.jsonOutputVariablesPath) > $(Pipeline.Workspace)/variables/national-parks-validator/TF_OUTPUT_AUTOMATE
+      displayName: "Terraform: Store Outputs"
+
+
+  - job: Deploy_National_Parks
+    dependsOn: Deploy_Automate
+    displayName: "Deploy National Parks"
+    
+    steps:
+    - template: templates/agent-setup.yml
+
+    - task: DownloadSecureFile@1
+      name: tfNatParksVarsFile
+      inputs:
+        secureFile: 'nat-parks-pipeline.tfvars'
+      displayName: "Download: nat-parks-pipeline.tfvars"
+
+    - task: DownloadSecureFile@1
+      name: awsInstanceKey
+      inputs:
+        secureFile: 'demo-validator-us-east-1.pem'
+      displayName: "Download: AWS Instance Key"
+    
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+                  sudo chmod 600 $(awsInstanceKey.secureFilePath)
+      displayName: "Update AWS Instance Key Permissions"
+
+    - task: TerraformTaskV1@0
+      inputs:
+        provider: 'aws'
+        command: 'init'
+        workingDirectory: 'terraform/aws'
+        backendServiceAWS: 'AWS-ADO-Pipeline'
+        backendAWSBucketName: '$(bucketName)'
+        backendAWSKey: '$(keyNationalParks)'
+      displayName: "Terraform: Init"
+
+    - task: TerraformTaskV1@0
+      name: nationalParksApply
+      inputs:
+        provider: 'aws'
+        command: 'apply'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
+        commandOptions: '-var-file=$(tfNatParksVarsFile.secureFilePath) -var "aws_key_pair_file=$(awsInstanceKey.secureFilePath)"'
+        environmentServiceNameAWS: 'AWS-ADO-Pipeline'
+      displayName: "Terraform: Apply"
+    
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+                  cat $(nationalParksApply.jsonOutputVariablesPath) > $(Pipeline.Workspace)/variables/national-parks-validator/TF_OUTPUT_NATIONAL_PARKS
+      displayName: "Terraform: Store Outputs"
+
+
+
 ### STAGE 3 Test
-- stage: Test_Red
-  displayName: Test Red
+- stage: Test 
+  displayName: Test
   condition: eq(variables.run30Test, true)
   dependsOn: Deploy
   variables:
@@ -27,8 +237,198 @@ stages:
 
     steps:
     - template: templates/agent-setup.yml
-    # # - template: templates/test.yml
-    #   parameters:
-    #     color: "red" # set to a non-boolean value to have the build fail
     
-   
+    - task: DownloadSecureFile@1
+      name: awsInstanceKey
+      inputs:
+        secureFile: 'demo-validator-us-east-1.pem'
+      displayName: "Download: AWS Instance Key"
+
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+                  # Load Automate Outputs
+                  a2_admin=$(cat $(Pipeline.Workspace)/variables/national-parks-validator/TF_OUTPUT_AUTOMATE | jq .a2_admin.value -r )
+                  echo "##vso[task.setvariable variable=a2AdminUser]$a2_admin"
+
+                  a2_admin_password=$(cat $(Pipeline.Workspace)/variables/national-parks-validator/TF_OUTPUT_AUTOMATE | jq .a2_admin_password.value -r )
+                  echo "##vso[task.setvariable variable=a2AdminPassword]$a2_admin_password"
+
+                  a2_token=$(cat $(Pipeline.Workspace)/variables/national-parks-validator/TF_OUTPUT_AUTOMATE | jq .a2_token.value -r )
+                  echo "##vso[task.setvariable variable=a2Token]$a2_token"
+
+                  a2_url=$(cat $(Pipeline.Workspace)/variables/national-parks-validator/TF_OUTPUT_AUTOMATE | jq .a2_url.value -r )
+                  echo "##vso[task.setvariable variable=a2Url]$a2_url"
+                  
+                  chef_automate_public_ip=$(cat $(Pipeline.Workspace)/variables/national-parks-validator/TF_OUTPUT_AUTOMATE | jq .chef_automate_public_ip.value -r )
+                  echo "##vso[task.setvariable variable=chefAutomatePublicIp]$chef_automate_public_ip"
+                  
+                  chef_automate_server_public_r53_dns=$(cat $(Pipeline.Workspace)/variables/national-parks-validator/TF_OUTPUT_AUTOMATE | jq .chef_automate_server_public_r53_dns.value -r )
+                  echo "##vso[task.setvariable variable=chefAutomateServerPublicR53Dns]$chef_automate_server_public_r53_dns"
+                  
+                  # Load National Parks Outputs
+                  haproxy_public_ip=$(cat $(Pipeline.Workspace)/variables/national-parks-validator/TF_OUTPUT_NATIONAL_PARKS | jq .haproxy_public_ip.value -r)
+                  echo "##vso[task.setvariable variable=haproxyPublicIp]$haproxy_public_ip"
+
+                  mongodb_public_ip=$(cat $(Pipeline.Workspace)/variables/national-parks-validator/TF_OUTPUT_NATIONAL_PARKS | jq .mongodb_public_ip.value -r)
+                  echo "##vso[task.setvariable variable=mongodbPublicIp]$mongodb_public_ip"
+
+                  national_parks_public_ip=$(cat $(Pipeline.Workspace)/variables/national-parks-validator/TF_OUTPUT_NATIONAL_PARKS | jq .national_parks_public_ip.value -r)
+                  echo "##vso[task.setvariable variable=nationalParksPublicIp]$national_parks_public_ip"
+
+                  permanent_peer_public_ip=$(cat $(Pipeline.Workspace)/variables/national-parks-validator/TF_OUTPUT_NATIONAL_PARKS | jq .permanent_peer_public_ip.value -r)
+                  echo "##vso[task.setvariable variable=permanentPeerPublicIp]$permanent_peer_public_ip"
+      displayName: "Terraform: Parse Outputs"
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+                  echo "a2_token: $(a2Token)" > $(Pipeline.Workspace)/variables/national-parks-validator/a2_input_variables.yml
+                  echo "a2_url: $(a2Url)" >> $(Pipeline.Workspace)/variables/national-parks-validator/a2_input_variables.yml
+      displayName: "Terraform: Store Outputs"
+
+    #  TODO: REMOVE THIS BLOCK
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+                  echo "a2AdminUser: $(a2AdminUser)"
+                  echo "a2AdminPassword: $(a2AdminPassword)"
+                  echo "a2Token: $(a2Token)"
+                  echo "a2Url: $(a2Url)"
+                  echo "chefAutomatePublicIp: $(chefAutomatePublicIp)"
+                  echo "chefAutomateServerPublicR53Dns: $(chefAutomateServerPublicR53Dns)"
+                  echo "haproxyPublicIp: $(haproxyPublicIp)"
+                  echo "mongodbPublicIp: $(mongodbPublicIp)"
+                  echo "nationalParksPublicIp: $(nationalParksPublicIp)"
+                  echo "permanentPeerPublicIp: $(permanentPeerPublicIp)"
+      displayName: "Terraform: Read Outputs"
+    
+    - task: vsts-chef-task-exec-inspec@1
+      continueOnError: true
+      inputs:
+        inspecProfilePath: '$(System.DefaultWorkingDirectory)/pipeline/inspec-tests'
+        inspecArguments: 'webserver --key-files $(awsInstanceKey.secureFilePath) --target ssh://centos@$(nationalParksPublicIp) --chef-license=accept'
+        inspecResultsFile: '$(System.DefaultWorkingDirectory)/TEST-webserver.xml'
+      displayName: "InSpec: Exec Webserver Tests"
+    
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: '**/TEST-webserver.xml'
+        testRunTitle: 'Web Server'
+      displayName: "InSpec: Publish Webserver Test Results"
+
+    - task: vsts-chef-task-exec-inspec@1
+      continueOnError: true
+      inputs:
+        inspecProfilePath: '$(System.DefaultWorkingDirectory)/pipeline/inspec-tests'
+        inspecArguments: 'haproxy --key-files $(awsInstanceKey.secureFilePath) --target ssh://centos@$(haproxyPublicIp) --chef-license=accept'
+        inspecResultsFile: '$(System.DefaultWorkingDirectory)/TEST-haproxy.xml'
+      displayName: "InSpec: Exec HAProxy Tests"
+    
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: '**/TEST-haproxy.xml'
+        testRunTitle: 'HAProxy'
+      displayName: "InSpec: Publish HAProxy Test Results"
+
+    - task: vsts-chef-task-exec-inspec@1
+      continueOnError: true
+      inputs:
+        inspecProfilePath: '$(System.DefaultWorkingDirectory)/pipeline/inspec-tests'
+        inspecArguments: 'automate --key-files $(awsInstanceKey.secureFilePath) --target ssh://ubuntu@$(chefAutomatePublicIp) --input-file $(Pipeline.Workspace)/variables/national-parks-validator/a2_input_variables.yml --chef-license=accept'
+        inspecResultsFile: '$(System.DefaultWorkingDirectory)/TEST-automate.xml'
+      displayName: "InSpec: Exec Automate Tests"
+    
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: '**/TEST-automate.xml'
+        testRunTitle: 'Automate'
+      displayName: "InSpec: Publish Automate Test Results"
+    
+
+### STAGE 4 Clean Up
+- stage: Clean_Up
+  displayName: "Clean Up"
+  dependsOn: Test
+  condition: eq(variables.run40CleanUp, true)
+  jobs:
+  - job: Clean_Up_Automate
+    dependsOn: Clean_Up_National_Parks
+    displayName: "Clean Up Automate"
+    
+    steps:
+    - template: templates/agent-setup.yml
+    
+    - task: DownloadSecureFile@1
+      name: tfAutomateVarsFile
+      inputs:
+        secureFile: 'automate-pipeline.tfvars'
+      displayName: "Download: automate-pipeline.tfvars"
+    
+    - task: DownloadSecureFile@1
+      name: awsInstanceKey
+      inputs:
+        secureFile: 'demo-validator-us-east-1.pem'
+      displayName: "Download: AWS Instance Key"
+
+    - task: TerraformTaskV1@0
+      inputs:
+        provider: 'aws'
+        command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/chef-automate/aws'
+        backendServiceAWS: 'AWS-ADO-Pipeline'
+        backendAWSBucketName: '$(bucketName)'
+        backendAWSKey: '$(keyAutomate)'
+      displayName: "Terraform: Init"
+
+    - task: TerraformTaskV1@0
+      inputs:
+        provider: 'aws'
+        command: 'destroy'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/chef-automate/aws'
+        commandOptions: '-var-file=$(tfAutomateVarsFile.secureFilePath) -var "aws_key_pair_file=$(awsInstanceKey.secureFilePath)"'
+        environmentServiceNameAWS: 'AWS-ADO-Pipeline'
+      displayName: "Terraform: Destroy"
+
+  - job: Clean_Up_National_Parks
+    displayName: "Clean Up National Parks"
+    
+    steps:
+    
+    - template: templates/agent-setup.yml
+    
+    - task: DownloadSecureFile@1
+      name: tfNatParksVarsFile
+      inputs:
+        secureFile: 'nat-parks-pipeline.tfvars'
+      displayName: "Download: nat-parks-pipeline.tfvars"
+    
+    - task: DownloadSecureFile@1
+      name: awsInstanceKey
+      inputs:
+        secureFile: 'demo-validator-us-east-1.pem'
+      displayName: "Download: AWS Instance Key"
+
+    - task: TerraformTaskV1@0
+      displayName: "Terraform: Init"
+      inputs:
+        provider: 'aws'
+        command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
+        backendServiceAWS: 'AWS-ADO-Pipeline'
+        backendAWSBucketName: '$(bucketName)'
+        backendAWSKey: '$(keyNationalParks)'
+
+    - task: TerraformTaskV1@0
+      inputs:
+        provider: 'aws'
+        command: 'destroy'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/aws'
+        commandOptions: '-var-file=$(tfNatParksVarsFile.secureFilePath) -var "aws_key_pair_file=$(awsInstanceKey.secureFilePath)"'
+        environmentServiceNameAWS: 'AWS-ADO-Pipeline'
+      displayName: "Terraform: Destroy"
