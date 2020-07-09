@@ -72,7 +72,7 @@ stages:
       displayName: "Habitat: Expose Build Variables"
 
     - publish: $(System.DefaultWorkingDirectory)/results
-      artifact: hart
+      artifact: red_hart
       displayName: "Publish Artifact"
 
     - script: |
@@ -395,7 +395,7 @@ stages:
       displayName: "Habitat: Expose Build Variables"
 
     - publish: $(System.DefaultWorkingDirectory)/results
-      artifact: hart
+      artifact: blue_hart
       displayName: "Publish Artifact"
 
     - script: |
