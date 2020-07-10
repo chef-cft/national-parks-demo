@@ -152,7 +152,8 @@ stages:
 
   - job: Build_Red
     displayName: "Build Red"
-    
+    condition: eq(variables.runBuild, true)
+
     steps:
     - template: templates/agent-setup.yml
 
@@ -276,6 +277,7 @@ stages:
   - job: Build_Blue
     displayName: "Build Blue"
     dependsOn: Test_Red
+    condition: eq(variables.runBuild, true)
 
     steps:
     - template: templates/agent-setup.yml
