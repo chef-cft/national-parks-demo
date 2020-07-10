@@ -159,8 +159,8 @@ stages:
     nationalParksPublicIp: null
     permanentPeerPublicIp: null
   jobs:
-  - job: Pull_Down_Variables
-    displayName: "Pull Down Variables"
+  - job: Pull_Variables
+    displayName: "Pull Variables"
 
     steps:
     - template: templates/agent-setup.yml
@@ -172,40 +172,41 @@ stages:
       displayName: "Download: AWS Instance Key"
 
     - task: Bash@3
-      inputs:
+      name: parse_outputs
+      inputs:  
         targetType: 'inline'
         script: |
                   # Load Automate Outputs
                   a2_admin=$(cat $(Pipeline.Workspace)/variables/national-parks-validator/TF_OUTPUT_AUTOMATE | jq .a2_admin.value -r )
-                  echo "##vso[task.setvariable variable=a2AdminUser]$a2_admin"
+                  echo "##vso[task.setvariable variable=a2AdminUser;isOutput=true]$a2_admin"
 
                   a2_admin_password=$(cat $(Pipeline.Workspace)/variables/national-parks-validator/TF_OUTPUT_AUTOMATE | jq .a2_admin_password.value -r )
-                  echo "##vso[task.setvariable variable=a2AdminPassword]$a2_admin_password"
+                  echo "##vso[task.setvariable variable=a2AdminPassword;isOutput=true]$a2_admin_password"
 
                   a2_token=$(cat $(Pipeline.Workspace)/variables/national-parks-validator/TF_OUTPUT_AUTOMATE | jq .a2_token.value -r )
-                  echo "##vso[task.setvariable variable=a2Token]$a2_token"
+                  echo "##vso[task.setvariable variable=a2Token;isOutput=true]$a2_token"
 
                   a2_url=$(cat $(Pipeline.Workspace)/variables/national-parks-validator/TF_OUTPUT_AUTOMATE | jq .a2_url.value -r )
-                  echo "##vso[task.setvariable variable=a2Url]$a2_url"
+                  echo "##vso[task.setvariable variable=a2Url;isOutput=true]$a2_url"
                   
                   chef_automate_public_ip=$(cat $(Pipeline.Workspace)/variables/national-parks-validator/TF_OUTPUT_AUTOMATE | jq .chef_automate_public_ip.value -r )
-                  echo "##vso[task.setvariable variable=chefAutomatePublicIp]$chef_automate_public_ip"
+                  echo "##vso[task.setvariable variable=chefAutomatePublicIp;isOutput=true]$chef_automate_public_ip"
                   
                   chef_automate_server_public_r53_dns=$(cat $(Pipeline.Workspace)/variables/national-parks-validator/TF_OUTPUT_AUTOMATE | jq .chef_automate_server_public_r53_dns.value -r )
-                  echo "##vso[task.setvariable variable=chefAutomateServerPublicR53Dns]$chef_automate_server_public_r53_dns"
+                  echo "##vso[task.setvariable variable=chefAutomateServerPublicR53Dns;isOutput=true]$chef_automate_server_public_r53_dns"
                   
                   # Load National Parks Outputs
                   haproxy_public_ip=$(cat $(Pipeline.Workspace)/variables/national-parks-validator/TF_OUTPUT_NATIONAL_PARKS | jq .haproxy_public_ip.value -r)
-                  echo "##vso[task.setvariable variable=haproxyPublicIp]$haproxy_public_ip"
+                  echo "##vso[task.setvariable variable=haproxyPublicIp;isOutput=true]$haproxy_public_ip"
 
                   mongodb_public_ip=$(cat $(Pipeline.Workspace)/variables/national-parks-validator/TF_OUTPUT_NATIONAL_PARKS | jq .mongodb_public_ip.value -r)
-                  echo "##vso[task.setvariable variable=mongodbPublicIp]$mongodb_public_ip"
+                  echo "##vso[task.setvariable variable=mongodbPublicIp;isOutput=true]$mongodb_public_ip"
 
                   national_parks_public_ip=$(cat $(Pipeline.Workspace)/variables/national-parks-validator/TF_OUTPUT_NATIONAL_PARKS | jq .national_parks_public_ip.value -r)
-                  echo "##vso[task.setvariable variable=nationalParksPublicIp]$national_parks_public_ip"
+                  echo "##vso[task.setvariable variable=nationalParksPublicIp;isOutput=true]$national_parks_public_ip"
 
                   permanent_peer_public_ip=$(cat $(Pipeline.Workspace)/variables/national-parks-validator/TF_OUTPUT_NATIONAL_PARKS | jq .permanent_peer_public_ip.value -r)
-                  echo "##vso[task.setvariable variable=permanentPeerPublicIp]$permanent_peer_public_ip"
+                  echo "##vso[task.setvariable variable=permanentPeerPublicIp;isOutput=true]$permanent_peer_public_ip"
       displayName: "Terraform: Parse Outputs"
     - task: Bash@3
       inputs:
@@ -234,7 +235,18 @@ stages:
 
   - job: Build_Red
     displayName: "Build Red"
-    dependsOn: Pull_Down_Variables
+    dependsOn: Pull_Variables
+    variables:
+      a2AdminUser: $[ dependencies.Pull_Variables.outputs['parse_outputs.a2AdminUser'] ]
+      a2AdminPassword: $[ dependencies.Pull_Variables.outputs['parse_outputs.a2AdminPassword'] ]
+      a2Token: $[ dependencies.Pull_Variables.outputs['parse_outputs.a2Token'] ]
+      a2Url: $[ dependencies.Pull_Variables.outputs['parse_outputs.a2Url'] ]
+      chefAutomatePublicIp: $[ dependencies.Pull_Variables.outputs['parse_outputs.chefAutomatePublicIp'] ]
+      chefAutomateServerPublicR53Dns: $[ dependencies.Pull_Variables.outputs['parse_outputs.chefAutomateServerPublicR53Dns'] ]
+      haproxyPublicIp: $[ dependencies.Pull_Variables.outputs['parse_outputs.haproxyPublicIp'] ]
+      mongodbPublicIp: $[ dependencies.Pull_Variables.outputs['parse_outputs.mongodbPublicIp'] ]
+      nationalParksPublicIp: $[ dependencies.Pull_Variables.outputs['parse_outputs.nationalParksPublicIp'] ]
+      permanentPeerPublicIp: $[ dependencies.Pull_Variables.outputs['parse_outputs.permanentPeerPublicIp'] ]
     
     steps:
     - template: templates/agent-setup.yml
@@ -287,8 +299,19 @@ stages:
       displayName: "Habitat: Package Upload"
     
   - job: Test_Red
-    displayName: "InSpec Test Red"
+    displayName: "Test Red"
     dependsOn: Build_Red
+    variables:
+      a2AdminUser: $[ dependencies.Pull_Variables.outputs['parse_outputs.a2AdminUser'] ]
+      a2AdminPassword: $[ dependencies.Pull_Variables.outputs['parse_outputs.a2AdminPassword'] ]
+      a2Token: $[ dependencies.Pull_Variables.outputs['parse_outputs.a2Token'] ]
+      a2Url: $[ dependencies.Pull_Variables.outputs['parse_outputs.a2Url'] ]
+      chefAutomatePublicIp: $[ dependencies.Pull_Variables.outputs['parse_outputs.chefAutomatePublicIp'] ]
+      chefAutomateServerPublicR53Dns: $[ dependencies.Pull_Variables.outputs['parse_outputs.chefAutomateServerPublicR53Dns'] ]
+      haproxyPublicIp: $[ dependencies.Pull_Variables.outputs['parse_outputs.haproxyPublicIp'] ]
+      mongodbPublicIp: $[ dependencies.Pull_Variables.outputs['parse_outputs.mongodbPublicIp'] ]
+      nationalParksPublicIp: $[ dependencies.Pull_Variables.outputs['parse_outputs.nationalParksPublicIp'] ]
+      permanentPeerPublicIp: $[ dependencies.Pull_Variables.outputs['parse_outputs.permanentPeerPublicIp'] ]
 
     steps:
     - template: templates/agent-setup.yml
@@ -347,6 +370,17 @@ stages:
   - job: Build_Blue
     displayName: "Build Blue"
     dependsOn: Test_Red
+    variables:
+      a2AdminUser: $[ dependencies.Pull_Variables.outputs['parse_outputs.a2AdminUser'] ]
+      a2AdminPassword: $[ dependencies.Pull_Variables.outputs['parse_outputs.a2AdminPassword'] ]
+      a2Token: $[ dependencies.Pull_Variables.outputs['parse_outputs.a2Token'] ]
+      a2Url: $[ dependencies.Pull_Variables.outputs['parse_outputs.a2Url'] ]
+      chefAutomatePublicIp: $[ dependencies.Pull_Variables.outputs['parse_outputs.chefAutomatePublicIp'] ]
+      chefAutomateServerPublicR53Dns: $[ dependencies.Pull_Variables.outputs['parse_outputs.chefAutomateServerPublicR53Dns'] ]
+      haproxyPublicIp: $[ dependencies.Pull_Variables.outputs['parse_outputs.haproxyPublicIp'] ]
+      mongodbPublicIp: $[ dependencies.Pull_Variables.outputs['parse_outputs.mongodbPublicIp'] ]
+      nationalParksPublicIp: $[ dependencies.Pull_Variables.outputs['parse_outputs.nationalParksPublicIp'] ]
+      permanentPeerPublicIp: $[ dependencies.Pull_Variables.outputs['parse_outputs.permanentPeerPublicIp'] ]
 
     steps:
     - template: templates/agent-setup.yml
@@ -409,8 +443,19 @@ stages:
       displayName: "Habitat: Package Upload"
   
   - job: Test_Blue
-    displayName: "InSpec Testing Blue"
+    displayName: "Test Blue"
     dependsOn: Build_Blue
+    variables:
+      a2AdminUser: $[ dependencies.Pull_Variables.outputs['parse_outputs.a2AdminUser'] ]
+      a2AdminPassword: $[ dependencies.Pull_Variables.outputs['parse_outputs.a2AdminPassword'] ]
+      a2Token: $[ dependencies.Pull_Variables.outputs['parse_outputs.a2Token'] ]
+      a2Url: $[ dependencies.Pull_Variables.outputs['parse_outputs.a2Url'] ]
+      chefAutomatePublicIp: $[ dependencies.Pull_Variables.outputs['parse_outputs.chefAutomatePublicIp'] ]
+      chefAutomateServerPublicR53Dns: $[ dependencies.Pull_Variables.outputs['parse_outputs.chefAutomateServerPublicR53Dns'] ]
+      haproxyPublicIp: $[ dependencies.Pull_Variables.outputs['parse_outputs.haproxyPublicIp'] ]
+      mongodbPublicIp: $[ dependencies.Pull_Variables.outputs['parse_outputs.mongodbPublicIp'] ]
+      nationalParksPublicIp: $[ dependencies.Pull_Variables.outputs['parse_outputs.nationalParksPublicIp'] ]
+      permanentPeerPublicIp: $[ dependencies.Pull_Variables.outputs['parse_outputs.permanentPeerPublicIp'] ]
 
     steps:
     - template: templates/agent-setup.yml
