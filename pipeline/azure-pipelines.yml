@@ -468,7 +468,7 @@ stages:
 - stage: Clean_Up
   displayName: "Clean Up"
   dependsOn: Test_Blue
-  condition: eq(variables.run40CleanUp, true)
+  condition: eq(variables.run30CleanUp, true)
   jobs:
   - job: Clean_Up_Automate
     dependsOn: Clean_Up_National_Parks
