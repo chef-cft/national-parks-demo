@@ -467,7 +467,7 @@ stages:
 ### STAGE 4 Clean Up
 - stage: Clean_Up
   displayName: "Clean Up"
-  dependsOn: Test_Blue
+  dependsOn: Demo
   condition: eq(variables.run30CleanUp, true)
   jobs:
   - job: Clean_Up_Automate
