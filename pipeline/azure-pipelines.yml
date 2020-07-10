@@ -147,7 +147,17 @@ stages:
   displayName: "Demo" 
   condition: eq(variables.run20Demo, true)
   dependsOn: Deploy
-
+  variables:
+    a2AdminUser: null
+    a2AdminPassword: null
+    a2Token: null
+    a2Url: null
+    chefAutomatePublicIp: null
+    chefAutomateServerPublicR53Dns: null
+    haproxyPublicIp: null
+    mongodbPublicIp: null
+    nationalParksPublicIp: null
+    permanentPeerPublicIp: null
   jobs:
   - job: Pull_Variables
     displayName: "Pull Variables"
