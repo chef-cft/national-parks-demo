@@ -163,13 +163,12 @@ stages:
                   sudo cp $(System.DefaultWorkingDirectory)/red-index.html $(System.DefaultWorkingDirectory)/src/main/webapp/index.html
       displayName: "Copy Red Pins"
     
-    - task: Bash@3
-      inputs:
-        targetType: 'inline'
-        script: |
-                  sudo sed -i 's/pkg_version=.*/pkg_version=10.0' $(System.DefaultWorkingDirectory)/habitat/plan.sh
-                  # sudo cp $(System.DefaultWorkingDirectory)/pipeline/plan-patch.sh $(System.DefaultWorkingDirectory)/habitat/plan.sh 
-      displayName: "Incremented Pkg Version"
+    # - task: Bash@3
+    #   inputs:
+    #     targetType: 'inline'
+    #     script: |
+    #               sudo sed -i 's/pkg_version=.*/pkg_version=10.0' $(System.DefaultWorkingDirectory)/habitat/plan.sh
+    #   displayName: "Incremented Pkg Version"
 
     - task: vsts-habitat-signing-key@3
       inputs:
@@ -299,8 +298,8 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-                  sudo sed -i 's/pkg_version=.*/pkg_version=11.0' $(System.DefaultWorkingDirectory)/habitat/plan.sh
-                  # sudo cp $(System.DefaultWorkingDirectory)/pipeline/plan-patch.sh $(System.DefaultWorkingDirectory)/habitat/plan.sh 
+                  # sudo sed -i 's/pkg_version=.*/pkg_version=11.0' $(System.DefaultWorkingDirectory)/habitat/plan.sh
+                  sudo cp $(System.DefaultWorkingDirectory)/pipeline/plan-patch.sh $(System.DefaultWorkingDirectory)/habitat/plan.sh 
       displayName: "Incremented Pkg Version"
 
 
