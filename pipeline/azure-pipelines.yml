@@ -232,8 +232,9 @@ stages:
                   echo "permanentPeerPublicIp: $(permanentPeerPublicIp)"
       displayName: "Terraform: Read Outputs"
 
-  - job: Build_National_Parks_Red
-    displayName: "Build National Parks Red"
+  - job: Build_Red
+    displayName: "Build Red"
+    dependsOn: Pull_Down_Variables
     
     steps:
     - template: templates/agent-setup.yml
@@ -285,8 +286,9 @@ stages:
         HAB_LICENSE: accept-no-persist
       displayName: "Habitat: Package Upload"
     
-  - job: Test_National_Parks_Red
+  - job: Test_Red
     displayName: "InSpec Test Red"
+    dependsOn: Build_Red
 
     steps:
     - template: templates/agent-setup.yml
@@ -342,8 +344,9 @@ stages:
         testRunTitle: 'Automate'
       displayName: "InSpec: Publish Automate Test Results"
 
-  - job: Build_National_Parks
-    displayName: "Build National Parks"
+  - job: Build_Blue
+    displayName: "Build Blue"
+    dependsOn: Test_Red
 
     steps:
     - template: templates/agent-setup.yml
@@ -405,8 +408,9 @@ stages:
         HAB_LICENSE: accept-no-persist
       displayName: "Habitat: Package Upload"
   
-  - job: Test_National_Parks_Blue
+  - job: Test_Blue
     displayName: "InSpec Testing Blue"
+    dependsOn: Build_Blue
 
     steps:
     - template: templates/agent-setup.yml
