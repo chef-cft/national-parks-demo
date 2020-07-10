@@ -177,6 +177,7 @@ stages:
         targetType: 'inline'
         script: |
                   # Load Automate Outputs
+                  echo $(cat $(Pipeline.Workspace)/variables/national-parks-validator/TF_OUTPUT_AUTOMATE | jq)
                   a2_admin=$(cat $(Pipeline.Workspace)/variables/national-parks-validator/TF_OUTPUT_AUTOMATE | jq .a2_admin.value -r )
                   echo "##vso[task.setvariable variable=a2AdminUser;isOutput=true]$a2_admin"
 
