@@ -38,7 +38,7 @@ end
 a2_token = input('a2_token')
 a2_url = input('a2_url')
 describe http("#{a2_url}/api/v0/applications/service-groups", 
-  method: 'GET'
+  method: 'GET',
   headers: { 'api-token' => a2_token }, 
   open_timeout: 60, 
   read_timeout: 60, 
@@ -51,7 +51,7 @@ end
 a2_admin_token = input('a2_admin_token')
 a2_url = input('a2_url')
 describe http("#{a2_url}/api/v0/applications/service-groups", 
-  method: 'GET'
+  method: 'GET',
   headers: { 'api-token' => a2_admin_token }, 
   open_timeout: 60, 
   read_timeout: 60, 

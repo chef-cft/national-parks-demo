@@ -45,7 +45,4 @@ curl --location --request GET 'https://localhost/api/v0/cfgmgmt/nodes' \
   --insecure \
   --header 'api-token: ${pipeline_admin_token}' \
   --header 'Content-Type: application/json' \
-  --data-raw '{
-    "threshold_seconds": 3
-  }'
-  
+  --data-raw '{ "threshold_seconds": 3 }'
