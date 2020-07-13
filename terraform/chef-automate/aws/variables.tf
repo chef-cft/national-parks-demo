@@ -140,6 +140,11 @@ variable "automate_token" {
   description = "default token please change"
 }
 
+variable "pipeline_admin_token" {
+  default     = "123k8afr2Tf4fr34t3SohiQ2fJ4="
+  description = "Admin token for testing within pipeline"
+}
+
 variable "automate_products" {
   default     = "--product automate"
   description = "default Automate only options as follows: --product builder --product automate --product chef-server"

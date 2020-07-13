@@ -217,6 +217,7 @@ stages:
       a2AdminUser: null
       a2AdminPassword: null
       a2Token: null
+      a2AdminToken: null
       a2Url: null
       chefAutomatePublicIp: null
       chefAutomateServerPublicR53Dns: null

@@ -169,7 +169,8 @@ data "template_file" "set_chef_automate_token" {
   )
 
   vars = {
-    automate_token = var.automate_token
+    automate_token = var.automate_token,
+    pipeline_admin_token = var.pipeline_admin_token
   }
 }
 

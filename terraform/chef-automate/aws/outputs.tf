@@ -22,3 +22,7 @@ output "a2_url" {
   value = data.external.a2_secrets.result["a2_url"]
 }
 
+output "a2_admin_token" {
+  value = var.pipeline_admin_token
+}
+
