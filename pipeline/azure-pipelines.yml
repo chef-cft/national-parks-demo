@@ -192,9 +192,9 @@ stages:
         habitatImageNamesFilename: '$(System.DefaultWorkingDirectory)/image.names'
       displayName: "Habitat: Expose Build Variables"
 
-    - publish: $(System.DefaultWorkingDirectory)/results
-      artifact: red_hart
-      displayName: "Publish Artifact"
+    # - publish: $(System.DefaultWorkingDirectory)/results
+    #   artifact: red_hart
+    #   displayName: "Publish Artifact"
 
     - script: |
               source $(System.DefaultWorkingDirectory)/results/last_build.env
@@ -327,9 +327,9 @@ stages:
         habitatImageNamesFilename: '$(System.DefaultWorkingDirectory)/image.names'
       displayName: "Habitat: Expose Build Variables"
 
-    - publish: $(System.DefaultWorkingDirectory)/results
-      artifact: blue_hart
-      displayName: "Publish Artifact"
+    # - publish: $(System.DefaultWorkingDirectory)/results
+    #   artifact: blue_hart
+    #   displayName: "Publish Artifact"
 
     - script: |
               source $(System.DefaultWorkingDirectory)/results/last_build.env
