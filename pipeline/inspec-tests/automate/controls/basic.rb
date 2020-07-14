@@ -50,7 +50,7 @@ end
 
 a2_admin_token = input('a2_admin_token')
 a2_url = input('a2_url')
-describe http("#{a2_url}/api/v0/applications/service-groups", 
+describe http("#{a2_url}/api/v0/cfgmgmt/nodes/api/v0/cfgmgmt/nodes", 
   method: 'GET',
   headers: { 'api-token' => a2_admin_token }, 
   open_timeout: 60, 
@@ -58,5 +58,4 @@ describe http("#{a2_url}/api/v0/applications/service-groups",
   ssl_verify: true, 
   max_redirects: 5 ) do
   its('status') { should eq 200 }
-  # its('body') { should include 'token:national-parks' }
 end
