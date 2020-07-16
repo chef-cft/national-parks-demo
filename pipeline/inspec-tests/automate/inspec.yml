@@ -9,10 +9,6 @@ version: 0.1.0
 supports:
   platform: os
 
-inputs:
-- name: a2_url
-  description: a2_url from terraform
-  type: string
-- name: a2_token
-  description: a2_token generated from terraform
-  type: string
+depends:
+  - name: a2-resource-pack
+    path: ../a2-resource-pack
