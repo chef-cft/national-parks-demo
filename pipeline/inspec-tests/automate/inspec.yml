@@ -8,7 +8,3 @@ summary: An InSpec Compliance Profile
 version: 0.1.0
 supports:
   platform: os
-
-depends:
-  - name: a2-resource-pack
-    path: ../a2-resource-pack
