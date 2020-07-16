@@ -3,3 +3,4 @@
     [event_gateway.v1.sys]
       [event_gateway.v1.sys.service]
         disable_frontend_tls = ${disable_event_tls}
+upgrade_strategy = "none"
