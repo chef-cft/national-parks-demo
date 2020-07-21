@@ -78,7 +78,7 @@ variable "hab_install_opts" {
 }
 
 variable "test_instance_type" {
-  default = "t2.micro"
+  default = "t3.micro"
 }
 
 variable "dev_channel" {
