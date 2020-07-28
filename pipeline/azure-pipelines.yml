@@ -169,6 +169,7 @@ stages:
         script: |
                   VERSION="RED-$(Build.BuildNumber)"
                   sudo sed -i "s/^\(pkg_version\s*=\s*\).*$/\\1\"$VERSION\"/" $(System.DefaultWorkingDirectory)/habitat/plan.sh
+                  cat $(System.DefaultWorkingDirectory)/habitat/plan.sh
       displayName: "Incremented Pkg Version"
     
     - task: vsts-habitat-signing-key@3
@@ -302,6 +303,7 @@ stages:
         script: |
                   VERSION="BLUE-$(Build.BuildNumber)"
                   sudo sed -i "s/^\(pkg_version\s*=\s*\).*$/\\1\"$VERSION\"/" $(System.DefaultWorkingDirectory)/habitat/plan.sh
+                  cat $(System.DefaultWorkingDirectory)/habitat/plan.sh
       displayName: "Incremented Pkg Version"
 
 
