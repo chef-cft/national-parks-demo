@@ -17,7 +17,7 @@ pkg_exposes=(port)
 
 do_prepare()
 {
-    export JAVA_HOME=$(hab pkg path core/corretto)
+    export JAVA_HOME=$(hab pkg path core/corretto/11.0.2.9.3)
 }
 
 do_build()
