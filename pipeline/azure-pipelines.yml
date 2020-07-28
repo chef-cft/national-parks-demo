@@ -257,7 +257,7 @@ stages:
       continueOnError: true
       inputs:
         inspecProfilePath: '$(System.DefaultWorkingDirectory)/pipeline/inspec-tests'
-        inspecArguments: 'haproxy --key-files $(awsInstanceKey.secureFilePath) --target ssh://centos@$(haproxyPublicIp) --chef-license=accept'
+        inspecArguments: 'haproxy --key-files $(awsInstanceKey.secureFilePath) --target ssh://centos@$(haproxyPublicIp) --chef-license=accept --input color=RED'
         inspecResultsFile: '$(System.DefaultWorkingDirectory)/TEST-haproxy.xml'
       displayName: "InSpec: Exec HAProxy Tests"
     
@@ -393,7 +393,7 @@ stages:
       continueOnError: true
       inputs:
         inspecProfilePath: '$(System.DefaultWorkingDirectory)/pipeline/inspec-tests'
-        inspecArguments: 'haproxy --key-files $(awsInstanceKey.secureFilePath) --target ssh://centos@$(haproxyPublicIp) --chef-license=accept'
+        inspecArguments: 'haproxy --key-files $(awsInstanceKey.secureFilePath) --target ssh://centos@$(haproxyPublicIp) --chef-license=accept --input color=BLUE'
         inspecResultsFile: '$(System.DefaultWorkingDirectory)/TEST-haproxy.xml'
       displayName: "InSpec: Exec HAProxy Tests"
     
