@@ -29,7 +29,7 @@ control "webpage-1.0" do
   impact 1.0                       
   title "Web page contains content"
   desc "Web page contains content"
-  describe http('http://localhost:8080/national-parks/') do
+  describe http('http://localhost:8085/national-parks/') do
     its('status') { should cmp 200 }
     its('body') { should include "#{pin_color} ICON" }
   end
