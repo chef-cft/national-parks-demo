@@ -149,6 +149,60 @@ stages:
   dependsOn: Deploy
 
   jobs:
+  - job: Test_Automate
+    displayName: "Test Automate"
+    variables:
+      a2AdminUser: null
+      a2AdminPassword: null
+      a2Token: null
+      a2AdminToken: null
+      a2Url: null
+      chefAutomatePublicIp: null
+      chefAutomateServerPublicR53Dns: null
+      haproxyPublicIp: null
+      mongodbPublicIp: null
+      nationalParksPublicIp: null
+      permanentPeerPublicIp: null
+
+    steps:
+    - template: templates/agent-setup.yml
+    - template: templates/load-tf-outputs.yml
+    
+    - task: DownloadSecureFile@1
+      name: awsInstanceKey
+      inputs:
+        secureFile: 'demo-validator-us-east-1.pem'
+      displayName: "Download: AWS Instance Key"
+    
+    - task: vsts-chef-task-exec-inspec@1
+      continueOnError: true
+      inputs:
+        inspecProfilePath: '$(System.DefaultWorkingDirectory)/pipeline/inspec-tests'
+        inspecArguments: 'automate --key-files $(awsInstanceKey.secureFilePath) --target ssh://ubuntu@$(chefAutomatePublicIp) --input-file $(Pipeline.Workspace)/variables/national-parks-validator/a2_input_variables.yml --chef-license=accept'
+        inspecResultsFile: '$(System.DefaultWorkingDirectory)/TEST-automate.xml'
+      displayName: "InSpec: Exec Automate Tests"
+    
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: '**/TEST-automate.xml'
+        testRunTitle: 'Automate'
+      displayName: "InSpec: Publish Automate Test Results"
+    
+    - task: vsts-chef-task-exec-inspec@1
+      continueOnError: true
+      inputs:
+        inspecProfilePath: '$(System.DefaultWorkingDirectory)/pipeline/inspec-tests'
+        inspecArguments: 'api --input-file $(Pipeline.Workspace)/variables/national-parks-validator/a2_input_variables.yml --chef-license=accept'
+        inspecResultsFile: '$(System.DefaultWorkingDirectory)/TEST-api.xml'
+      displayName: "InSpec: Exec Automate Tests"
+    
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: '**/TEST-api.xml'
+        testRunTitle: 'API'
+      displayName: "InSpec: Publish API Test Results"
 
   - job: Build_Red
     displayName: "Build Red"
@@ -211,7 +265,7 @@ stages:
       env:
         HAB_LICENSE: accept-no-persist
       displayName: "Habitat: Package Upload"
-    
+  
   - job: Test_Red
     displayName: "Test Red"
     dependsOn: Build_Red
@@ -267,21 +321,6 @@ stages:
         testResultsFiles: '**/TEST-haproxy.xml'
         testRunTitle: 'HAProxy'
       displayName: "InSpec: Publish HAProxy Test Results"
-
-    - task: vsts-chef-task-exec-inspec@1
-      continueOnError: true
-      inputs:
-        inspecProfilePath: '$(System.DefaultWorkingDirectory)/pipeline/inspec-tests'
-        inspecArguments: 'automate --key-files $(awsInstanceKey.secureFilePath) --target ssh://ubuntu@$(chefAutomatePublicIp) --input-file $(Pipeline.Workspace)/variables/national-parks-validator/a2_input_variables.yml --chef-license=accept'
-        inspecResultsFile: '$(System.DefaultWorkingDirectory)/TEST-automate.xml'
-      displayName: "InSpec: Exec Automate Tests"
-    
-    - task: PublishTestResults@2
-      inputs:
-        testResultsFormat: 'JUnit'
-        testResultsFiles: '**/TEST-automate.xml'
-        testRunTitle: 'Automate'
-      displayName: "InSpec: Publish Automate Test Results"
 
   - job: Build_Blue
     displayName: "Build Blue"
@@ -403,21 +442,6 @@ stages:
         testResultsFiles: '**/TEST-haproxy.xml'
         testRunTitle: 'HAProxy'
       displayName: "InSpec: Publish HAProxy Test Results"
-
-    - task: vsts-chef-task-exec-inspec@1
-      continueOnError: true
-      inputs:
-        inspecProfilePath: '$(System.DefaultWorkingDirectory)/pipeline/inspec-tests'
-        inspecArguments: 'automate --key-files $(awsInstanceKey.secureFilePath) --target ssh://ubuntu@$(chefAutomatePublicIp) --input-file $(Pipeline.Workspace)/variables/national-parks-validator/a2_input_variables.yml --chef-license=accept'
-        inspecResultsFile: '$(System.DefaultWorkingDirectory)/TEST-automate.xml'
-      displayName: "InSpec: Exec Automate Tests"
-    
-    - task: PublishTestResults@2
-      inputs:
-        testResultsFormat: 'JUnit'
-        testResultsFiles: '**/TEST-automate.xml'
-        testRunTitle: 'Automate'
-      displayName: "InSpec: Publish Automate Test Results"
    
 
 
