@@ -210,7 +210,7 @@ resource "aws_instance" "national_parks" {
     inline = [
       "sudo rm -rf /etc/machine-id",
       "sudo systemd-machine-id-setup",
-      "sudo hostname national-parks-${var.node_count}",
+      "sudo hostname national-parks-${count.index}",
       "sudo groupadd hab",
       "sudo adduser hab -g hab",
       "chmod +x /tmp/install_hab.sh",
