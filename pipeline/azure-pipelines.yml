@@ -221,7 +221,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-                  VERSION="$(Build.BuildNumber).0"
+                  VERSION="$(Build.BuildId).0"
                   sudo sed -i "s/^\(pkg_version\s*=\s*\).*$/\\1\"$VERSION\"/" $(System.DefaultWorkingDirectory)/habitat/plan.sh
                   cat $(System.DefaultWorkingDirectory)/habitat/plan.sh
       displayName: "Incremented Pkg Version"
@@ -340,7 +340,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-                  VERSION="$(Build.BuildNumber).1"
+                  VERSION="$(Build.BuildId).1"
                   sudo sed -i "s/^\(pkg_version\s*=\s*\).*$/\\1\"$VERSION\"/" $(System.DefaultWorkingDirectory)/habitat/plan.sh
                   cat $(System.DefaultWorkingDirectory)/habitat/plan.sh
       displayName: "Incremented Pkg Version"
