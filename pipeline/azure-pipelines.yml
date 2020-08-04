@@ -195,7 +195,7 @@ stages:
         inspecProfilePath: '$(System.DefaultWorkingDirectory)/pipeline/inspec-tests'
         inspecArguments: 'api --input-file $(Pipeline.Workspace)/variables/national-parks-validator/a2_input_variables.yml --chef-license=accept'
         inspecResultsFile: '$(System.DefaultWorkingDirectory)/TEST-api.xml'
-      displayName: "InSpec: Exec Automate Tests"
+      displayName: "InSpec: Exec API Tests"
     
     - task: PublishTestResults@2
       inputs:
@@ -265,6 +265,13 @@ stages:
       env:
         HAB_LICENSE: accept-no-persist
       displayName: "Habitat: Package Upload"
+    
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+                  sleep 60
+      displayName: "Wait 60 Seconds"
   
   - job: Test_Red
     displayName: "Test Red"
@@ -385,6 +392,13 @@ stages:
       env:
         HAB_LICENSE: accept-no-persist
       displayName: "Habitat: Package Upload"
+    
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+                  sleep 60
+      displayName: "Wait 60 Seconds"
   
   - job: Test_Blue
     displayName: "Test Blue"
@@ -410,7 +424,7 @@ stages:
       inputs:
         secureFile: 'demo-validator-us-east-1.pem'
       displayName: "Download: AWS Instance Key"
-    
+        
     - task: vsts-chef-task-exec-inspec@1
       continueOnError: true
       inputs:
