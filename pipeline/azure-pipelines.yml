@@ -248,9 +248,6 @@ stages:
         habitatImageNamesFilename: '$(System.DefaultWorkingDirectory)/image.names'
       displayName: "Habitat: Expose Build Variables"
 
-    # - publish: $(System.DefaultWorkingDirectory)/results
-    #   artifact: red_hart
-    #   displayName: "Publish Artifact"
 
     - script: |
               source $(System.DefaultWorkingDirectory)/results/last_build.env
@@ -270,8 +267,8 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-                  sleep 60
-      displayName: "Wait 60 Seconds"
+                  sleep 180
+      displayName: "Wait 180 Seconds"
   
   - job: Test_Red
     displayName: "Test Red"
@@ -375,9 +372,6 @@ stages:
         habitatImageNamesFilename: '$(System.DefaultWorkingDirectory)/image.names'
       displayName: "Habitat: Expose Build Variables"
 
-    # - publish: $(System.DefaultWorkingDirectory)/results
-    #   artifact: blue_hart
-    #   displayName: "Publish Artifact"
 
     - script: |
               source $(System.DefaultWorkingDirectory)/results/last_build.env
@@ -397,8 +391,8 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-                  sleep 60
-      displayName: "Wait 60 Seconds"
+                  sleep 180
+      displayName: "Wait 180 Seconds"
   
   - job: Test_Blue
     displayName: "Test Blue"
