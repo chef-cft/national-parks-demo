@@ -31,6 +31,5 @@ control "webpage-1.0" do
   desc "Web page contains content"
   describe http('http://localhost:8085/national-parks/') do
     its('status') { should cmp 200 }
-    its('body') { should include "#{pin_color} ICON" }
   end
 end
