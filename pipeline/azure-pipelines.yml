@@ -176,14 +176,15 @@ stages:
       displayName: "Download: AWS Instance Key"
     
     - task: vsts-chef-task-exec-inspec@1
-      continueOnError: true
+      # continueOnError: true
       inputs:
         inspecProfilePath: '$(System.DefaultWorkingDirectory)/pipeline/inspec-tests'
         inspecArguments: 'automate --key-files $(awsInstanceKey.secureFilePath) --target ssh://ubuntu@$(chefAutomatePublicIp) --input-file $(Pipeline.Workspace)/variables/national-parks-validator/a2_input_variables.yml --chef-license=accept'
         inspecResultsFile: '$(System.DefaultWorkingDirectory)/TEST-automate.xml'
       displayName: "InSpec: Exec Automate Tests"
-    
+     
     - task: PublishTestResults@2
+      condition: always()
       inputs:
         testResultsFormat: 'JUnit'
         testResultsFiles: '**/TEST-automate.xml'
@@ -191,7 +192,7 @@ stages:
       displayName: "InSpec: Publish Automate Test Results"
     
     - task: vsts-chef-task-exec-inspec@1
-      continueOnError: true
+      # continueOnError: true
       inputs:
         inspecProfilePath: '$(System.DefaultWorkingDirectory)/pipeline/inspec-tests'
         inspecArguments: 'api --input-file $(Pipeline.Workspace)/variables/national-parks-validator/a2_input_variables.yml --chef-license=accept'
@@ -199,6 +200,7 @@ stages:
       displayName: "InSpec: Exec API Tests"
     
     - task: PublishTestResults@2
+      condition: always()
       inputs:
         testResultsFormat: 'JUnit'
         testResultsFiles: '**/TEST-api.xml'
@@ -298,7 +300,7 @@ stages:
       displayName: "Download: AWS Instance Key"
     
     - task: vsts-chef-task-exec-inspec@1
-      continueOnError: true
+      # continueOnError: true
       inputs:
         inspecProfilePath: '$(System.DefaultWorkingDirectory)/pipeline/inspec-tests'
         inspecArguments: 'webserver --key-files $(awsInstanceKey.secureFilePath) --target ssh://centos@$(nationalParksPublicIp) --chef-license=accept --input color=RED'
@@ -306,6 +308,7 @@ stages:
       displayName: "InSpec: Exec Webserver Tests"
     
     - task: PublishTestResults@2
+      condition: always()
       inputs:
         testResultsFormat: 'JUnit'
         testResultsFiles: '**/TEST-webserver.xml'
@@ -313,7 +316,7 @@ stages:
       displayName: "InSpec: Publish Webserver Test Results"
 
     - task: vsts-chef-task-exec-inspec@1
-      continueOnError: true
+      # continueOnError: true
       inputs:
         inspecProfilePath: '$(System.DefaultWorkingDirectory)/pipeline/inspec-tests'
         inspecArguments: 'haproxy --key-files $(awsInstanceKey.secureFilePath) --target ssh://centos@$(haproxyPublicIp) --chef-license=accept --input color=RED'
@@ -321,6 +324,7 @@ stages:
       displayName: "InSpec: Exec HAProxy Tests"
     
     - task: PublishTestResults@2
+      condition: always()
       inputs:
         testResultsFormat: 'JUnit'
         testResultsFiles: '**/TEST-haproxy.xml'
@@ -421,7 +425,7 @@ stages:
       displayName: "Download: AWS Instance Key"
         
     - task: vsts-chef-task-exec-inspec@1
-      continueOnError: true
+      # continueOnError: true
       inputs:
         inspecProfilePath: '$(System.DefaultWorkingDirectory)/pipeline/inspec-tests'
         inspecArguments: 'webserver --key-files $(awsInstanceKey.secureFilePath) --target ssh://centos@$(nationalParksPublicIp) --chef-license=accept --input color=BLUE'
@@ -429,6 +433,7 @@ stages:
       displayName: "InSpec: Exec Webserver Tests"
     
     - task: PublishTestResults@2
+      condition: always()
       inputs:
         testResultsFormat: 'JUnit'
         testResultsFiles: '**/TEST-webserver.xml'
@@ -436,7 +441,7 @@ stages:
       displayName: "InSpec: Publish Webserver Test Results"
 
     - task: vsts-chef-task-exec-inspec@1
-      continueOnError: true
+      # continueOnError: true
       inputs:
         inspecProfilePath: '$(System.DefaultWorkingDirectory)/pipeline/inspec-tests'
         inspecArguments: 'haproxy --key-files $(awsInstanceKey.secureFilePath) --target ssh://centos@$(haproxyPublicIp) --chef-license=accept --input color=BLUE'
@@ -444,6 +449,7 @@ stages:
       displayName: "InSpec: Exec HAProxy Tests"
     
     - task: PublishTestResults@2
+      condition: always()
       inputs:
         testResultsFormat: 'JUnit'
         testResultsFiles: '**/TEST-haproxy.xml'
