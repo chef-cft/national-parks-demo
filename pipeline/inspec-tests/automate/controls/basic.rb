@@ -40,6 +40,9 @@ end
   'authn-service': {
     path: '/apis/iam/v2/tokens',
   },
+  'authn-service': {
+    path: '/apis/iam/v2/tokens',
+  },
   'authz-service': {
     path: '/apis/iam/v2/policy_version',
   },
@@ -65,7 +68,7 @@ end
     path: '/api/v0/gateway/version',
   },
 }.each_with_index do |(service_name, opts), index|
-  control "api-test-#{index}.0" do       
+  control "#{service_name}" do       
     impact 1.0               
     title "GET #{opts[:path]}"
     desc "Checks the version endpoint of #{service_name} to make sure it's up and running"
