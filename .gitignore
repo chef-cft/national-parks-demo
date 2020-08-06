@@ -8,3 +8,4 @@ terraform/chef-automate/azure/UpdateDisk.ps1
 *inspec.lock
 *inspec.out
 *TEST-*.xml
+pipeline/inspec-tests/input.yml
