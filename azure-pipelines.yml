@@ -13,16 +13,21 @@ stages:
     steps:
     - task: vsts-habitat-install@3
       displayName: 'Install Habitat'
+
     - task: vsts-habitat-signing-key@3
       displayName: 'Signing Origin Key: install'
       inputs:
         habitatOrigin: bldr
+
     - task: vsts-habitat-build@3
-      displayName: 'Build Habitat plan'
       inputs:
         habitatOrigin: bldr
+        habitatSrcPath: '$(Build.SourcesDirectory)'
+        habitatPlanContext: 'habitat'
       env:
         HAB_LICENSE: accept-no-persist
+      displayName: "Habitat: Build Package"
+
     - task: vsts-habitat-expose-habitat-build-vars@3
       displayName: 'Expose Habitat Build Variables'
       inputs:
