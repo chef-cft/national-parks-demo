@@ -9,7 +9,7 @@ stages:
     pool:
       # If you are building a Windows package, you'll need to swap this to a windows image.
       # name: Hosted VS2017
-      vmImage: 'ubuntu-latest'
+      vmImage: 'ubuntu-18.04'
     steps:
     - task: vsts-habitat-install@3
       displayName: 'Install Habitat'
@@ -39,7 +39,7 @@ stages:
   jobs:
   - deployment: plan
     pool:
-      vmImage: 'ubuntu-latest'
+      vmImage: 'ubuntu-18.04'
     environment: 'dev'
     strategy:
       runOnce:
@@ -68,7 +68,7 @@ stages:
   jobs:
   - deployment: plan
     pool:
-      vmImage: 'ubuntu-latest'
+      vmImage: 'ubuntu-18.04'
     environment: 'stg'
     strategy:
       runOnce:
@@ -91,7 +91,7 @@ stages:
   jobs:
   - deployment: plan
     pool:
-      vmImage: 'ubuntu-latest'
+      vmImage: 'ubuntu-18.04'
     environment: 'prod'
     strategy:
       runOnce:
