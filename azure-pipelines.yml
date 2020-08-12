@@ -72,9 +72,9 @@ stages:
           #     habitatPackageChannel: dev
           - task: CmdLine@2
             displayName: 'Export HART to Docker Image'
-              inputs:
-                script:  source $(Pipeline.Workspace)/hart/last_build.env
-                hab pkg export container $(Pipeline.Workspace)/hart/$(pkg_artifact)
+            inputs:
+              script:  source $(Pipeline.Workspace)/hart/last_build.env
+              hab pkg export container $(Pipeline.Workspace)/hart/$(pkg_artifact)
             env:
               HAB_LICENSE: accept-no-persist
               
