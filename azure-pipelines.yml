@@ -63,49 +63,55 @@ stages:
               habitatPackageChannel: dev
             env:
               HAB_LICENSE: accept-no-persist
+          - task: vsts-habitat-pkg-export@3
+            displayName: 'Export HART to Docker Image'
+              inputs:
+                habitatOrigin: bldr
+                habitatPackagePath: '$(Build.SourcesDirectory)/results/$(pkg_artifact)'
+                habitatPackageChannel: dev
 
-- stage: Promote_Stg
-  jobs:
-  - deployment: plan
-    pool:
-      vmImage: 'ubuntu-latest'
-    environment: 'stg'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: vsts-habitat-install@3
-            displayName: 'Install Habitat'
-          - task: vsts-habitat-signing-key@3
-            displayName: 'Signing Origin Key: install'
-            inputs:
-              habitatOrigin: bldr
-          - script: |
-              source $(Pipeline.Workspace)/hart/last_build.env
-              /tmp/hab pkg promote $pkg_ident stage
-            displayName: 'Promote to Stage'
-            env:
-              HAB_LICENSE: accept-no-persist
-
-- stage: Promote_Prod
-  jobs:
-  - deployment: plan
-    pool:
-      vmImage: 'ubuntu-latest'
-    environment: 'prod'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: vsts-habitat-install@3
-            displayName: 'Install Habitat'
-          - task: vsts-habitat-signing-key@3
-            displayName: 'Signing Origin Key: install'
-            inputs:
-              habitatOrigin: bldr
-          - script: |
-              source $(Pipeline.Workspace)/hart/last_build.env
-              /tmp/hab pkg promote $pkg_ident prod
-            displayName: 'Promote to Prod'
-            env:
-              HAB_LICENSE: accept-no-persist
+# - stage: Promote_Stg
+#   jobs:
+#   - deployment: plan
+#     pool:
+#       vmImage: 'ubuntu-latest'
+#     environment: 'stg'
+#     strategy:
+#       runOnce:
+#         deploy:
+#           steps:
+#           - task: vsts-habitat-install@3
+#             displayName: 'Install Habitat'
+#           - task: vsts-habitat-signing-key@3
+#             displayName: 'Signing Origin Key: install'
+#             inputs:
+#               habitatOrigin: bldr
+#           - script: |
+#               source $(Pipeline.Workspace)/hart/last_build.env
+#               /tmp/hab pkg promote $pkg_ident stage
+#             displayName: 'Promote to Stage'
+#             env:
+#               HAB_LICENSE: accept-no-persist
+#
+# - stage: Promote_Prod
+#   jobs:
+#   - deployment: plan
+#     pool:
+#       vmImage: 'ubuntu-latest'
+#     environment: 'prod'
+#     strategy:
+#       runOnce:
+#         deploy:
+#           steps:
+#           - task: vsts-habitat-install@3
+#             displayName: 'Install Habitat'
+#           - task: vsts-habitat-signing-key@3
+#             displayName: 'Signing Origin Key: install'
+#             inputs:
+#               habitatOrigin: bldr
+#           - script: |
+#               source $(Pipeline.Workspace)/hart/last_build.env
+#               /tmp/hab pkg promote $pkg_ident prod
+#             displayName: 'Promote to Prod'
+#             env:
+#               HAB_LICENSE: accept-no-persist
