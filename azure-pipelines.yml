@@ -63,7 +63,7 @@ stages:
               habitatPackageChannel: dev
             env:
               HAB_LICENSE: accept-no-persist
-          - task: CmdLine@2
+          - task: CmdLine@1
             displayName: 'Export HART to Docker Image'
             env:
               HAB_LICENSE: accept-no-persist
