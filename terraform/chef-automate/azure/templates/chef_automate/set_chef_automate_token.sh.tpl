@@ -1,19 +1,20 @@
 #!/bin/bash
+echo making admin token via cli
+export TOKEN=`sudo chef-automate iam token create cli --admin`
 
-echo "Adding hardcoded api token"
-export TOKEN=`sudo chef-automate admin-token`
-
-echo "setting automate_token"
+echo setting speciifc token value via API
 
 curl -X POST \
-  https://localhost/api/v0/auth/tokens \
+  https://localhost/apis/iam/v2/tokens \
   --insecure \
   -H "api-token: $TOKEN" \
-  -d '{"value": "${automate_token}","description": "From Terraform","active": true, "id": "00000000-0000-0000-0000-000000000000"}'
+  -d '{"name":"national-parks", "value": "${automate_token}", "active": true, "id": "national-parks"}'
+
+echo setting API policies
 
 curl -s \
-  https://localhost/api/v0/auth/policies \
+  https://localhost/apis/iam/v2/policies/ingest-access/members:add \
   --insecure \
   -H "api-token: $TOKEN" \
   -H "Content-Type: application/json" \
-  -d '{"subjects":["token:00000000-0000-0000-0000-000000000000"], "action":"*", "resource":"compliance:*"}'
+  -d '{"members":["token:national-parks"]}'
