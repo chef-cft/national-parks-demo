@@ -68,7 +68,7 @@ stages:
             env:
               HAB_LICENSE: accept-no-persist
           - script: |
-              hab license accept
+              /tmp/hab pkg install core/hab-pkg-export-container
               source $(Pipeline.Workspace)/hart/last_build.env
               echo "Starting script"
               echo "Building $(pkg_artifact) from $(pkg_origin)"
@@ -84,12 +84,12 @@ stages:
           #     displayName: 'Build Docker Image'
           #     env:
           #       HAB_LICENSE: accept-no-persist
-# - stage: Promote_Stg
+# - stage: Export_Docker
 #   jobs:
 #   - deployment: plan
 #     pool:
 #       vmImage: 'ubuntu-latest'
-#     environment: 'stg'
+#     environment: 'dev'
 #     strategy:
 #       runOnce:
 #         deploy:
