@@ -67,7 +67,7 @@ stages:
             displayName: 'Export HART to Docker Image'
               inputs:
                 habitatOrigin: bldr
-                habitatPackagePath: '$(Build.SourcesDirectory)/results/$(pkg_artifact)'
+                habitatPackagePath: '$(Pipeline.Workspace)/hart/$(pkg_artifact)'
                 habitatPackageChannel: dev
 
 # - stage: Promote_Stg
