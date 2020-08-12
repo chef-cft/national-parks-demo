@@ -68,6 +68,7 @@ stages:
             env:
               HAB_LICENSE: accept-no-persist
           - script: |
+              hab license accept
               source $(Pipeline.Workspace)/hart/last_build.env
               echo "Starting script"
               echo "Building $(pkg_artifact) from $(pkg_origin)"
