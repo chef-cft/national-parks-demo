@@ -65,11 +65,6 @@ stages:
               HAB_LICENSE: accept-no-persist
           - task: vsts-habitat-pkg-export@3
             displayName: 'Export HART to Docker Image'
-            inputs:
-              habitatOrigin: bldr
-              habitatExportFormat: container
-              habitatPackagePath: '$(Pipeline.Workspace)/hart/$(pkg_artifact)'
-              habitatPackageChannel: dev
             env:
               HAB_LICENSE: accept-no-persist
           - script: |
