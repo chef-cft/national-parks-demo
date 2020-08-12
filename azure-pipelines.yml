@@ -72,7 +72,7 @@ stages:
               source $(Pipeline.Workspace)/hart/last_build.env
               echo "Starting script"
               echo "Building $(pkg_artifact) from $(pkg_origin)"
-              hab pkg export container $(Pipeline.Workspace)/hart/$(pkg_artifact) --channel dev
+              /tmp/hab pkg export container $(Pipeline.Workspace)/hart/$(pkg_artifact) --channel dev
             displayName: 'Export Docker Image'
             env:
               HAB_LICENSE: accept-no-persist
