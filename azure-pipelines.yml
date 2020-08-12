@@ -74,6 +74,7 @@ stages:
               HAB_LICENSE: accept-no-persist
           - script: |
               source $(Pipeline.Workspace)/hart/last_build.env
+              hab license accept
               hab pkg export container $(Pipeline.Workspace)/hart/$(pkg_artifact)
             displayName: 'Export Docker Image'
             env:
