@@ -70,9 +70,10 @@ stages:
               habitatExportFormat: container
               habitatPackagePath: '$(Pipeline.Workspace)/hart/$(pkg_artifact)'
               habitatPackageChannel: dev
+            env:
+              HAB_LICENSE: accept-no-persist
           - script: |
               source $(Pipeline.Workspace)/hart/last_build.env
-              export HAB_LICENSE="accept-no-persist"
               hab pkg export container $(Pipeline.Workspace)/hart/$(pkg_artifact)
             displayName: 'Export Docker Image'
             env:
