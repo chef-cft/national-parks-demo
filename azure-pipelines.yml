@@ -63,21 +63,27 @@ stages:
               habitatPackageChannel: dev
             env:
               HAB_LICENSE: accept-no-persist
-          # - task: vsts-habitat-pkg-export@3
-          #   displayName: 'Export HART to Docker Image'
-          #   inputs:
-          #     habitatOrigin: bldr
-          #     habitatExportFormat: container
-          #     habitatPackagePath: '$(Pipeline.Workspace)/hart/$(pkg_artifact)'
-          #     habitatPackageChannel: dev
-          - task: CmdLine@2
+          - task: vsts-habitat-pkg-export@3
             displayName: 'Export HART to Docker Image'
-              - script: |
+            inputs:
+              habitatOrigin: bldr
+              habitatExportFormat: container
+              habitatPackagePath: '$(Pipeline.Workspace)/hart/$(pkg_artifact)'
+              habitatPackageChannel: dev
+          - script: |
               source $(Pipeline.Workspace)/hart/last_build.env
               hab pkg export container $(Pipeline.Workspace)/hart/$(pkg_artifact)
-              displayName: 'Build Docker Image'
-              env:
-                HAB_LICENSE: accept-no-persist
+            displayName: 'Build Docker Image'
+            env:
+              HAB_LICENSE: accept-no-persist
+          # - task: CmdLine@2
+          #   displayName: 'Export HART to Docker Image'
+          #     - script: |
+          #     source $(Pipeline.Workspace)/hart/last_build.env
+          #     hab pkg export container $(Pipeline.Workspace)/hart/$(pkg_artifact)
+          #     displayName: 'Build Docker Image'
+          #     env:
+          #       HAB_LICENSE: accept-no-persist
 # - stage: Promote_Stg
 #   jobs:
 #   - deployment: plan
