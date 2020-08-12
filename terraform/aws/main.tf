@@ -57,19 +57,17 @@ resource "aws_subnet" "national_parks_subnet" {
 ////////////////////////////////
 // Instance Data
 
-data "aws_ami" "centos" {
+data "aws_ami" "rhel7" {
   most_recent = true
-
+  owners      = ["309956199498"]
   filter {
     name   = "name"
-    values = ["chef-highperf-centos7-*"]
+    values = ["RHEL-7.?*GA*"]
   }
 
   filter {
     name   = "virtualization-type"
     values = ["hvm"]
   }
-
-  owners = ["446539779517"]
 }
 
