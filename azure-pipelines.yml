@@ -66,10 +66,12 @@ stages:
           - task: vsts-habitat-pkg-export@3
             displayName: 'Export HART to Docker Image'
             inputs:
-                habitatOrigin: bldr
-                habitatExportFormat: container
-                habitatPackagePath: '$(Pipeline.Workspace)/hart/$(pkg_artifact)'
-                habitatPackageChannel: dev
+              habitatOrigin: bldr
+              habitatExportFormat: container
+              habitatPackagePath: '$(Pipeline.Workspace)/hart/$(pkg_artifact)'
+              habitatPackageChannel: dev
+            env:
+              HAB_LICENSE: accept-no-persist
 
 # - stage: Promote_Stg
 #   jobs:
