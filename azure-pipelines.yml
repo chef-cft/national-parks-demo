@@ -66,6 +66,7 @@ stages:
               habitatPackagePath: '$(Pipeline.Workspace)/hart/$(pkg_artifact)'
               habitatPackageChannel: dev
             env:
+<<<<<<< Updated upstream
               HAB_LICENSE: accept
           - task: CmdLine@2
             displayName: 'Export HART to Docker Image'
@@ -89,6 +90,15 @@ stages:
           #     env:
           #       HAB_LICENSE: accept-no-persist
 # - stage: Export_Docker
+=======
+              HAB_LICENSE: accept-no-persist
+          - script: |
+              /tmp/hab license accept
+              sudo /tmp/hab pkg export container $(Pipeline.Workspace)/hart/$(pkg_artifact)
+            displayName: 'Export to Docker'
+
+# - stage: Promote_Stg
+>>>>>>> Stashed changes
 #   jobs:
 #   - deployment: plan
 #     pool:
