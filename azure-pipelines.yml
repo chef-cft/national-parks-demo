@@ -67,6 +67,8 @@ stages:
               /tmp/hab license accept
               sudo /tmp/hab pkg export container $(Pipeline.Workspace)/hart/$(pkg_artifact)
             displayName: 'Export to Docker'
+          - task: chef-software.vsts-chef-tasks.vsts-chef-task-install-inspec.vsts-chef-task-install-inspec@1
+            displayName: 'Install InSpec'
 
 # - stage: Promote_Stg
 #   jobs:
