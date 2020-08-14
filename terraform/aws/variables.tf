@@ -100,6 +100,26 @@ variable "node_count" {
 variable "origin" {
 }
 
+variable "effortless_origin" {
+  default = "effortless"
+}
+
+variable "effortless_infra" {
+  default = "config-baseline"
+}
+
+variable "effortless_inspec" {
+  default = "audit-baseline"
+}
+
+variable "effortless_infra_channel" {
+  default = "stable"
+}
+
+variable "effortless_inspec_channel" {
+  default = "stable"
+}
+
 variable "group" {
   default = "default"
 }
@@ -112,8 +132,19 @@ variable "update_condition" {
   default = "track-channel"
 }
 
+variable "health_check_interval" {
+  default = "30"
+}
+
 variable "sleep" {
   default = "60"
+}
+variable "UPDATE_STRATEGY_FREQUENCY_MS" {
+  default = "60000"
+}
+
+variable "HAB_AUTH_TOKEN" {
+  default = "blankkey"
 }
 
 ////////////////////////////////

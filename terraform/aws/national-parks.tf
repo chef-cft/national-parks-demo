@@ -67,8 +67,8 @@ resource "aws_instance" "permanent_peer" {
       "sudo /sbin/sysctl -w net.ipv4.conf.all.accept_redirects=0",
       "sudo cp /home/${var.aws_ami_user}/audit_linux.toml /hab/user/audit-baseline/config/user.toml",
       "sudo cp /home/${var.aws_ami_user}/config_linux.toml /hab/user/config-baseline/config/user.toml",
-      "sudo hab svc load effortless/config-baseline --group ${var.group} --strategy at-once --channel stable",
-      "sudo hab svc load effortless/audit-baseline --group ${var.group} --strategy at-once --channel stable",
+      "sudo hab svc load ${var.effortless_origin}/${var.effortless_infra} --group ${var.group} --strategy at-once --channel ${var.effortless_infra_channel}",
+      "sudo hab svc load ${var.effortless_origin}/${var.effortless_inspec} --group ${var.group} --strategy at-once --channel ${var.effortless_inspec_channel}",
     ]
   }
 }
@@ -152,8 +152,8 @@ resource "aws_instance" "mongodb" {
       "sudo cp /home/${var.aws_ami_user}/audit_linux.toml /hab/user/audit-baseline/config/user.toml",
       "sudo cp /home/${var.aws_ami_user}/config_linux.toml /hab/user/config-baseline/config/user.toml",
       "sudo cp /home/${var.aws_ami_user}/mongo.toml /hab/user/mongodb/config/user.toml",
-      "sudo hab svc load effortless/config-baseline --group ${var.group} --strategy at-once --channel stable",
-      "sudo hab svc load effortless/audit-baseline --group ${var.group} --strategy at-once --channel stable",
+      "sudo hab svc load ${var.effortless_origin}/${var.effortless_infra} --group ${var.group} --strategy at-once --channel ${var.effortless_infra_channel}",
+      "sudo hab svc load ${var.effortless_origin}/${var.effortless_inspec} --group ${var.group} --strategy at-once --channel ${var.effortless_inspec_channel}",
       "sudo hab svc load core/mongodb/3.2.10/20171016003652 --group ${var.group}",
     ]
   }
@@ -210,7 +210,7 @@ resource "aws_instance" "national_parks" {
     inline = [
       "sudo rm -rf /etc/machine-id",
       "sudo systemd-machine-id-setup",
-      "sudo hostname national-parks-${var.node_count}",
+      "sudo hostname national-parks-${count.index}",
       "sudo groupadd hab",
       "sudo adduser hab -g hab",
       "chmod +x /tmp/install_hab.sh",
@@ -230,9 +230,9 @@ resource "aws_instance" "national_parks" {
       "sudo /sbin/sysctl -w net.ipv4.conf.all.accept_redirects=0",
       "sudo cp /home/${var.aws_ami_user}/audit_linux.toml /hab/user/audit-baseline/config/user.toml",
       "sudo cp /home/${var.aws_ami_user}/config_linux.toml /hab/user/config-baseline/config/user.toml",
-      "sudo hab svc load effortless/config-baseline --group ${var.group} --strategy at-once --channel stable",
-      "sudo hab svc load effortless/audit-baseline --group ${var.group} --strategy at-once --channel stable",
-      "sudo hab svc load ${var.origin}/national-parks --group ${var.group} --channel ${var.prod_channel} --strategy ${var.update_strategy} --update-condition ${var.update_condition} --bind database:mongodb.${var.group}",
+      "sudo hab svc load ${var.effortless_origin}/${var.effortless_infra} --group ${var.group} --strategy at-once --channel ${var.effortless_infra_channel}",
+      "sudo hab svc load ${var.effortless_origin}/${var.effortless_inspec} --group ${var.group} --strategy at-once --channel ${var.effortless_inspec_channel}",
+      "sudo hab svc load ${var.origin}/national-parks --group ${var.group} --channel ${var.prod_channel} --strategy ${var.update_strategy} --update-condition ${var.update_condition} --health-check-interval ${var.health_check_interval}  --bind database:mongodb.${var.group}",
     ]
   }
 }
@@ -312,8 +312,8 @@ resource "aws_instance" "haproxy" {
       "sudo cp /home/${var.aws_ami_user}/audit_linux.toml /hab/user/audit-baseline/config/user.toml",
       "sudo cp /home/${var.aws_ami_user}/config_linux.toml /hab/user/config-baseline/config/user.toml",
       "sudo cp /home/${var.aws_ami_user}/haproxy.toml /hab/user/haproxy/config/user.toml",
-      "sudo hab svc load effortless/config-baseline --group ${var.group} --strategy at-once --channel stable",
-      "sudo hab svc load effortless/audit-baseline --group ${var.group} --strategy at-once --channel stable",
+      "sudo hab svc load ${var.effortless_origin}/${var.effortless_infra} --group ${var.group} --strategy at-once --channel ${var.effortless_infra_channel}",
+      "sudo hab svc load ${var.effortless_origin}/${var.effortless_inspec} --group ${var.group} --strategy at-once --channel ${var.effortless_inspec_channel}",
       "sudo hab svc load core/haproxy --group ${var.group} --bind backend:national-parks.${var.group}",
     ]
   }

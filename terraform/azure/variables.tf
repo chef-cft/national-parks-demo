@@ -48,6 +48,13 @@ variable "update_condition" {
   default = "track-channel"
 }
 
+variable "health_check_interval" {
+  default = "30"
+}
+variable "UPDATE_STRATEGY_FREQUENCY_MS" {
+  default = "60000"
+}
+
 ////////////////////////////////
 // Tags
 

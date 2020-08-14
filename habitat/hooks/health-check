@@ -1,0 +1,30 @@
+#!/bin/sh
+ 
+#define default return code as 0
+rc=3
+
+#curl local host - 200 code is "ok" 
+#variable cfg.server.port so port can be dynamic in health check
+STATUS=$({{pkgPathFor "core/curl"}}/bin/curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/national-parks/)
+
+echo "HTTP Status Code: $STATUS"
+
+case $STATUS in
+  200)
+    rc=0 ;;
+  1)
+    rc=1 ;;
+  4**)
+    rc=2 ;;
+  *)
+    rc=3 ;;
+esac
+
+# hab error codes 
+# 0- ok
+# 1- warning
+# 2- critical
+# 3- unknown
+
+echo "healthcheck return code: $rc"
+exit $rc

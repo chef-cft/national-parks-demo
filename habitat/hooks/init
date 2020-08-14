@@ -1,9 +1,13 @@
 #!/bin/bash -x
 
+echo "clean up after a previous pacakge"
+rm -rf {{pkg.svc_var_path}}/tc
+
 echo "Preparing TOMCAT_HOME..."
 # Move directories that ship in the package into place
 cp -a {{pkgPathFor "core/tomcat8"}}/tc {{pkg.svc_var_path}}/
 
+#NOTE comment the next line out to create/demo a bad package 
 cp {{pkg.path}}/*.war {{pkg.svc_var_path}}/tc/webapps
 
 # Following lines are to copy project tomcat configs to run time tomcat8 directory

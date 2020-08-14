@@ -2,6 +2,8 @@
 Description=Habitat Supervisor
 
 [Service]
+
+Environment=HAB_AUTH_TOKEN=${HAB_AUTH_TOKEN}
 ExecStartPre=/bin/bash -c /bin/systemctl
 ExecStart=/bin/hab run ${flags}
 
