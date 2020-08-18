@@ -69,13 +69,17 @@ stages:
             displayName: 'Export to Docker'
           - task: chef-software.vsts-chef-tasks.vsts-chef-task-install-inspec.vsts-chef-task-install-inspec@1
             displayName: 'Install InSpec'
-          - task: ShellScript@2
-            displayName: 'Run National Parks App'
-            env:
-              HAB_LICENSE: accept-no-persist
-          - script: 
-              docker run --env HAB_LICENSE --rm --privileged -p 8080:8080 -p 9631:9631 '$(pkg_origin)/$(pkg_name):$(pkg_release)'
-            displayName: 'Docker Run'
+          - task: DockerCompose@0
+            displayName: Run a Docker Compose command
+            inputs:
+                action: Run a Docker Compose command
+                dockerComposeFile: ../examples/docker-compose.yml
+                projectName: $(Build.Repository.Name)
+                qualifyImageNames: false
+                buildImages: false
+                dockerComposeFileArgs: 
+                 HAB_LICENSE="accept-no-persist"
+                ports: 8080
 # - stage: Promote_Stg
 #   jobs:
 #   - deployment: plan
