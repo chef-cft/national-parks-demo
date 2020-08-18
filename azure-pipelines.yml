@@ -70,9 +70,9 @@ stages:
           - task: chef-software.vsts-chef-tasks.vsts-chef-task-install-inspec.vsts-chef-task-install-inspec@1
             displayName: 'Install InSpec'
           - task: DockerCompose@0
-            displayName: Run a Docker Compose command
+            displayName: Run Docker Compose
             inputs:
-                action: Run a Docker Compose command
+                action: Run services
                 dockerComposeFile: examples/docker-compose.yml
                 projectName: $(Build.Repository.Name)
                 qualifyImageNames: false
