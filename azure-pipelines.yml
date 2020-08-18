@@ -73,7 +73,7 @@ stages:
             displayName: Run a Docker Compose command
             inputs:
                 action: Run a Docker Compose command
-                dockerComposeFile: ../examples/docker-compose.yml
+                dockerComposeFile: examples/docker-compose.yml
                 projectName: $(Build.Repository.Name)
                 qualifyImageNames: false
                 buildImages: false
