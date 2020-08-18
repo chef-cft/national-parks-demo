@@ -67,8 +67,6 @@ stages:
               /tmp/hab license accept
               sudo /tmp/hab pkg export container $(Pipeline.Workspace)/hart/$(pkg_artifact)
               source $(Pipeline.Workspace)/hart/last_build.env
-              $docker_registry_tag = $(pkg_origin).azurecr.io/$(pkg_name):$(pkg_version)-$(pkg_release)
-              docker tag $(pkg_origin)/$(pkg_name) $docker_registry_tag
             displayName: 'Export to Docker'
           - task: Docker@2
             displayName: 'Upload to ACR'
