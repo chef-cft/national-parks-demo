@@ -12,7 +12,7 @@ services:
       HAB_MONGODB: "[mongod.net]\nbind_ip = '0.0.0.0'\n[mongod.security]\ncluster_auth_mode = ''"
       HAB_LICENSE: "accept-no-persist" 
   national-parks:
-    image: example/national-parks:7.0.0
+    image: chefdockerwebinar/national-parks:latest
     privileged: true
     environment:
       HAB_LICENSE: "accept-no-persist"
