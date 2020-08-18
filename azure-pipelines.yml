@@ -66,6 +66,9 @@ stages:
           - script: |
               /tmp/hab license accept
               sudo /tmp/hab pkg export container $(Pipeline.Workspace)/hart/$(pkg_artifact)
+              $docker_registry_tag = "${pkg_origin}.azurecr.io/${pkg_name}:${pkg_version}-${pkg_release}"
+              docker tag ${pkg_origin}/${pkg_name} $docker_registry_tag
+              docker image ls
             displayName: 'Export to Docker'
           - task: chef-software.vsts-chef-tasks.vsts-chef-task-install-inspec.vsts-chef-task-install-inspec@1
             displayName: 'Install InSpec'
