@@ -1,0 +1,21 @@
+version: '3.7'
+services:
+  mongodb:
+    image: core/mongodb:3.2.10
+    privileged: true
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.25'
+          memory: 100M
+    environment:
+      HAB_MONGODB: "[mongod.net]\nbind_ip = '0.0.0.0'\n[mongod.security]\ncluster_auth_mode = ''"
+      HAB_LICENSE: "accept-no-persist" 
+  national-parks:
+    image: chefdockerwebinar/national-parks:latest
+    privileged: true
+    environment:
+      HAB_LICENSE: "accept-no-persist"
+    command: --peer mongodb --bind database:mongodb.default
+    ports:
+      - 8080:8080
