@@ -81,6 +81,9 @@ stages:
             inputs:
                command: login
                containerRegistry: chefdockerwebinar
+          - task: CmdLine@1
+            displayName: Test CWD
+          - script: 'pwd; ls;'
           # - task: CmdLine@2
           #   inputs:
           #     script: 'docker tag chefdockerwebinar/national-parks:latest chefdockerwebinar.azurecr.io/national-parks:latest; docker image ls'
@@ -93,17 +96,17 @@ stages:
           #     tags: |
           #      7.0.0
           #      latest
-          - task: chef-software.vsts-chef-tasks.vsts-chef-task-install-inspec.vsts-chef-task-install-inspec@1
-            displayName: 'Install InSpec'
-          - task: DockerCompose@0
-            inputs:
-              containerregistrytype: 'Azure Container Registry'
-              azureSubscription: 'Solutions Architecture(b02e675a-cee0-49bd-a056-daa7ed05bf4e)'
-              azureContainerRegistry: '{"loginServer":"chefdockerwebinar.azurecr.io", "id" : "/subscriptions/b02e675a-cee0-49bd-a056-daa7ed05bf4e/resourceGroups/sa-infra-rg/providers/Microsoft.ContainerRegistry/registries/chefdockerwebinar"}'
-              dockerComposeFile: 'docker-compose.yml'
-              dockerComposeFileArgs: 'HAB_LICENSE=accept-no-persist'
-              action: 'Run a Docker Compose command'
-              dockerComposeCommand: 'docker-compose up --rm'
+          # - task: chef-software.vsts-chef-tasks.vsts-chef-task-install-inspec.vsts-chef-task-install-inspec@1
+          #   displayName: 'Install InSpec'
+          # - task: DockerCompose@0
+          #   inputs:
+          #     containerregistrytype: 'Azure Container Registry'
+          #     azureSubscription: 'Solutions Architecture(b02e675a-cee0-49bd-a056-daa7ed05bf4e)'
+          #     azureContainerRegistry: '{"loginServer":"chefdockerwebinar.azurecr.io", "id" : "/subscriptions/b02e675a-cee0-49bd-a056-daa7ed05bf4e/resourceGroups/sa-infra-rg/providers/Microsoft.ContainerRegistry/registries/chefdockerwebinar"}'
+          #     dockerComposeFile: 'docker-compose.yml'
+          #     dockerComposeFileArgs: 'HAB_LICENSE=accept-no-persist'
+          #     action: 'Run a Docker Compose command'
+          #     dockerComposeCommand: 'docker-compose up --rm'
 # - stage: Promote_Stg
 #   jobs:
 #   - deployment: plan
