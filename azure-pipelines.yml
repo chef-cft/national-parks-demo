@@ -74,7 +74,7 @@ stages:
             displayName: 'Upload to ACR'
             inputs:
               containerRegistry: 'chefdockerwebinar'
-              repository: '$(pkg_origin)/$(pkg_name)'
+              repository: 'chefdockerwebinar.azurecr.io/$(pkg_name)'
               command: 'push'
               tags: '$(Build.BuildNumber)'
           - task: chef-software.vsts-chef-tasks.vsts-chef-task-install-inspec.vsts-chef-task-install-inspec@1
