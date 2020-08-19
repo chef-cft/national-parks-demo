@@ -100,7 +100,7 @@ stages:
               containerregistrytype: 'Azure Container Registry'
               azureSubscription: 'Solutions Architecture(b02e675a-cee0-49bd-a056-daa7ed05bf4e)'
               azureContainerRegistry: '{"loginServer":"chefdockerwebinar.azurecr.io", "id" : "/subscriptions/b02e675a-cee0-49bd-a056-daa7ed05bf4e/resourceGroups/sa-infra-rg/providers/Microsoft.ContainerRegistry/registries/chefdockerwebinar"}'
-              dockerComposeFile: '**/docker-compose.yml'
+              dockerComposeFile: 'docker-compose.yml'
               dockerComposeFileArgs: 'HAB_LICENSE=accept-no-persist'
               action: 'Run a Docker Compose command'
               dockerComposeCommand: 'docker-compose up --rm'
