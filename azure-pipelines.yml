@@ -54,6 +54,8 @@ stages:
           - script: |
               source $(Pipeline.Workspace)/hart/last_build.env
               echo "##vso[task.setvariable variable=pkg_artifact]$pkg_artifact"
+              echo "##vso[task.setvariable variable=pkg_origin]$pkg_origin"
+              echo "##vso[task.setvariable variable=pkg_name]$pkg_name"
             displayName: 'Publish Artifact Name'
           - task: vsts-habitat-pkg-upload@3
             displayName: 'Package Upload'
