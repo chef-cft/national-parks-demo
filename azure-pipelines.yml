@@ -89,7 +89,7 @@ stages:
             displayName: Test CWD
             inputs:
               targetType: 'inline'
-              script: 'pwd; ls;'
+              script: 'pwd; ls -lart; ls -lart results/'
           # - task: CmdLine@2
           #   inputs:
           #     script: 'docker tag chefdockerwebinar/national-parks:latest chefdockerwebinar.azurecr.io/national-parks:latest; docker image ls'
