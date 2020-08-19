@@ -71,13 +71,24 @@ stages:
               /tmp/hab license accept
               sudo /tmp/hab pkg export container $(Pipeline.Workspace)/hart/$(pkg_artifact)
             displayName: 'Export to Docker'
+          - task: DockerInstaller@0
+            displayName: Docker Installer
+            inputs:
+              dockerVersion: 17.09.0-ce
+              releaseType: stable
+          - task: CmdLine@1
+            displayName: 'Tag Docker Image'
+            inputs:
+             script: docker tag chefdockerwebinar/national-parks:latest chefdockerwebinar.azurecr.io/national-parks:latest            
           - task: Docker@2
             displayName: 'Upload to ACR'
             inputs:
               containerRegistry: 'chefdockerwebinar'
               repository: 'chefdockerwebinar.azurecr.io/national-parks'
               command: 'push'
-              tags: 'latest'
+              tags: |
+               7.0.0
+               latest
           - task: chef-software.vsts-chef-tasks.vsts-chef-task-install-inspec.vsts-chef-task-install-inspec@1
             displayName: 'Install InSpec'
           - task: DockerCompose@0
