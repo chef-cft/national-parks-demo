@@ -70,7 +70,6 @@ stages:
           - script: |
               /tmp/hab license accept
               sudo /tmp/hab pkg export container $(Pipeline.Workspace)/hart/$(pkg_artifact)
-              docker tag chefdockerwebinar/national-parks:$(pkg_version)-$(pkg_release) chefdockerwebinar.azurecr.io/national-parks:$(pkg_version)-$(pkg_release)
             displayName: 'Export to Docker'
           - task: Docker@2
             displayName: 'Upload to ACR'
@@ -78,7 +77,7 @@ stages:
               containerRegistry: 'chefdockerwebinar'
               repository: 'chefdockerwebinar.azurecr.io/national-parks'
               command: 'push'
-              tags: '$(pkg_version)-$(pkg_release)'
+              tags: 'chefdockerwebinar.azurecr.io/$(pkg_version)-$(pkg_release)'
           - task: chef-software.vsts-chef-tasks.vsts-chef-task-install-inspec.vsts-chef-task-install-inspec@1
             displayName: 'Install InSpec'
           - task: DockerCompose@0
