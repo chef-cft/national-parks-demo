@@ -4,8 +4,8 @@ pkg_origin=scottford
 pkg_version=7.0.0
 pkg_maintainer="Scott Ford <sford@chef.io>"
 pkg_license=('Apache-2.0')
-pkg_deps=(core/tomcat8 core/corretto/11.0.2.9.3 core/mongo-tools)
-pkg_build_deps=(core/corretto/11.0.2.9.3 core/maven)
+pkg_deps=(core/tomcat8 core/corretto core/mongo-tools)
+pkg_build_deps=(core/corretto core/maven)
 pkg_svc_user="root"
 pkg_binds=(
   [database]="port"
@@ -17,7 +17,7 @@ pkg_exposes=(port)
 
 do_prepare()
 {
-    export JAVA_HOME=$(hab pkg path core/corretto/11.0.2.9.3)
+    export JAVA_HOME=$(hab pkg path core/corretto)
 }
 
 do_build()
