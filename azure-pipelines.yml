@@ -37,7 +37,7 @@ stages:
     - task: CopyFiles@2
       inputs:
         contents: '$(Build.SourcesDirectory)/docker-compose.yml'
-        targetFolder: $(Build.ArtifactStagingDirectory)
+        targetFolder: $(System.DefaultWorkingDirectory)/results
 
 - stage: Publish_Dev
   jobs:
