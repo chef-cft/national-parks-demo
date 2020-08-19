@@ -89,7 +89,7 @@ stages:
             displayName: Test CWD
             inputs:
               targetType: 'inline'
-              script: 'cd $(Build.SourcesDirectory); pwd; ls;'
+              script: 'cd $(Build.ArtifactStagingDirectory); pwd; ls;'
           # - task: CmdLine@2
           #   inputs:
           #     script: 'docker tag chefdockerwebinar/national-parks:latest chefdockerwebinar.azurecr.io/national-parks:latest; docker image ls'
