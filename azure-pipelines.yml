@@ -92,7 +92,7 @@ stages:
                command: login
                containerRegistry: chefdockerwebinar
           - task: Bash@3
-            displayName: Test CWD
+            displayName: Test Docker Tag
             inputs:
               targetType: 'inline'
               script: 'docker tag $(pkg_origin)/$(pkg_name):$(pkg_version)-$(pkg_release) chefdockerwebinar.azurecr.io/$(pkg_name):$(pkg_version)-$(pkg_release); docker image ls;' 
