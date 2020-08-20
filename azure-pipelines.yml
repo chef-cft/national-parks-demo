@@ -86,7 +86,7 @@ stages:
             displayName: Test CWD
             inputs:
               targetType: 'inline'
-              script: 'pwd; ls -lart; ls -lart results/'
+              script: 'pwd; ls -lart; ls -lart results/; cd $(Pipeline.Workspace); ls -lart hart/'
           # - task: CmdLine@2
           #   inputs:
           #     script: 'docker tag chefdockerwebinar/national-parks:latest chefdockerwebinar.azurecr.io/national-parks:latest; docker image ls'
