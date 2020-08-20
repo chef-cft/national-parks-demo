@@ -96,8 +96,7 @@ stages:
             inputs:
               command: push
               repository: $(pkg_origin)/$(pkg_name)
-              tags: |
-              $(pkg_name):$(pkg_version)-$(pkg_release)
+              tags: $(pkg_version)-$(pkg_release)
           # - task: CmdLine@2
           #   inputs:
           #     script: 'docker tag chefdockerwebinar/national-parks:latest chefdockerwebinar.azurecr.io/national-parks:latest; docker image ls'
