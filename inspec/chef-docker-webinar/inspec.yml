@@ -1,11 +1,12 @@
-     name: webinar-docker
-title: Docker CIS 
+name: webinar-docker
+title: Container Configuration Compliance
 maintainer: The Authors
 copyright: The Authors
 copyright_email: you@example.com
 license: Apache-2.0
 summary: An InSpec Compliance Profile
-version: 0.1.0
+version: 0.2.2
 depends:
   - name: cis-docker-benchmark
-    path: ../cis-docker-benchmark
+    url: https://github.com/dev-sec/cis-docker-benchmark.git
+    

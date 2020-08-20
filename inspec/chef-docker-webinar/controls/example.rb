@@ -18,15 +18,15 @@
 #
 #
 #
-# require_controls 'cis-docker-benchmark' do
-#   control 'docker-4.6'
-#   control 'docker-4.7'
-#   control 'docker-4.9'
-#   control 'docker-5.1'
-#   control 'docker-5.3'
-#   control 'docker-5.4'
-#   control 'docker-5.5'
-#   control 'docker-5.6'
-#   control 'docker-5.7'
-#   control 'docker-5.9'
-# end
+require_controls 'cis-docker-benchmark' do
+  control 'docker-4.6'
+  control 'docker-4.7'
+  control 'docker-4.9'
+  control 'docker-5.1'
+  control 'docker-5.3'
+  control 'docker-5.4'
+  control 'docker-5.5'
+  control 'docker-5.6'
+  control 'docker-5.7'
+  control 'docker-5.9'
+end
