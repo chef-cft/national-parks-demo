@@ -34,6 +34,15 @@ stages:
         habitatSetBuildNumber: true
     - publish: $(System.DefaultWorkingDirectory)/results
       artifact: hart
+
+    - task: CopyFiles@2
+      inputs:
+       contents: 'docker-compose.yml'
+       targetFolder: $(System.DefaultWorkingDirectory)/results
+    - task: PublishBuildArtifacts@1
+      inputs:
+        pathToPublish: $(System.DefaultWorkingDirectory)/results
+        artifactName: DockerComposeFile
     
 
 - stage: Publish_Dev
