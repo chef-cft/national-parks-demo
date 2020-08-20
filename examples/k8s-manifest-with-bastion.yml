@@ -37,7 +37,7 @@ spec:
         fsGroup: 42
       containers:
       - name: hab-bastion
-        image: jvogtacr.azurecr.io/hab_bastion:latest
+        image: chefdockerwebinar.azurecr.io/hab_bastion:0.1.0
         args:
         - '--permanent-peer'
         ports:
@@ -73,7 +73,7 @@ spec:
         fsGroup: 42
       containers:
       - name: national-parks-db
-        image: jvogtacr.azurecr.io/mongodb:3.2.10
+        image: chefdockerwebinar.azurecr.io/mongodb:3.2.10
         args:
         - --peer
         - hab-bastion
@@ -109,7 +109,7 @@ spec:
         fsGroup: 42
       containers:
       - name: national-parks-app
-        image: jvogtacr.azurecr.io/national-parks:7.0.0
+        image: chefdockerwebinar.azurecr.io/national-parks:7.0.11-20200806021132
         args:
         - --peer
         - hab-bastion
