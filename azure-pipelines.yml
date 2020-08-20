@@ -85,11 +85,12 @@ stages:
             displayName: Login to ACR
             inputs:
                command: login
-               containerRegistry: chefdockerwebinar
+               containerRegistry: chefimagepush
           - task: Docker@2
             displayName: Docker Image Push
             inputs:
               command: push
+              containerRegistry: chefimagepush
               repository: $(pkg_origin)/$(pkg_name)
               tags: $(pkg_version)-$(pkg_release)
           # - task: CmdLine@2
