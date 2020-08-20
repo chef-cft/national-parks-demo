@@ -95,7 +95,7 @@ stages:
             displayName: Test CWD
             inputs:
               targetType: 'inline'
-              script: 'echo $(pkg_artifact); echo $(pkg_origin);'
+              script: 'echo ORIGIN: $(pkg_origin); echo PKG_NAME: $(pkg_name); echo PKG_VERSION: $(pkg_version); echo PKG_RELEASE: $(pkg_release);' 
           # - task: CmdLine@2
           #   inputs:
           #     script: 'docker tag chefdockerwebinar/national-parks:latest chefdockerwebinar.azurecr.io/national-parks:latest; docker image ls'
