@@ -90,9 +90,15 @@ stages:
             displayName: Login to ACR
             inputs:
                command: login
-               containerRegistry: chefdockerwebinar 
-          - task: Docker@2
-          - script: 'docker tag $(pkg_origin)/$(pkg_name):$(pkg_version)-$(pkg_release) chefdockerwebinar.azurecr.io/$(pkg_name):$(pkg_version)-$(pkg_release); docker image ls'
+               containerRegistry: chefdockerwebinar
+          - task: Bash@3
+            displayName: Test CWD
+            inputs:
+              targetType: 'inline'
+              script: 'docker tag $(pkg_origin)/$(pkg_name):$(pkg_version)-$(pkg_release) chefdockerwebinar.azurecr.io/$(pkg_name):$(pkg_version)-$(pkg_release); docker image ls;' 
+          # - task: CmdLine@2
+          #   inputs:
+          #     script: 'docker tag chefdockerwebinar/national-parks:latest chefdockerwebinar.azurecr.io/national-parks:latest; docker image ls'
           # - task: Docker@2
           #   displayName: 'Upload to ACR'
           #   inputs:
