@@ -91,11 +91,13 @@ stages:
             inputs:
                command: login
                containerRegistry: chefdockerwebinar
-          - task: Bash@3
-            displayName: Test Docker Tag
+          - task: Docker@2
+            displayName: Docker Image Push
             inputs:
-              targetType: 'inline'
-              script: 'docker tag $(pkg_origin)/$(pkg_name):$(pkg_version)-$(pkg_release) chefdockerwebinar.azurecr.io/$(pkg_name):$(pkg_version)-$(pkg_release); docker image ls;' 
+              command: push
+              repository: $(pkg_origin)/$(pkg_name)
+              tags: |
+              $(pkg_name):$(pkg_version)-$(pkg_release)
           # - task: CmdLine@2
           #   inputs:
           #     script: 'docker tag chefdockerwebinar/national-parks:latest chefdockerwebinar.azurecr.io/national-parks:latest; docker image ls'
