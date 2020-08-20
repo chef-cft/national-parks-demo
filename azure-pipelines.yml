@@ -97,17 +97,8 @@ stages:
             displayName: Upload Docker Image'
             inputs:
               script: 'docker image ls'
-          # - task: Docker@2
-          #   displayName: 'Upload to ACR'
-          #   inputs:
-          #     containerRegistry: chefdockerwebinar
-          #     repository: chefdockerwebinar.azurecr.io/national-parks
-          #     command: 'push'
-          #     tags: |
-          #      7.0.0
-          #      latest
-          # - task: chef-software.vsts-chef-tasks.vsts-chef-task-install-inspec.vsts-chef-task-install-inspec@1
-          #   displayName: 'Install InSpec'
+          - task: chef-software.vsts-chef-tasks.vsts-chef-task-install-inspec.vsts-chef-task-install-inspec@1
+            displayName: 'Install and Run InSpec'
           # - task: DockerCompose@0
           #   inputs:
           #     containerregistrytype: 'Azure Container Registry'
