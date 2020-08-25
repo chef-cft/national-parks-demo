@@ -257,15 +257,7 @@ resource "aws_instance" "chef_automate" {
       "sudo sed -i 's/license = \".*\"/license = \"${var.automate_license}\"/g' /tmp/config.toml",
       "sudo rm -f /tmp/ssl_cert /tmp/ssl_key",
       "sudo mv /tmp/config.toml /etc/chef-automate/config.toml",
-<<<<<<< HEAD
-      "sudo ./chef-automate deploy /etc/chef-automate/config.toml --accept-terms-and-mlsa",
-      "sudo ./chef-automate applications enable",
-      "sudo hab license accept",
-      "sudo hab pkg install chef/applications-service -b",
-      "sleep 60",
-=======
       "sudo ./chef-automate deploy ${var.automate_products} /etc/chef-automate/config.toml --accept-terms-and-mlsa",
->>>>>>> 5d7cc8dc4cf957497066b42ccdd71ad3b781493c
       "sudo ./chef-automate config patch /tmp/automate-eas-config.toml",
       "sudo chown ubuntu:ubuntu $HOME/automate-credentials.toml",
       "sudo cat $HOME/automate-credentials.toml",
