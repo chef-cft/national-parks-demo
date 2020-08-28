@@ -4,7 +4,15 @@ splay_first_run = 0
 run_lock_timeout = 1800
 log_level = "warn"
 
+[chef_license]
+acceptance = "accept-no-persist"
+
 [data_collector]
+enable = "true"
+server_url = "${automate_url}/data-collector/v0/"
+token = "${automate_token}"
+
+[automate]
 enable = "true"
 server_url = "${automate_url}/data-collector/v0/"
 token = "${automate_token}"
