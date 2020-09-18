@@ -1,0 +1,105 @@
+----------------------------------------------------------
+1. Launch Automate from terraform/chef-automate/aws
+
+
+To check applications tab:
+    sudo chef-automate applications --help
+
+To check hab sup settings
+    sudo service hab-sup.service
+----------------------------------------------------------
+
+## Commands for Local studio:
+# This is designed to be a file that makes it easier to copy and paste for quick stand up of the environment:
+
+export HAB_DOCKER_OPTS='-p 8000:8000 -p 8080:8080 -p 8085:8085 -p 9631:9631' ;
+hab studio enter
+
+build
+source results/last_build.env
+hab svc load core/mongodb/3.2.9/20170515233318
+hab config apply mongodb.default $(date +%s) mongo.toml
+hab svc load $pkg_ident --bind database:mongodb.default
+hab svc load core/haproxy --bind backend:national-parks.default
+hab config apply haproxy.default $(date +%s) haproxy.toml
+sup-log
+
+-------- Test different service group ---------------------
+source results/last_build.env
+hab svc load core/mongodb/3.2.9/20170515233318 --group test
+hab config apply mongodb.test $(date +%s) mongo.toml
+hab svc load $pkg_ident --bind database:mongodb.test --group test
+hab svc load core/haproxy --bind backend:national-parks.test --group test
+hab config apply haproxy.test $(date +%s) haproxy.toml
+hab sup status
+
+------------------------------------------------------------
+
+
+- Test the frontend:
+    Directly - http://localhost:8080/national-parks
+    HAProxy - http://localhost:8085/national-parks
+    http://localhost:8000/haproxy-stats
+    username: admin
+    password: password
+
+
+## Commands for AWS:
+
+cd terraform/aws
+cp tfvars.example terraform.tfvars
+edit terraform.tfvars with your own values
+terraform apply
+
+Check that it's working:
+http://<haproxy-public-ip>:8000/haproxy-stats
+
+Scaling out:
+In your terraform.tfvars add a line for count = 3
+run terraform apply
+http://<haproxy-public-ip>:8000/haproxy-stats to see the new instances in the pool
+
+
+## Commands for Azure:
+
+cd terraform/azure
+terraform init
+az login
+cp tfvars.example terraform.tfvars
+edit terraform.tfvars with your own values
+terraform apply
+
+
+## Commands for GKE
+cd terraform/gke
+terraform apply
+
+### Run the 2 commands provided from `terraform apply` 
+1_creds_command = gcloud container clusters get-credentials...
+2_admin_permissions = kubectl create clusterrolebinding cluster-admin-binding...
+
+### Deploy Habitat Operator and Habitat Updater
+cd ../../../habitat-operator/
+kubectl apply -f examples/rbac/rbac.yml && kubectl apply -f examples/rbac/habitat-operator.yml
+
+### Deploy Habitat Operator
+cd ../habitat-updater/
+kubectl apply -f kubernetes/rbac/rbac.yml && kubectl apply -f kubernetes/rbac/updater.yml
+
+### Deploy National-Parks into Kubernetes
+cd ../national-parks-demo/terraform/gke/habitat-operator/
+kubectl create -f gke-service.yml && kubectl create -f habitat.yml
+sleep 30
+kubectl get all  <---- use after deployment
+
+Find the `EXTERNAL-IP` for `service/national-parks-lb`:
+`http://<EXTERNAL-IP>/national-parks`
+
+### Manual update red to blue
+cd national-parks-demo`
+`hab studio enter`
+`cp blue-index.html src/main/webapp/index.html`
+`build`
+`source results/last_build.env`
+`hab pkg export docker results/$pkg_artifact`
+`exit`
