@@ -164,7 +164,7 @@ resource "azurerm_virtual_machine" "chef_automate" {
       "sudo ./chef-automate deploy ${var.automate_products} /etc/chef-automate/config.toml --accept-terms-and-mlsa",
       "sleep 60",
       "sudo chown ${var.azure_image_user}:${var.azure_image_user} $HOME/automate-credentials.toml",
-      "sudo echo -e api-token = \"$(sudo chef-automate admin-token)\" >> $HOME/automate-credentials.toml",
+      "sudo echo -e api-token = \"$(sudo chef-automate iam token create admin --admin)\" >> $HOME/automate-credentials.toml",
       "sudo cat $HOME/automate-credentials.toml",
       "sudo chef-automate iam admin-access restore ${var.automate_password}",
       "sudo chmod +x /tmp/set_chef_automate_token.sh",
