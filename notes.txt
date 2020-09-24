@@ -21,7 +21,7 @@ hab svc load core/mongodb/3.2.9/20170515233318
 hab config apply mongodb.default $(date +%s) habitat/mongo.toml
 hab svc load $pkg_ident --bind database:mongodb.default
 hab svc load core/haproxy --bind backend:national-parks.default
-hab config apply haproxy.default $(date +%s) haproxy.toml
+hab config apply haproxy.default $(date +%s) habitat/haproxy.toml
 sup-log
 
 -------- Test different service group ---------------------
@@ -30,7 +30,7 @@ hab svc load core/mongodb/3.2.9/20170515233318 --group test
 hab config apply mongodb.test $(date +%s) habitat/mongo.toml
 hab svc load $pkg_ident --bind database:mongodb.test --group test
 hab svc load core/haproxy --bind backend:national-parks.test --group test
-hab config apply haproxy.test $(date +%s) haproxy.toml
+hab config apply haproxy.test $(date +%s) habitat/haproxy.toml
 hab sup status
 
 ------------------------------------------------------------
