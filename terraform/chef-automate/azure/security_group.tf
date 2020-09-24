@@ -64,6 +64,18 @@ resource "azurerm_network_security_group" "chef_automate" {
     destination_address_prefix = "*"
   }
 
+  security_rule {
+    name                       = "4222"
+    priority                   = 1006
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "4222"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+
   tags = {
     X-Dept        = var.tag_dept
     X-Customer    = var.tag_customer
@@ -73,4 +85,3 @@ resource "azurerm_network_security_group" "chef_automate" {
     X-TTL         = var.tag_ttl
   }
 }
-

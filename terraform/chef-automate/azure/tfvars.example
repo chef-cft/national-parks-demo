@@ -20,5 +20,8 @@ tag_project = "proj"
 tag_dept = "sales"
 // Contacdt Tag
 tag_contact = "me@somewhere.com"
-// Chef Automate Hostname
+// Chef Automate
 automate_hostname = "jmery-a2"
+automate_password = "some-password"
+automate_token = "reusable-token"
+automate_license = "your-license"
