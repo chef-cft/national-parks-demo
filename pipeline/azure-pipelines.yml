@@ -190,10 +190,7 @@ stages:
         testResultsFiles: '**/TEST-automate.xml'
         testRunTitle: 'Automate'
       displayName: "InSpec: Publish Automate Test Results"
-    - task: ManualIntervention@8
-      inputs:
-        instructions: 'do the thing'
-        emailRecipients: 'ghenkhaus@chef.io'
+
     - task: vsts-chef-task-exec-inspec@1
       # continueOnError: true
       inputs:
