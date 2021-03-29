@@ -12,10 +12,10 @@ In order run this repo, you must first install Habitat. You can find setup docs 
 
 ## Demo Tracks
 1. [Building national parks and running locally in the studio](docs/local_demo.md) (start here)
-1. [Habitat via containers on Azure Kubernetes Service](docs/aks_demo.md)
-1. [Habitat via containers on Google Kubernetes Engine](docs/gke_demo.md)
-1. [Habitat + Terraform - Running natively on VMs](docs/terraform_demo.md)
-1. [Continued local testing with Habitat + Docker Compose](docs/docker_compose_demo.md)
+2. [Habitat + Terraform - Running natively on VMs](docs/terraform_demo.md)
+3. [Habitat via containers on Azure Kubernetes Service](docs/aks_demo.md)
+4. [Habitat via containers on Google Kubernetes Engine](docs/gke_demo.md)
+5. [Continued local testing with Habitat + Docker Compose](docs/docker_compose_demo.md)
 
 ### Terraform Note
 This repository contains Terraform code that is now written to Terraform 0.12.x specs.  It is HIGHLY recommended to use [tfswitch](https://warrensbox.github.io/terraform-switcher/) if you are not already using it.  This repo contains .tfswitchrc files that will automatically enable the right version of terraform, assuming you have that functionality set up in your terminal emulator.  See the end of the tfswitch homepage under the heading `Use .tfswitchrc file` for more information.
