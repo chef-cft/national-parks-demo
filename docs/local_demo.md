@@ -1,4 +1,4 @@
-# Build/Test National-Parks App Locally: 
+# Build/Test National-Parks App Locally:
 
 1. Clone this repo
 2. `cd national-parks-demo`

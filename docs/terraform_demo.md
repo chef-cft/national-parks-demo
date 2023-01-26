@@ -1,4 +1,5 @@
 # Running National Parks on VMs with Terraform
+
 Included in the repo is Terraform code (Version `0.12`) for launching the application in AWS and Google Kubernetes Engine. Provision either AWS, GKE, or both, and then you can watch Habitat update across cloud deployments.
 
 Due to how often Terraform is updated, it's recommended to use `tfswitch`. This will help alleviate any problems with version incompatabilities.
@@ -9,6 +10,7 @@ The `tfswitch` tool is available [here](https://github.com/warrensbox/terraform-
 The demo now sets a specific Chef Automate password and Chef Automate token for simplicity. Please change the default token value in your `terraform.tfvars` 
 
 ## Deploy Chef Automate
+
 1. `cd terraform/chef-automate/(aws|azure|gcp)`
 2. `cp tfvar.example terraform.tfvars`
 3. `$EDITOR terraform.tfvars`
@@ -57,6 +59,7 @@ or
 `http://<haproxy_public_ip>:8000/haproxy-stats`
 
 ## Proivision National-Parks in Azure
+
 You will need to have an [Azure account already created](https://azure.microsoft.com/en-us/features/azure-portal/)
 
 1. `cd terraform/azure`
@@ -85,9 +88,11 @@ or
 `http://<haproxy_public_ip>:8000/haproxy-stats`
 
 ## Scaling out Azure and AWS Deployments
+
 Both the AWS and Azure deployments support scaling of the web front end instances to demonstrate the concept of 'choreography' vs 'orchestration' with Habitat. The choreography comes from the idea that when the front end instances scale out, the supervisor for the HAProxy instance automatically takes care of the adding the new members to the pool and begins balancing traffic correctly across all instances.
 
 ### Scaling out
+
 1. In your `terraform.tfvars` add a line for `count = 3`
 2. run `terraform apply`
 3. Once provisioning finishes, go to the `http://<haproxy-public-ip>:8000/haproxy-stats` to see the new instances in the pool
