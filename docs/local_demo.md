@@ -1,13 +1,19 @@
 # Build/Test National-Parks App Locally:
 
 1. Clone this repo
-2. `cd national-parks-demo`
-3. Export environment variables to forward ports on the `export HAB_DOCKER_OPTS='-p 8000:8000 -p 8080:8080 -p 8085:8085 -p 9631:9631'`
-4. `hab studio enter`
-5. `build`
-6. `source results/last_build.env`
+   `cd national-parks-demo`
+2. Export environment variables to forward ports to the container
+  `export HAB_DOCKER_OPTS='-p 8000:8000 -p 8080:8080 -p 8085:8085 -p 9631:9631'`
+3. Start the hab studio
+  `hab studio enter`
+4. Build the package based on current config
+  `build`
+5. Breathe
+   `Inhale. Exhale. Repeat`
+6. Grab teh environment variables created
+  `source results/last_build.env`
 7. Load `core/mongodb` package from the public depot:  
-  `hab svc load core/mongodb/3.2.10/20171016003652`
+   `hab svc load core/mongodb/3.2.10/20171016003652`
 8. Override the default configuration of mongodb:
    `hab config apply mongodb.default $(date +%s) habitat/mongo.toml`
 9. Load the most recent build of national-parks: 
