@@ -12,12 +12,12 @@ resource "random_id" "instance_id" {
 ////////////////////////////////
 // Instance Data
 
-data "aws_ami" "centos7" {
+data "aws_ami" "centos8" {
   most_recent = true
 
   filter {
     name   = "name"
-    values = ["chef-highperf-centos7-*"]
+    values = ["cmcneese-highperf-centos8-*"]
   }
 
   filter {
