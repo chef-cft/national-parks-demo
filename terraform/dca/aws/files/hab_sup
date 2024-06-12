@@ -1,0 +1,33 @@
+# Provides:
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start daemon at boot time
+# Description:       Enable service provided by daemon.
+### END INIT INFO
+
+dir=""
+cmd=""
+user=""
+
+name=`basename $0`
+pid_file="/var/run/$name.pid"
+stdout_log="/var/log/$name.log"
+stderr_log="/var/log/$name.err"
+
+case "$1" in
+    start)
+                echo "Starting habitat supervisor"
+                nohup hab run --auto-update --listen-gossip 0.0.0.0:9638 --listen-http 0.0.0.0:9631 > /var/log/hab-sup.log 2>&1&
+    ;;
+    stop)
+                echo "Stopping habitat supervisor"
+                hab term
+    ;;
+    restart)
+        $0 stop
+                $0 start
+    ;;
+esac
+exit 0

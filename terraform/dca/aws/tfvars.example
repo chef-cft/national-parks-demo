@@ -1,0 +1,58 @@
+/////////////////////////////////////
+//Cloud Credentials
+
+// AWS Profile to be used
+aws_profile = "solutions-architects"
+// AWS Key Pair Name
+aws_key_pair_name = "my_key"
+// SSH Key to use (local path)
+aws_key_pair_file = "~/.ssh/my_key.pem"
+
+///////////////////////////////////
+// Project tags
+tag_customer = "MyCustoemr"
+
+tag_project = "MyProject"
+
+tag_name = "MyName"
+
+tag_dept = "MyDepartment"
+
+tag_contact = "me@chef.io"
+
+tag_application = "dca"
+
+////////////////////////////////////
+// Chef Automate Information (optional)
+// Copy from the terraform outputs from launching chef-automate
+automate_url = "https://nrycar-demo.chef-demo.com"
+
+automate_hostname = "nrycar-demo.chef-demo.com"
+
+automate_ip = "54.200.232.236"
+
+automate_user = "admin"
+
+automate_token = "V7v2k1fSYnr_eoF8HkZeBfkgaEE="
+
+// Set to 'false' if not using Chef Automate
+event-stream-enabled = "true"
+
+/////////////////////////////////////////
+// Habitat Information
+// Leave with defaults, or replace with your own effortless packages
+// Note: Private packages not yet supported. Must be public on bldr.
+
+infra_origin = "nrycar"
+
+infra_package = "dca-hardening"
+
+audit_origin = "nrycar"
+
+audit_package = "dca-audit"
+
+/////////////////////////////////////////
+// Environment Information
+
+// How many nodes to launch for DCA
+node_count = "1"

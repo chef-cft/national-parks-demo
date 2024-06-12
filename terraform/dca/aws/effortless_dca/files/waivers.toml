@@ -1,0 +1,11 @@
+interval = 30
+splay = 5
+
+[waivers]
+[waivers.'sysctl-14']
+run = false
+justification = "Conflict with corporate networking policy. Skip."
+[waivers.'os-08']
+expiration_date = "2020-04-01"
+run = false
+justification = "We have a plan to fix this in Q1. Alert after spring."
