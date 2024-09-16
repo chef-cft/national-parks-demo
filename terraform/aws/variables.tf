@@ -11,12 +11,12 @@ variable "aws_region" {
 ////////////////////////////////
 // Server Settings
 
-variable "aws_centos_image_user" {
-  default = "centos"
+variable "aws_rhel7_image_user" {
+  default = "ec2-user"
 }
 
 variable "aws_ami_user" {
-  default = "centos"
+  default = "ec2-user"
 }
 
 variable "aws_amazon_image_user" {

@@ -6,7 +6,7 @@ resource "aws_instance" "permanent_peer" {
     private_key = file(var.aws_key_pair_file)
   }
 
-  ami                         = data.aws_ami.centos.id
+  ami                         = data.aws_ami.rhel7.id
   instance_type               = var.test_server_instance_type
   key_name                    = var.aws_key_pair_name
   subnet_id                   = aws_subnet.national_parks_subnet.id
@@ -82,7 +82,7 @@ resource "aws_instance" "mongodb" {
     private_key = file(var.aws_key_pair_file)
   }
 
-  ami                         = data.aws_ami.centos.id
+  ami                         = data.aws_ami.rhel7.id
   instance_type               = var.test_server_instance_type
   key_name                    = var.aws_key_pair_name
   subnet_id                   = aws_subnet.national_parks_subnet.id
@@ -168,7 +168,7 @@ resource "aws_instance" "national_parks" {
     private_key = file(var.aws_key_pair_file)
   }
 
-  ami                         = data.aws_ami.centos.id
+  ami                         = data.aws_ami.rhel7.id
   instance_type               = var.test_server_instance_type
   key_name                    = var.aws_key_pair_name
   subnet_id                   = aws_subnet.national_parks_subnet.id
@@ -246,7 +246,7 @@ resource "aws_instance" "haproxy" {
     private_key = file(var.aws_key_pair_file)
   }
 
-  ami                         = data.aws_ami.centos.id
+  ami                         = data.aws_ami.rhel7.id
   instance_type               = var.test_server_instance_type
   key_name                    = var.aws_key_pair_name
   subnet_id                   = aws_subnet.national_parks_subnet.id
